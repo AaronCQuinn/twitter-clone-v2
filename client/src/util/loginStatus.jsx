@@ -8,6 +8,6 @@ export const checkLoginStatus = () => {
   url: `http://localhost:5000${AUTH_ENDPOINT}`
   })
   .then(response =>
-    console.log(response)
+    console.log(response.data)
   );
 }
