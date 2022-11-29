@@ -1,29 +1,31 @@
 import React, {useState} from 'react'
+import { useEffect } from 'react';
+import './registrationForm.css'
 
 function RegistrationForm() {
     const [passValue, setPassValue] = useState({
-        password: "",
-        passwordConf: "",
+        registerPassword: "",
+        registerPasswordConf: "",
     });
     const [validPass, setValidPass] = useState(false);
 
-    const passMatch = () => {
-        if (passValue.password === passValue.passwordConf) {
+    useEffect(() => {
+        const {registerPassword, registerPasswordConf} = passValue;
+        if (registerPassword !== registerPasswordConf) {
             setValidPass(true);
         } else {
             setValidPass(false);
         }
-    }
+    }, [passValue])
+
 
     const passChange = (e) => {
-        if (e.target.name === "registerPassword") {
-            setPassValue({...passValue, password: e.target.value});
-        } else {
-            setPassValue({...passValue, passwordConf: e.target.value})
+        const passString = e.target.value.trim();
+        const passInput = {
+            ...passValue, [e.target.name]:passString
+        
         }
-
-        passMatch();
-        console.log(passValue)
+        setPassValue(passInput);
     };
 
     return (
@@ -39,7 +41,12 @@ function RegistrationForm() {
             <input type="text" name="regUsername" id="regUsername" placeholder='Username' required/>
             <input type="email" name="regEmail" id="regEmail" placeholder='Email' required/>
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={passChange} required/>
-            <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Password' onChange={passChange} required/>
+            <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={passChange} required/>
+            {validPass &&
+            <div className='password-warning'>
+                The current passwords do not match!
+            </div>
+            }
             <input type="submit" value="Login" />
         </form>
 
