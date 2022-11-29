@@ -1,32 +1,48 @@
 import React, {useState} from 'react'
 import { useEffect } from 'react';
 import './registrationForm.css'
+import axios from 'axios'
 
 function RegistrationForm() {
-    const [passValue, setPassValue] = useState({
+    const [formValues, setFormValues] = useState({
+        regFirstName: "",
+        regLastName: "",
+        regUsername: "",
+        regEmail: "",
         registerPassword: "",
         registerPasswordConf: "",
     });
     const [validPass, setValidPass] = useState(false);
 
     useEffect(() => {
-        const {registerPassword, registerPasswordConf} = passValue;
+        const {registerPassword, registerPasswordConf} = formValues;
         if (registerPassword !== registerPasswordConf) {
             setValidPass(true);
         } else {
             setValidPass(false);
         }
-    }, [passValue])
+    }, [formValues])
 
 
-    const passChange = (e) => {
-        const passString = e.target.value.trim();
-        const passInput = {
-            ...passValue, [e.target.name]:passString
-        
-        }
-        setPassValue(passInput);
+    const handleChange = (e) => {
+        setFormValues({...formValues, [e.target.name]:e.target.value});
     };
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        axios.post('/api/user_registration', { formValues },
+            {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(error => {
+                console.log(`Error posting to back end: ${error}`);
+        })
+    }
 
     return (
     <div className="loginContainer">
@@ -35,13 +51,13 @@ function RegistrationForm() {
           Register
         </h1>
 
-        <form method="post">
-            <input type="text" name="regFirstName" id="regFirstName" placeholder='First Name' required/>
-            <input type="text" name="regLastName" id="regLastName" placeholder='Last Name' required/>
-            <input type="text" name="regUsername" id="regUsername" placeholder='Username' required/>
-            <input type="email" name="regEmail" id="regEmail" placeholder='Email' required/>
-            <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={passChange} required/>
-            <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={passChange} required/>
+        <form onSubmit={handleSubmit}>
+            <input type="text" name="regFirstName" id="regFirstName" placeholder='First Name' onChange={handleChange} required/>
+            <input type="text" name="regLastName" id="regLastName" placeholder='Last Name' onChange={handleChange} required/>
+            <input type="text" name="regUsername" id="regUsername" placeholder='Username' onChange={handleChange} required/>
+            <input type="email" name="regEmail" id="regEmail" placeholder='Email' onChange={handleChange} required/>
+            <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
+            <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
             {validPass &&
             <div className='password-warning'>
                 The current passwords do not match!
