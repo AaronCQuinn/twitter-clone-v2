@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { useEffect } from 'react';
 import './registrationForm.css'
 import axios from 'axios'
+import encryptPassword from '../../util/encrypt';
 
 function RegistrationForm() {
     const [formValues, setFormValues] = useState({
@@ -41,6 +42,8 @@ function RegistrationForm() {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
+        formValues.registerPassword = encryptPassword(formValues.registerPassword)
+        formValues.registerPasswordConf = encryptPassword(formValues.registerPasswordConf);
         axios.post('/api/user_registration', { formValues },
             {
             headers: {
