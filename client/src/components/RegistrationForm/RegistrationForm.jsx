@@ -12,24 +12,22 @@ function RegistrationForm() {
         registerPassword: "",
         registerPasswordConf: "",
     });
-    const [matchPass, setMatchPass] = useState(false);
-    const [validPass, setValidPass] = useState(false);
+    const [matchPass, setMatchPass] = useState(true);
+    const [validPass, setValidPass] = useState(true);
 
     useEffect(() => {
-        const {registerPassword, registerPasswordConf} = formValues;
-
         function checkPassword(str) {
             const re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
             return re.test(str);
         }
 
-        if (registerPassword !== registerPasswordConf) {
-            setMatchPass(true);
-        } else {
+        if (formValues.registerPassword !== formValues.registerPasswordConf) {
             setMatchPass(false);
+        } else {
+            setMatchPass(true);
         }
 
-        if (checkPassword(registerPassword)) {
+        if (checkPassword(formValues.registerPassword) || formValues.registerPassword === "" || formValues.registerPasswordConf === "") {
             setValidPass(true);
         } else {
             setValidPass(false);
@@ -71,12 +69,12 @@ function RegistrationForm() {
             <input type="email" name="regEmail" id="regEmail" placeholder='Email' onChange={handleChange} required/>
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
             <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
-            {matchPass &&
+            {!matchPass &&
             <div className='password-warning'>
                 The current passwords do not match!
             </div>
             }
-            {validPass &&
+            {!validPass &&
             <div className='password-warning'>
                 Your password must be a minimum of 8 characters with an upper and lowercase character, as well as a number and symbol.
             </div>
