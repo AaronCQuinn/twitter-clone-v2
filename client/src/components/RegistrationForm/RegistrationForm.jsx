@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import { useEffect } from 'react';
 import './registrationForm.css'
 import axios from 'axios'
-import encryptPassword from '../../util/encrypt';
 
 function RegistrationForm() {
     const [formValues, setFormValues] = useState({
@@ -13,6 +12,7 @@ function RegistrationForm() {
         registerPassword: "",
         registerPasswordConf: "",
     });
+
     const [matchPass, setMatchPass] = useState(true);
     const [validPass, setValidPass] = useState(true);
 
@@ -42,12 +42,10 @@ function RegistrationForm() {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-        formValues.registerPassword = encryptPassword(formValues.registerPassword)
-        formValues.registerPasswordConf = encryptPassword(formValues.registerPasswordConf);
         axios.post('/api/user_registration', { formValues },
             {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/json'
               }
             })
             .then(res => {
@@ -55,8 +53,11 @@ function RegistrationForm() {
             })
             .catch(error => {
                 console.log(`Error posting to back end: ${error}`);
-        })
+        });
+        setFormValues({...formValues, registerPassword: "", registerPasswordConf: ""});
+        e.target.reset();
     }
+
 
     return (
     <div className="loginContainer">
@@ -66,10 +67,10 @@ function RegistrationForm() {
         </h1>
 
         <form onSubmit={handleSubmit}>
-            <input type="text" name="regFirstName" id="regFirstName" placeholder='First Name' onChange={handleChange} required/>
-            <input type="text" name="regLastName" id="regLastName" placeholder='Last Name' onChange={handleChange} required/>
-            <input type="text" name="regUsername" id="regUsername" placeholder='Username' onChange={handleChange} required/>
-            <input type="email" name="regEmail" id="regEmail" placeholder='Email' onChange={handleChange} required/>
+            <input type="text" name="regFirstName" id="regFirstName" placeholder='First Name' value={formValues.regFirstName} onChange={handleChange} required/>
+            <input type="text" name="regLastName" id="regLastName" placeholder='Last Name' value={formValues.regLastName} onChange={handleChange} required/>
+            <input type="text" name="regUsername" id="regUsername" placeholder='Username' value={formValues.regUsername} onChange={handleChange} required/>
+            <input type="email" name="regEmail" id="regEmail" placeholder='Email' value={formValues.regEmail} onChange={handleChange} required/>
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
             <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
             {!matchPass &&
