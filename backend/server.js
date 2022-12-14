@@ -10,6 +10,7 @@ app.use(cors({
 }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 // Routes
 const authRoute = require('./routes/authRoutes');
 app.use('/api/user_authentication', authRoute)

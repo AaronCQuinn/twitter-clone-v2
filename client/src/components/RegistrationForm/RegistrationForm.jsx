@@ -49,7 +49,7 @@ function RegistrationForm() {
               }
             })
             .then(res => {
-                console.log(res);
+                console.log(res.data.payload);
             })
             .catch(error => {
                 console.log(`Error posting to back end: ${error}`);
@@ -70,7 +70,7 @@ function RegistrationForm() {
             <input type="text" name="regFirstName" id="regFirstName" placeholder='First Name' value={formValues.regFirstName} onChange={handleChange} required/>
             <input type="text" name="regLastName" id="regLastName" placeholder='Last Name' value={formValues.regLastName} onChange={handleChange} required/>
             <input type="text" name="regUsername" id="regUsername" placeholder='Username' value={formValues.regUsername} onChange={handleChange} required/>
-            <input type="email" name="regEmail" id="regEmail" placeholder='Email' value={formValues.regEmail} onChange={handleChange} required/>
+            <input type="email" name="regEmail" id="regEmail" placeholder='Email' value={formValues.regEmail} onChange={handleChange} />
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
             <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
             {!matchPass &&
