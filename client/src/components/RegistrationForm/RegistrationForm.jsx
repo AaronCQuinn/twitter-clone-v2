@@ -15,6 +15,10 @@ function RegistrationForm() {
 
     const [matchPass, setMatchPass] = useState(true);
     const [validPass, setValidPass] = useState(true);
+    const [validationError, setValidationError] = useState({
+        status: false,
+        text: "",
+    });
 
     useEffect(() => {
         function checkPassword(str) {
@@ -37,6 +41,12 @@ function RegistrationForm() {
 
 
     const handleChange = (e) => {
+        if (validationError.status) {
+            setValidationError({
+                status: false,
+                text: ""
+            });
+        }
         setFormValues({...formValues, [e.target.name]:e.target.value});
     };
 
@@ -49,7 +59,9 @@ function RegistrationForm() {
               }
             })
             .then(res => {
-                console.log(res.data.error);
+                if (res.data.status) {
+                    setValidationError(res.data);
+                }
             })
             .catch(error => {
                 console.log(`Error posting to back end: ${error}`);
@@ -70,7 +82,7 @@ function RegistrationForm() {
             <input type="text" name="regFirstName" id="regFirstName" placeholder='First Name' value={formValues.regFirstName} onChange={handleChange} required/>
             <input type="text" name="regLastName" id="regLastName" placeholder='Last Name' value={formValues.regLastName} onChange={handleChange} required/>
             <input type="text" name="regUsername" id="regUsername" placeholder='Username' value={formValues.regUsername} onChange={handleChange} required/>
-            <input type="email" name="regEmail" id="regEmail" placeholder='Email' value={formValues.regEmail} onChange={handleChange} required />
+            <input type="email" name="regEmail" id="regEmail" placeholder='Email' value={formValues.regEmail} onChange={handleChange} />
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
             <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
             {!matchPass &&
@@ -81,6 +93,11 @@ function RegistrationForm() {
             {!validPass &&
             <div className='password-warning'>
                 Your password must be a minimum of 8 characters with an upper and lowercase character, as well as a number and symbol.
+            </div>
+            }
+            {validationError.status &&
+            <div className='password-warning'>
+                {validationError.text}
             </div>
             }
             <input type="submit" value="Login" />
