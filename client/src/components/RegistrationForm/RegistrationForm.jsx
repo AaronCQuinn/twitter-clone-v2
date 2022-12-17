@@ -19,6 +19,10 @@ function RegistrationForm() {
         status: false,
         text: "",
     });
+    const [formSuccess, setFormSuccess] = useState({
+        status: false,
+        text: "",
+    });
 
     useEffect(() => {
         function checkPassword(str) {
@@ -59,8 +63,11 @@ function RegistrationForm() {
               }
             })
             .then(res => {
-                if (res.data.status) {
+                console.log(res);
+                if (res.status !== 200) {
                     setValidationError(res.data);
+                } else {
+                    setFormSuccess(res.data);
                 }
             })
             .catch(error => {
@@ -86,18 +93,23 @@ function RegistrationForm() {
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
             <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
             {!matchPass &&
-            <div className='password-warning'>
+            <div className='registration-warning'>
                 The current passwords do not match!
             </div>
             }
             {!validPass &&
-            <div className='password-warning'>
+            <div className='registration-warning'>
                 Your password must be a minimum of 8 characters with an upper and lowercase character, as well as a number and symbol.
             </div>
             }
             {validationError.status &&
-            <div className='password-warning'>
+            <div className='registration-warning'>
                 {validationError.text}
+            </div>
+            }
+            {formSuccess.status && 
+            <div className='registration-success'>
+                {formSuccess.text}
             </div>
             }
             <input type="submit" value="Login" />

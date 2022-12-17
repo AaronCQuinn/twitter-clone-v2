@@ -1,6 +1,13 @@
-.password-warning {
+.registration-warning {
     margin-bottom: 10px;
     padding: 5px;
     background-color: indianred;
+    color: #fff;
+}
+
+.registration-success {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: green;
     color: #fff;
 }
