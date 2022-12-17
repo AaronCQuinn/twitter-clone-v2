@@ -1,10 +1,11 @@
 const express = require('express');
 const app = express();
-const PORT = 5000;
 const middleware = require('./middleware');
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const mongoose = require('./database');
 
+const PORT = 5000;
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
