@@ -15,12 +15,8 @@ function RegistrationForm() {
 
     const [matchPass, setMatchPass] = useState(true);
     const [validPass, setValidPass] = useState(true);
-    const [validationError, setValidationError] = useState({
-        status: false,
-        text: "",
-    });
-    const [formSuccess, setFormSuccess] = useState({
-        status: false,
+    const [serverResponse, setServerResponse] = useState({
+        status: "",
         text: "",
     });
 
@@ -45,9 +41,11 @@ function RegistrationForm() {
 
 
     const handleChange = (e) => {
-        if (validationError.status) {
-            setValidationError({
-                status: false,
+        console.log('here');
+        console.log(serverResponse);
+        if (Object.values(serverResponse).some(Boolean)) {
+            setServerResponse({
+                status: "",
                 text: ""
             });
         }
@@ -63,16 +61,16 @@ function RegistrationForm() {
               }
             })
             .then(res => {
-                console.log(res);
-                if (res.status !== 200) {
-                    setValidationError(res.data);
-                } else {
-                    setFormSuccess(res.data);
-                }
-            })
+                console.log(res.status);
+            })              
             .catch(error => {
+                console.error(error);
                 console.log(`Error posting to back end: ${error}`);
-        });
+            })
+        .catch(error => {
+            console.log(error.response.data);
+            console.log(`Axios request failed: ${error}`);
+        })
         setFormValues({...formValues, registerPassword: "", registerPasswordConf: ""});
         e.target.reset();
     }
@@ -93,7 +91,7 @@ function RegistrationForm() {
             <input type="password" name="registerPassword" id="registerPassword" placeholder='Password' onChange={handleChange} required/>
             <input type="password" name="registerPasswordConf" id="registerPasswordConf" placeholder='Confirm Password' onChange={handleChange} required/>
             {!matchPass &&
-            <div className='registration-warning'>
+            <div className="registration-warning">
                 The current passwords do not match!
             </div>
             }
@@ -102,15 +100,10 @@ function RegistrationForm() {
                 Your password must be a minimum of 8 characters with an upper and lowercase character, as well as a number and symbol.
             </div>
             }
-            {validationError.status &&
-            <div className='registration-warning'>
-                {validationError.text}
-            </div>
-            }
-            {formSuccess.status && 
-            <div className='registration-success'>
-                {formSuccess.text}
-            </div>
+            {serverResponse.status &&
+            <div className={"registration-" + serverResponse.status}>
+                {serverResponse.text}
+            </div>    
             }
             <input type="submit" value="Login" />
         </form>
