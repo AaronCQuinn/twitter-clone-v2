@@ -6,7 +6,7 @@ class Database {
     constructor() {
         this.connect();
     }
-
+    
     connect() {
         mongoose.connect(process.env.MONGO_URI)
             .then(() => {

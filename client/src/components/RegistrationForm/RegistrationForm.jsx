@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { useEffect } from 'react';
 import './registrationForm.css'
 import axios from 'axios'
+import { hasValue } from '../../util/hasValue';
 
 function RegistrationForm() {
     const [formValues, setFormValues] = useState({
@@ -15,9 +16,10 @@ function RegistrationForm() {
 
     const [matchPass, setMatchPass] = useState(true);
     const [validPass, setValidPass] = useState(true);
-    const [serverResponse, setServerResponse] = useState({
-        status: "",
-        text: "",
+    const [serverResponse, setServerResponse] = useState();
+    const [responseMessage, setResponseMessage] = useState({
+        message: "",
+        statusColor: ""
     });
 
     useEffect(() => {
@@ -39,15 +41,42 @@ function RegistrationForm() {
         }
     }, [formValues])
 
+    useEffect(() => {
+        console.log('fired');
+        let message;
+        let statusColor;
+
+        if (serverResponse === 201) {
+            statusColor = 'success';
+        } else {
+            statusColor = 'warning'
+        }
+
+        switch (serverResponse) {
+            case 201:
+                message = "Your new account was successfully registered.";
+                break;
+            case 409:
+                message = "There is already a user registered under this username or email.";
+                break;
+            case 500:
+                message = 'There was a server error. Please try again.';
+                break;
+            case 400:
+                message = "All fields must be submitted with a valid value in order to register.";
+                break;
+        }
+
+        setResponseMessage({
+            message,
+            statusColor
+        })
+    }, [serverResponse])
+
 
     const handleChange = (e) => {
-        console.log('here');
-        console.log(serverResponse);
-        if (Object.values(serverResponse).some(Boolean)) {
-            setServerResponse({
-                status: "",
-                text: ""
-            });
+        if (hasValue(serverResponse)) {
+            setServerResponse();
         }
         setFormValues({...formValues, [e.target.name]:e.target.value});
     };
@@ -61,10 +90,11 @@ function RegistrationForm() {
               }
             })
             .then(res => {
-                console.log(res.status);
+                console.log(res);
+                setServerResponse(res.status);
             })              
             .catch(error => {
-                console.error(error);
+                setServerResponse(error.response.status)
                 console.log(`Error posting to back end: ${error}`);
             })
         .catch(error => {
@@ -100,9 +130,9 @@ function RegistrationForm() {
                 Your password must be a minimum of 8 characters with an upper and lowercase character, as well as a number and symbol.
             </div>
             }
-            {serverResponse.status &&
-            <div className={"registration-" + serverResponse.status}>
-                {serverResponse.text}
+            {responseMessage.message &&
+            <div className={"registration-" + responseMessage.statusColor}>
+                {responseMessage.message}
             </div>    
             }
             <input type="submit" value="Login" />
