@@ -42,13 +42,9 @@ function RegistrationForm() {
     }, [formValues])
 
     useEffect(() => {
-        console.log('fired');
         let message;
-        let statusColor;
-
-        if (serverResponse === 201) {
-            statusColor = 'success';
-        } else {
+        let statusColor = 'success';
+        if (!serverResponse === 201) {
             statusColor = 'warning'
         }
 
@@ -64,6 +60,8 @@ function RegistrationForm() {
                 break;
             case 400:
                 message = "All fields must be submitted with a valid value in order to register.";
+                break;
+            default:
                 break;
         }
 

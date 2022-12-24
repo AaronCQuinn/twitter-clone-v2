@@ -2,23 +2,18 @@ import React from 'react'
 import Home from './pages/Home'
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register'
-import { useEffect, useState } from 'react';
 import {
-  BrowserRouter as Router,
-  Switch,
   Route,
-  Link
+  Routes
 } from 'react-router-dom';
-import { checkLoginStatus } from './util/loginStatus';
 
 function App() {
-  const [userAuth, setUserAuth] = useState(false);
-  useEffect(() => {
-    checkLoginStatus();
-  },[])
-
   return (
-    <Register />
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='/login' element={<Login />} />
+    </Routes>
   )
 }
 
