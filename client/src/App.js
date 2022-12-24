@@ -6,11 +6,14 @@ import {
   Route,
   Routes
 } from 'react-router-dom';
+import ProtectedRoute from './util/ProtectedRoute';
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path='/' element={<Home/>} />
+      </Route>
       <Route path='/register' element={<Register />} />
       <Route path='/login' element={<Login />} />
     </Routes>
