@@ -44,7 +44,8 @@ function RegistrationForm() {
     useEffect(() => {
         let message;
         let statusColor;
-        if (!serverResponse === 201) {
+        
+        if (serverResponse !== 201) {
             statusColor = 'warning'
         } else {
             statusColor = 'success'

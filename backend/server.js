@@ -3,6 +3,7 @@ const app = express();
 const middleware = require('./middleware');
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 const mongoose = require('./database');
 
 const PORT = 5000;
@@ -12,6 +13,7 @@ app.use(cors({
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
+app.use(cookieParser());
 // Routes
 const authRoute = require('./routes/authRoutes');
 app.use('/api/user_authentication', authRoute)
