@@ -18,28 +18,22 @@ router.post('/', async (req, res, next) => {
         return res.sendStatus(400);
     }
 
-    let firstName = req.body.regFirstName.trim();
-    let lastName = req.body.regLastName.trim();
-    let username = req.body.regUsername.trim();
-    let email = req.body.regEmail.trim();
-    let password = req.body.registerPassword;
-    let passwordConf = req.body.registerPasswordConf;
-
+    const { regFirstName, regLastName, regUsername, regEmail, registerPassword, registerPasswordConf } = trimValues;
 
     // Both passwords must pass validation checks.
-    if (!checkPassword(password) || !checkPassword(passwordConf)) {
+    if (!checkPassword(registerPassword) || !checkPassword(registerPasswordConf)) {
         console.log('Password did not pass validation check.');
         return res.sendStatus(400);
     }
 
     // Both passwords must match.
-    if (password !== passwordConf) {
+    if (registerPassword !== registerPasswordConf) {
         console.log('Password confirmation did not match.');
         return res.sendStatus(400);
     }
 
     // Check if either the username or email already exists.
-    const existingUser = await User.findOne({$or: [{ username: username }, { email: email }]}).catch(() => {
+    const existingUser = await User.findOne({$or: [{ username: regUsername }, { email: regEmail }]}).catch(() => {
         console.log("Error checking Mongo for pre-existing user.");
         return res.sendStatus(500);
     })
@@ -51,11 +45,11 @@ router.post('/', async (req, res, next) => {
     
     try {
         const user = await User.create({
-            firstName,
-            lastName,
-            username,
-            email,
-            password: await encryptPassword(password),
+            firstName: regFirstName, 
+            lastName: regLastName, 
+            username: regUsername, 
+            email: regEmail, 
+            password: await encryptPassword(registerPassword),
         })
         console.log('User successfully added to the database.');
         const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);

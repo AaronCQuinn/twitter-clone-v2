@@ -1,27 +1,28 @@
-import { Navigate } from 'react-router-dom';
-import axios from 'axios';
-import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { Navigate, Outlet  } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const ProtectedRoute = () => {
-    const [isAuth, setIsAuth] = useState();
+    const [isAuth, setIsAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-        async function getAuth() {
-            await fetch(`/api/user_authentication`)
-            .then(res => {
-                console.log(res.status);
-                if (res.status === 401) {
-                    setIsAuth(false);
-                } else {
-                    setIsAuth(true);
-                }
-            })
+        setLoading(true);
+        const getAuth = async() => {
+            try {
+                const res = await fetch(`/api/user_authentication`);
+                setLoading(false);
+                if (res.status === 200) { setIsAuth(true) } ;
+            } catch(error) {
+                console.log("Error trying to get authentication status: " + error);
+            }
         }
         getAuth();
     }, [])
-    console.log(isAuth);
-    return isAuth ? <Outlet /> : <Navigate to='register' />;
+
+    if (loading) {
+        return <></>; 
+    } else {
+        return isAuth ? <Outlet /> : <Navigate to='login' />;
+    }
 };
   
 

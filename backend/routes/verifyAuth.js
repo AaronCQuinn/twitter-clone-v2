@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
     try {
         const user = jwt.verify(token, process.env.JWT_SECRET);
         if (user) {
-            res.send(true);
+            res.sendStatus(200);
         } else {
             res.clearCookie('token');
             return res.sendStatus(401);

@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(cookieParser());
 // Routes
-const authRoute = require('./routes/authRoutes');
-app.use('/api/user_authentication', authRoute)
+const verifyAuthRoute = require('./routes/verifyAuth');
+app.use('/api/user_authentication', verifyAuthRoute)
 const userRegistrationRoute = require('./routes/userRegistration');
 app.use('/api/user_registration', userRegistrationRoute);
 
