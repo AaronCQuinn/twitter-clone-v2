@@ -19,6 +19,8 @@ const verifyAuthRoute = require('./routes/verifyAuth');
 app.use('/api/user_authentication', verifyAuthRoute)
 const userRegistrationRoute = require('./routes/userRegistration');
 app.use('/api/user_registration', userRegistrationRoute);
+const userLoginRoute = require('./routes/userLogin');
+app.use('/api/user_login', userLoginRoute);
 
 const server = app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)

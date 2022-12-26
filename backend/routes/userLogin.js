@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const checkPassword = require('../util/checkPassword');
 const User = require('../schemas/UserSchema');
-const encryptPassword = require('../util/encryptPassword');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 router.post('/', async(req, res) => {
@@ -19,6 +18,32 @@ router.post('/', async(req, res) => {
     const {loginUsername, loginPassword} = trimValues;
 
     if (loginUsername && loginPassword) {
-        
+        const existingUser = 
+        await User.findOne({$or: [{ username: loginUsername }, { email: loginUsername }]})
+        .catch(() => {
+            console.log("Error checking Mongo for pre-existing user.");
+            return res.sendStatus(500);
+        })
+
+        if (!existingUser) {
+            console.log('User not found in the database.')
+            return res.sendStatus(404);
+        }
+
+        const comparePass = await bcrypt.compare(loginPassword, existingUser.password);
+
+        if (!comparePass) {
+            console.log('User entered the wrong password.');
+            return res.sendStatus(401);
+        }
+
+        console.log("User provided correct credentials.");
+        const token = jwt.sign(existingUser.toJSON(), process.env.JWT_SECRET);
+        res.cookie('token', token, {
+            httpOnly: true
+        })
+        return res.sendStatus(201);
     }
 })
+
+module.exports = router;

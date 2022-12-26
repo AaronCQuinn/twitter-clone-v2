@@ -54,7 +54,7 @@ router.post('/', async (req, res, next) => {
         console.log('User successfully added to the database.');
         const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
         res.cookie("token", token, {
-                httpOnly: true,
+                httpOnly: true
             })
         return res.sendStatus(201);
     } catch(err) {

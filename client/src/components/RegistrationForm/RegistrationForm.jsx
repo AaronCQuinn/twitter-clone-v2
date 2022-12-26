@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './registrationForm.css'
 import axios from 'axios'
 import { hasValue } from '../../util/hasValue';
+import { useNavigate } from 'react-router-dom'
 
 function RegistrationForm() {
     const [formValues, setFormValues] = useState({
@@ -13,14 +13,13 @@ function RegistrationForm() {
         registerPassword: "",
         registerPasswordConf: "",
     });
-
+    
     const [matchPass, setMatchPass] = useState(true);
     const [validPass, setValidPass] = useState(true);
     const [serverResponse, setServerResponse] = useState();
-    const [responseMessage, setResponseMessage] = useState({
-        message: "",
-        statusColor: ""
-    });
+    const [responseMessage, setResponseMessage] = useState();
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
         function checkPassword(str) {
@@ -43,18 +42,12 @@ function RegistrationForm() {
 
     useEffect(() => {
         let message;
-        let statusColor;
-        
-        if (serverResponse !== 201) {
-            statusColor = 'warning'
-        } else {
-            statusColor = 'success'
-        }
 
+        if (serverResponse === 201) {
+            return navigate('/');
+        } 
+        
         switch (serverResponse) {
-            case 201:
-                message = "Your new account was successfully registered.";
-                break;
             case 409:
                 message = "There is already a user registered under this username or email.";
                 break;
@@ -68,11 +61,8 @@ function RegistrationForm() {
                 break;
         }
 
-        setResponseMessage({
-            message,
-            statusColor
-        })
-    }, [serverResponse])
+        setResponseMessage(message)
+    }, [serverResponse, navigate])
 
 
     const handleChange = (e) => {
@@ -82,7 +72,7 @@ function RegistrationForm() {
         setFormValues({...formValues, [e.target.name]:e.target.value});
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         axios.post('/api/user_registration', formValues,
             {
@@ -91,7 +81,6 @@ function RegistrationForm() {
               }
             })
             .then(res => {
-                console.log(res);
                 setServerResponse(res.status);
             })              
             .catch(error => {
@@ -131,12 +120,11 @@ function RegistrationForm() {
                 Your password must be a minimum of 8 characters with an upper and lowercase character, as well as a number and symbol.
             </div>
             }
-            {responseMessage.message &&
-            <div className={"registration-" + responseMessage.statusColor}>
-                {responseMessage.message}
-            </div>    
-            }
-            <input type="submit" value="Login" />
+            {responseMessage &&
+            <div className={"registration-warning"}>
+                {responseMessage}
+            </div>}
+            <input type="submit" />
         </form>
 
         <a href="/login">Already have an account? Login here.</a>
