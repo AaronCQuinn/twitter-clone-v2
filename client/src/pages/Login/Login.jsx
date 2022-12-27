@@ -9,11 +9,9 @@ function Login() {
   }, []);
 
   return (
-
       <div className='wrapper'>
         <LoginForm />
       </div>
-
   )
 }
 

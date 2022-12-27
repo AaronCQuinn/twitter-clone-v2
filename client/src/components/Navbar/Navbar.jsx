@@ -3,11 +3,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDove, faHouseUser, faMagnifyingGlass, faBell, faUser, faEnvelope, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import {Col} from 'react-bootstrap/';
+import { useNavigate } from 'react-router-dom';
 import './navbar.css'
 
-const Navbar = () => {
+const Navbar = ({ widthOption }) => {
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/user_logout');
+            navigate('/login');
+        } catch(error) {
+            
+        }
+    }
   return (
-    <Col xs={2} className='homeNav'>
+    <Col xs={widthOption} className='homeNav'>
         <Link to='/'>
             <FontAwesomeIcon icon={faDove} className='homeNavAnchor blue' />
         </Link>
@@ -26,9 +37,7 @@ const Navbar = () => {
         <Link to='/profile'>
             <FontAwesomeIcon icon={faUser} className='homeNavAnchor' />
         </Link>
-        <Link to='/profile'>
-            <FontAwesomeIcon icon={faSignOutAlt} className='homeNavAnchor' />
-        </Link>
+        <FontAwesomeIcon icon={faSignOutAlt} className='homeNavAnchor' onClick={handleLogout} />
     </Col>
   )
 }

@@ -21,6 +21,8 @@ const userRegistrationRoute = require('./routes/userRegistration');
 app.use('/api/user_registration', userRegistrationRoute);
 const userLoginRoute = require('./routes/userLogin');
 app.use('/api/user_login', userLoginRoute);
+const userLogoutRoute = require('./routes/userLogout');
+app.use('/api/user_logout', userLogoutRoute);
 
 const server = app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)

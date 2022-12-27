@@ -1,0 +1,30 @@
+:root {
+    --lightGrey: rgb(230, 236, 240);
+    --spacing: 15px;
+}
+
+.titleContainerTitle {
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.mainSectionContainer {
+    padding: 0;
+    border-left: 1px solid var(--lightGrey);
+    border-right: 1px solid var(--lightGrey);
+    display: flex;
+    flex-direction: column;
+}
+
+.titleContainer {
+    height: 55px;
+    padding: 0px var(--spacing);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.titleContainer h1 {
+    flex: 1;
+}

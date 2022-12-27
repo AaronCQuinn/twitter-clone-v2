@@ -5,10 +5,16 @@ const jwt = require('jsonwebtoken');
 
 router.get('/', (req, res) => {
     const token = req.cookies?.token;
+    
     try {
         const user = jwt.verify(token, process.env.JWT_SECRET);
         if (user) {
-            res.sendStatus(200);
+            const {username, profilePicture} = user;
+            const clientData = {
+                username,
+                profilePicture
+            }
+            res.status(200).send(clientData);
         } else {
             res.clearCookie('token');
             return res.sendStatus(401);
