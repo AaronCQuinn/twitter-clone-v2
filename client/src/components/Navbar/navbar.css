@@ -1,5 +1,33 @@
+:root {
+    --twitter-blue: #1FA2F1;
+    --buttonHoverBH: #d4edff;
+}
+
 .homeNav {
-    background-color: red;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+}
+
+.homeNavAnchor {
+    padding: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #282929;
+}
+
+.homeNavAnchor:hover {
+    background-color: var(--buttonHoverBH);
+    color: var(--twitter-blue);
+    border-radius: 50%;
+}
+
+.blue {
+    color: var(--twitter-blue);
 }
 
 .mainSectionContainer {
