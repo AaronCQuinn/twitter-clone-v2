@@ -1,19 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import './postForm.css'
 
 const PostForm = () => {
-    const [text, setText] = useState("");
+    const [content, setContent] = useState("");
     const [postError, setPostError] = useState();
     const authContext = useContext(AuthContext);
     const {profilePicture} = authContext.state.user;
 
+    useEffect(() => {
+        toast.error(postError, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    }, [postError])
+
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/create_post', {text},
+        axios.post('/api/create_post', {content},
             {
             headers: {
                 'Content-Type': 'application/json'
@@ -30,7 +44,7 @@ const PostForm = () => {
             setPostError('There was an error posting your tweet. Please try again!');
             console.log(`Axios request failed: ${error}`);
         })
-        setText("");
+        setContent("");
         e.target.reset();
     }
 
@@ -41,9 +55,9 @@ const PostForm = () => {
             </div>
                 <div className="textareaContainer">
                     <form onSubmit={onSubmit}>
-                        <textarea id="postTextArea" value={text} onChange={(e) => setText(e.target.value)} placeholder="What's happening?" />
+                        <textarea id="postTextArea" value={content} onChange={(e) => setContent(e.target.value)} placeholder="What's happening?" />
                         <div className="buttonsContainer">
-                            <Button id="submitPostButton" disabled={!Boolean(text.trim())} type="submit">Post</Button>
+                            <Button id="submitPostButton" disabled={!Boolean(content.trim())} type="submit">Post</Button>
                         </div>
                     </form>
                 </div>

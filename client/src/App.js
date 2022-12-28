@@ -7,16 +7,22 @@ import {
   Routes
 } from 'react-router-dom';
 import ProtectedRoute from './util/ProtectedRoute';
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (
-    <Routes>
-      <Route element={<ProtectedRoute />}>
-        <Route path='/' element={<Home/>} />
-      </Route>
-      <Route path='/register' element={<Register />} />
-      <Route path='/login' element={<Login />} />
-    </Routes>
+    <>
+      <ToastContainer />
+      <Routes>
+        <Route element={<ProtectedRoute />}>
+          <Route path='/' element={<Home/>} />
+        </Route>
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
+    </>
   )
 }
 

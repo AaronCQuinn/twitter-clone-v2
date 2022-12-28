@@ -33,7 +33,7 @@ const ProtectedRoute = () => {
             }
         }
         getAuth();
-    }, [dispatch])
+    }, [dispatch, navigate])
 
     if (loading) {
         return <></>; 

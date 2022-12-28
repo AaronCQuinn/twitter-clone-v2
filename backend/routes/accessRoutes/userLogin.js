@@ -37,10 +37,11 @@ router.post('/', async(req, res) => {
             return res.sendStatus(401);
         }
 
-        const {username, profilePicture} = existingUser;
+        const {username, profilePicture, _id} = existingUser;
         const clientData = {
             username,
-            profilePicture
+            profilePicture,
+            _id
         }
 
         console.log("User provided correct credentials.");

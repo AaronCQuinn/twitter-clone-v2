@@ -9,10 +9,9 @@ router.get('/', (req, res) => {
     try {
         const user = jwt.verify(token, process.env.JWT_SECRET);
         if (user) {
-            const {username, profilePicture} = user;
             const clientData = {
-                username,
-                profilePicture
+                username: user.username,
+                profilePicture: user.profilePicture
             }
             res.status(200).send(clientData);
         } else {
