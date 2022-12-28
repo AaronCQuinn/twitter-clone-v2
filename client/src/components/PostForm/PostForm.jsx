@@ -13,14 +13,14 @@ const PostForm = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/posts', text,
+        axios.post('/api/create_post', {text},
             {
             headers: {
                 'Content-Type': 'application/json'
               }
             })
             .then(res => {
-
+                console.log(res);
             })              
             .catch(error => {
                 setPostError('There was an error posting your tweet. Please try again!');
@@ -43,7 +43,7 @@ const PostForm = () => {
                     <form onSubmit={onSubmit}>
                         <textarea id="postTextArea" value={text} onChange={(e) => setText(e.target.value)} placeholder="What's happening?" />
                         <div className="buttonsContainer">
-                            <Button id="submitPostButton" disabled={!Boolean(text.trim())}>Post</Button>
+                            <Button id="submitPostButton" disabled={!Boolean(text.trim())} type="submit">Post</Button>
                         </div>
                     </form>
                 </div>

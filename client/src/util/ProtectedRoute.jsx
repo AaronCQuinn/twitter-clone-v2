@@ -1,9 +1,10 @@
-import { Navigate, Outlet  } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate  } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
 
 const ProtectedRoute = () => {
+    const navigate = useNavigate();
     const [isAuth, setIsAuth] = useState(false);
     const [loading, setLoading] = useState(true);
     const { dispatch } = useContext(AuthContext);
@@ -13,11 +14,18 @@ const ProtectedRoute = () => {
         const getAuth = async() => {
             try {
                 let res = await fetch(`/api/user_authentication`);
-                let data = await res.json();
 
-                setLoading(false);
+                // If user wasn't authenticated, send them to login.
+                if (res.status === 401) {
+                    navigate('/login');
+                    return;
+                }
+
+                // User is authenticated.
+                let data = await res.json();
                 if (res.status === 200) { 
                     setIsAuth(true);
+                    setLoading(false);
                     dispatch({ type: 'LOGIN', payload: data });
                 };
             } catch(error) {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../schemas/UserSchema');
+const User = require('../../schemas/UserSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -37,8 +37,14 @@ router.post('/', async(req, res) => {
             return res.sendStatus(401);
         }
 
+        const {username, profilePicture} = existingUser;
+        const clientData = {
+            username,
+            profilePicture
+        }
+
         console.log("User provided correct credentials.");
-        const token = jwt.sign(existingUser.toJSON(), process.env.JWT_SECRET);
+        const token = jwt.sign(clientData, process.env.JWT_SECRET);
         res.cookie('token', token, {
             httpOnly: true
         })
