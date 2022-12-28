@@ -1,0 +1,47 @@
+:root {
+    --blueLight: #9BD1F9;
+}
+
+.postFormContainer {
+    display: flex;
+    padding: var(--spacing);
+    border-bottom: 10px solid rgb(230, 236, 240);
+    flex-shrink: 0;
+}
+
+.userImageContainer {
+    width: 50px;
+    height: 50px;
+}
+
+.userImageContainer img {
+    width: 100%;
+    border-radius: 50%;
+    /* If the user uploads a PNG with a transparent background, need the background to be white as well. */
+    background-color: white;
+}
+
+.textareaContainer {
+    flex: 1;
+    padding-left: var(--spacing);
+}
+
+.textareaContainer textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 19px;
+}
+
+#submitPostButton {
+    background-color: var(--twitter-blue);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 7px 15px;
+    margin-top: 5px;
+}
+
+#submitPostButton:disabled {
+    background-color: var(--blueLight);
+}

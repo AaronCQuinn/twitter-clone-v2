@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col } from 'react-bootstrap/';
+import PostForm from '../PostForm/PostForm';
 import './content.css'
 
 const Content = ({ widthOption }) => {
@@ -9,6 +10,7 @@ const Content = ({ widthOption }) => {
             <div className="titleContainer">
                 <h1 className='titleContainerTitle'>Home</h1>
             </div>
+            <PostForm />
         </Col>
     )
 }
