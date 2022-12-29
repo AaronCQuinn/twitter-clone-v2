@@ -1,0 +1,39 @@
+:root {
+    --greyText: rgb(101, 119, 134);
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing);
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+
+.headerLink {
+    text-decoration: none;
+    font-weight: bold;
+    
+}
+
+.headerLink:hover {
+    text-decoration: underline;
+}
+
+.mainContentContainer {
+    display: flex;
+    flex: 1;
+}
+
+.postContentContainer {
+    padding-left: var(--spacing);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.username,
+.date {
+    color: var(--greyText);
+}
+

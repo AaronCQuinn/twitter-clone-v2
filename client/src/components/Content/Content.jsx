@@ -8,7 +8,7 @@ import Spinner from '../Spinner/Spinner';
 import './content.css'
 
 const Content = ({ widthOption }) => {
-    const [posts, setPosts] = useState({ username: "test", profilePicture: "test", content: "test" });
+    const [posts, setPosts] = useState({});
     const [loading, setLoading] = useState(true);
 
     const getPosts = async() => {
@@ -18,6 +18,7 @@ const Content = ({ widthOption }) => {
             let data = await res.json();
             setPosts(data);
             setLoading(false);
+            console.log(data);
         } catch(error) {
             console.log("Error trying to get posts from the database: " + error);
         }
