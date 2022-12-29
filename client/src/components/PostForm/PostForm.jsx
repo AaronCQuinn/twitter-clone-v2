@@ -27,7 +27,7 @@ const PostForm = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/create_post', {content},
+        axios.post('/api/posts', {content},
             {
             headers: {
                 'Content-Type': 'application/json'

@@ -6,7 +6,7 @@ import Content from '../../components/Content/Content';
 
 function Home() {
     useEffect(() => {
-        document.title = 'Home ● Twitter'
+        document.title = 'Home ● Twitter';
     }, [])
 
     return (
