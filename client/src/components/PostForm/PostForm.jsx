@@ -6,11 +6,11 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import './postForm.css'
 
-const PostForm = () => {
+const PostForm = ({ getPosts }) => {
     const [content, setContent] = useState("");
     const [postError, setPostError] = useState();
     const authContext = useContext(AuthContext);
-    const {profilePicture} = authContext.state.user;
+    const { profilePicture } = authContext.state.user;
 
     useEffect(() => {
         toast.error(postError, {
@@ -35,6 +35,7 @@ const PostForm = () => {
             })
             .then(res => {
                 console.log(res);
+                getPosts();
             })              
             .catch(error => {
                 setPostError('There was an error posting your tweet. Please try again!');
