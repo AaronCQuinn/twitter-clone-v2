@@ -1,5 +1,6 @@
 :root {
     --greyText: rgb(101, 119, 134);
+    --greyButtonText: rgba(0,0,0, 0.34);
 }
 
 .post {
@@ -13,7 +14,7 @@
 .headerLink {
     text-decoration: none;
     font-weight: bold;
-    
+    padding-right: 5px;
 }
 
 .headerLink:hover {
@@ -24,6 +25,7 @@
     display: flex;
     flex: 1;
 }
+
 
 .postContentContainer {
     padding-left: var(--spacing);
@@ -37,3 +39,32 @@
     color: var(--greyText);
 }
 
+.username {
+    padding-right: 10px;
+}
+
+.postFooter {
+    align-items: center;
+}
+
+.postFooter .postButtonContainer {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.postFooter .postButtonContainer button {
+    padding: 2px 5px;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    color: var(--greyButtonText)
+}
+
+.postButtonContainer button:hover {
+    background-color: #d4edff;
+    color: var(--twitter-blue);
+    border-radius: 50%;
+}

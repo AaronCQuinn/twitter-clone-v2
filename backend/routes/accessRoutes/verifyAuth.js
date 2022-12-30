@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
         if (user) {
             const clientData = {
                 username: user.username,
-                profilePicture: user.profilePicture
+                profilePicture: user.profilePicture,
+                likes: user.likes
             }
             res.status(200).send(clientData);
         } else {
