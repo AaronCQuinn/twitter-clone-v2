@@ -63,8 +63,22 @@ button {
     color: var(--greyButtonText)
 }
 
-.postButtonContainer button:hover {
-    background-color: #d4edff;
-    color: var(--twitter-blue);
-    border-radius: 50%;
+.likeButtonCount {
+    padding-left: 4px;
+}
+
+.likeButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 20px;
+    max-width: 16px;
+}
+
+.likeButtonRed {
+    color: red;
+}
+
+.likeButtonHover:hover {
+    color: red;
 }

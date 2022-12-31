@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { faComment, faRetweet, faHeart } from '@fortawesome/free-solid-svg-icons'
 import './posts.css'
@@ -6,9 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { timeDifference } from '../../util/timeDifference';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import Spinner from '../Spinner/Spinner';
 
 
-const Posts = ({ posts }) => {
+const Posts = ({ posts, user, setPosts }) => {
+    const [userLikes, setUserLikes] = useState(user.likes);
+    const [likeAPICall, setLikeAPICall] = useState(false);
     const likeError = 'There was an error liking the post, please try again!';
 
     const likeErrorToast = () => {
@@ -26,7 +29,7 @@ const Posts = ({ posts }) => {
     }
 
     const handleLikeClick = async(id) => {
-        if (!id) { likeErrorToast() };
+        setLikeAPICall(true);
         axios.put(`/api/posts/${id}/like`, {id},
             {
             headers: {
@@ -34,8 +37,15 @@ const Posts = ({ posts }) => {
               }
             })
             .then(res => {
-                console.log(res);
-            })              
+                const index = posts.findIndex(post => post.id === res.data.id);
+                console.log(res.data.updatePost)
+                setPosts((prevPosts) => {
+                    prevPosts[index].likes = res.data.updatePost.likes;
+                    const newPosts = [...prevPosts];
+                    return newPosts;
+                })
+                setUserLikes(res.data.returnUser.likes);
+            })      
             .catch(error => {
                 likeErrorToast();
                 console.log(`Error posting to back end: ${error}`);
@@ -44,16 +54,17 @@ const Posts = ({ posts }) => {
             likeErrorToast();
             console.log(`Axios request failed: ${error}`);
         })
+        setLikeAPICall(false);
     }
-
+      
     if (!posts) {
         return <></>
     } else {
         return (
         <>
-            {posts.map((post, index) => {
+            {posts.map((post) => {
             return (
-                <div key={index} className="post">
+                <div key={post._id} className="post">
                 <div className="mainContentContainer">
                     <div className="userImageContainer">
                     <img src={post.postedBy.profilePicture} alt="" />
@@ -77,9 +88,18 @@ const Posts = ({ posts }) => {
                             <button>
                                 <FontAwesomeIcon icon={faRetweet} />
                             </button>
-                            <button onClick={() => handleLikeClick(post._id)}>
-                                <FontAwesomeIcon icon={faHeart} />
-                            </button>
+                            {likeAPICall ? 
+                                <div className="likeButtonContainer">
+                                    <Spinner />
+                                </div>
+                            :
+                                <button onClick={() => handleLikeClick(post._id)}>
+                                    <div className='likeButtonContainer'>
+                                        <FontAwesomeIcon icon={faHeart} className={userLikes.includes(post._id) ? 'likeButtonRed' : 'likeButtonHover'} />
+                                        <span className='likeButtonCount'>{post.likes.length > 0 ? post.likes.length : ''}</span>
+                                    </div>
+                                </button>
+                            }
                         </div>
                     </div>
                     </div>

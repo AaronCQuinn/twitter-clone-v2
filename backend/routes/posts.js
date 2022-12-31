@@ -56,15 +56,22 @@ router.put('/:id/like', async (req, res) => {
         return res.statusMessage(401);
     }
 
-    console.log(user.likes);
-
     const isLiked = user.likes && user.likes.includes(id);
-    const likeOption = isLiked ? "$pull" : "$addToSet";
-
 
     // If user has already liked the post, it will pull it from the set, otherwise will add it.
     // The new flag returns the updated document rather then the one before the update.
-    const returnUser = await User.findByIdAndUpdate(user._id, { [likeOption]: {likes: id} }, { new: true })
+    const returnUser = await User.findByIdAndUpdate(user._id, { [isLiked ? "$pull" : "$addToSet"]: {likes: id} }, { new: true })
+    .catch(error => {
+        console.error('User ' + user.username + " encountered an error while liking a tweet: " + error)
+        res.sendStatus(400);
+    })
+
+    // Same thing here, we need to update the post's liked property to account for the user liking or unliking it.
+    const updatePost = await Post.findByIdAndUpdate(id, { [isLiked ? "$pull" : "$addToSet"]: {likes: user._id} }, { new: true })
+    .catch(error => {
+        console.error('User ' + user.username + " encountered an error while liking a tweet: " + error)
+        res.sendStatus(400);
+    })
 
     // The session also needs to be updated so the client can read whether the status of the likes has changed, otherwise any attempt to like or unlike wouldn't work as the session still contains the old likes array.
     const {username, profilePicture, _id, likes} = returnUser;
@@ -82,7 +89,7 @@ router.put('/:id/like', async (req, res) => {
         }
     )
 
-    return res.sendStatus(204);
+    return res.status(201).send({updatePost, returnUser});
 });
 
 module.exports = router;
