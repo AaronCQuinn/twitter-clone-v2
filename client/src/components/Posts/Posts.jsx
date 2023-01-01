@@ -11,6 +11,7 @@ import Spinner from '../Spinner/Spinner';
 
 const Posts = ({ posts, user, setPosts }) => {
     const [userLikes, setUserLikes] = useState(user.likes);
+    const [userRetweets, setUserRetweets] = useState(user.retweets);
     const [likeAPICall, setLikeAPICall] = useState(false);
     const likeError = 'There was an error liking the post, please try again!';
 
@@ -37,7 +38,8 @@ const Posts = ({ posts, user, setPosts }) => {
               }
             })
             .then(res => {
-                const index = posts.findIndex(post => post.id === res.data.id);
+                const { updatePost } = res.data;
+                const index = posts.findIndex(post => post._id === updatePost._id);
                 setPosts((prevPosts) => {
                     prevPosts[index].likes = res.data.updatePost.likes;
                     const newPosts = [...prevPosts];
@@ -64,7 +66,16 @@ const Posts = ({ posts, user, setPosts }) => {
             }
             })
             .then(res => {
-                console.log(res);
+                const { updatePost } = res.data;
+                const { retweets } = res.data.returnUser;
+                console.log(retweets);
+                const index = posts.findIndex(post => post._id === updatePost._id);
+                setPosts((prevPosts) => {
+                    prevPosts[index].retweetUsers = updatePost.retweetUsers;
+                    const newPosts = [...prevPosts];
+                    return newPosts;
+                })
+                setUserRetweets(retweets);
             })      
             .catch(error => {
                 likeErrorToast();
@@ -104,7 +115,7 @@ const Posts = ({ posts, user, setPosts }) => {
                             <button>
                                 <FontAwesomeIcon icon={faComment} />
                             </button>
-                            <button onClick={() => handleRetweetClick(post._id)}>
+                            <button className={userRetweets?.includes(post._id) ? 'retweetButtonGreen' : 'retweetButtonHover'} onClick={() => {handleRetweetClick(post._id)}}>
                                 <FontAwesomeIcon icon={faRetweet} />
                             </button>
                             {likeAPICall ? 

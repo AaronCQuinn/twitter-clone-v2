@@ -84,3 +84,12 @@ button {
     color: red;
     transition: var(--transitionSetting);
 }
+
+.retweetButtonGreen {
+    color: green;
+}
+
+.retweetButtonHover:hover {
+    color: green;
+    transition: var(--transitionSetting);
+}
