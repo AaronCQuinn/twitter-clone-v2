@@ -38,7 +38,6 @@ const Posts = ({ posts, user, setPosts }) => {
             })
             .then(res => {
                 const index = posts.findIndex(post => post.id === res.data.id);
-                console.log(res.data.updatePost)
                 setPosts((prevPosts) => {
                     prevPosts[index].likes = res.data.updatePost.likes;
                     const newPosts = [...prevPosts];
@@ -55,6 +54,26 @@ const Posts = ({ posts, user, setPosts }) => {
             console.log(`Axios request failed: ${error}`);
         })
         setLikeAPICall(false);
+    }
+
+    const handleRetweetClick = async(id) => {
+        axios.post(`/api/posts/${id}/retweet`, {id},
+            {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            })
+            .then(res => {
+                console.log(res);
+            })      
+            .catch(error => {
+                likeErrorToast();
+                console.log(`Error posting to back end: ${error}`);
+            })
+        .catch(error => {
+            likeErrorToast();
+            console.log(`Axios request failed: ${error}`);
+        })
     }
       
     if (!posts) {
@@ -85,7 +104,7 @@ const Posts = ({ posts, user, setPosts }) => {
                             <button>
                                 <FontAwesomeIcon icon={faComment} />
                             </button>
-                            <button>
+                            <button onClick={() => handleRetweetClick(post._id)}>
                                 <FontAwesomeIcon icon={faRetweet} />
                             </button>
                             {likeAPICall ? 
@@ -96,7 +115,7 @@ const Posts = ({ posts, user, setPosts }) => {
                                 <button onClick={() => handleLikeClick(post._id)}>
                                     <div className='likeButtonContainer'>
                                         <FontAwesomeIcon icon={faHeart} className={userLikes.includes(post._id) ? 'likeButtonRed' : 'likeButtonHover'} />
-                                        <span className='likeButtonCount'>{post.likes.length > 0 ? post.likes.length : ''}</span>
+                                        <span className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</span>
                                     </div>
                                 </button>
                             }

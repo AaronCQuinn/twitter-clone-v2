@@ -1,6 +1,7 @@
 :root {
     --greyText: rgb(101, 119, 134);
     --greyButtonText: rgba(0,0,0, 0.34);
+    --transitionSetting: ease-in-out .2s;
 }
 
 .post {
@@ -81,4 +82,5 @@ button {
 
 .likeButtonHover:hover {
     color: red;
+    transition: var(--transitionSetting);
 }
