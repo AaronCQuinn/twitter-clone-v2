@@ -66,16 +66,16 @@ const Posts = ({ posts, user, setPosts }) => {
             }
             })
             .then(res => {
-                const { updatePost } = res.data;
-                const { retweets } = res.data.returnUser;
-                console.log(retweets);
-                const index = posts.findIndex(post => post._id === updatePost._id);
-                setPosts((prevPosts) => {
-                    prevPosts[index].retweetUsers = updatePost.retweetUsers;
-                    const newPosts = [...prevPosts];
-                    return newPosts;
-                })
-                setUserRetweets(retweets);
+                // const { updatePost } = res.data;
+                // const { retweets } = res.data.returnUser;
+                // const index = posts.findIndex(post => post._id === updatePost._id);
+                // setPosts((prevPosts) => {
+                //     prevPosts[index].retweetUsers = updatePost.retweetUsers;
+                //     const newPosts = [...prevPosts];
+                //     return newPosts;
+                // })
+                // setUserRetweets(retweets);
+                console.log(res.data.updatePost);
             })      
             .catch(error => {
                 likeErrorToast();
@@ -86,7 +86,7 @@ const Posts = ({ posts, user, setPosts }) => {
             console.log(`Axios request failed: ${error}`);
         })
     }
-      
+
     if (!posts) {
         return <></>
     } else {
@@ -109,6 +109,7 @@ const Posts = ({ posts, user, setPosts }) => {
                     </div>
                     <div className="postBody">
                         <span>{post.content}</span>
+                        <span>{post._id}</span>
                     </div>
                     <div className="postFooter">
                         <div className='postButtonContainer'>

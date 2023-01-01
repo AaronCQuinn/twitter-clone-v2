@@ -94,9 +94,9 @@ router.put('/:id/like', async (req, res) => {
 });
 
 router.post('/:id/retweet', async (req, res) => {
-    const { id } = req.body;
+    const incomingRTPostId = req.body.id;
 
-    if (!id) {
+    if (!incomingRTPostId) {
         return res.sendStatus(400);
     }
 
@@ -112,38 +112,40 @@ router.post('/:id/retweet', async (req, res) => {
     }
 
     // Check to see if we're un-retweeting. In this case it would be posted (retweeted) by the user, and the retweet data would contain the posts ID.
-    const deletedPost = await Post.findOneAndDelete({ postedBy : user._id, retweetData: id})
+    const deletedPost = await Post.findOneAndDelete({ postedBy: user._id, retweetData: incomingRTPostId})
     .catch(error => {
-        console.error('User ' + user.username + " encountered an error while retweeting a tweet: " + error)
-        res.sendStatus(500);
-    })
-    console.log(deletedPost === null);
+            console.error('User ' + user.username + " encountered an error while retweeting a tweet: " + error)
+            res.sendStatus(500);
+        }
+    )
 
+    const option = deletedPost != null ? "$pull" : "$addToSet";
+    let repost = deletedPost;
+    
     // If there was no post found, that means we need to create the retweet, hence adding a new post.
-    let retweet = deletedPost;
-    if (retweet === null) {
-        retweet = await Post.create({ postedBy: user._id, retweetData: id })
-            .catch(error => {
+    if (repost == null) {
+        repost = await Post.create({ postedBy: user._id, retweetData: incomingRTPostId })
+        .catch(error => {
                 console.log('Error creating a retweet for user ' + user.username + ". Error: " + error);
                 res.sendStatus(500);
-            })
-        }
-    console.log("User " + user.username + " created a retweet on post " + id);
-        
+            }
+        )
+    }
+    
     // If user has already retweeted the post, it will pull it from the set, otherwise will add it.
     // The new flag returns the updated document rather then the one before the update.
-    const returnUser = await User.findByIdAndUpdate(user._id, { [retweet !== null ? "$addToSet" : "$pull"]: {retweets: retweet._id} }, { new: true })
+    const returnUser = await User.findByIdAndUpdate(user._id, { [option]: {retweets: repost._id} }, { new: true })
     .catch(error => {
         console.error('User ' + user.username + " encountered an error while liking a tweet: " + error)
         res.sendStatus(500);
     });
-
+                
     // Same thing here, we need to update the post's retweet property to account for the user retweeting or unretweeting it.
-    const updatePost = await Post.findByIdAndUpdate(id, { [ retweet !== null ? "$pull" : "$addToSet"]: { retweetUsers: user._id} }, { new: true })
+    const updatePost = await Post.findByIdAndUpdate(incomingRTPostId, { [option]: { retweetUsers: user._id} }, { new: true })
     .catch(error => {
-        console.error('User ' + user.username + " encountered an error while retweeting a tweet: " + error)
-        res.sendStatus(500);
-    })
+            console.error('User ' + user.username + " encountered an error while retweeting a tweet: " + error)
+            res.sendStatus(500);
+        })
 
     const {username, profilePicture, _id, likes, retweets} = returnUser;
     const clientData = {
@@ -152,9 +154,8 @@ router.post('/:id/retweet', async (req, res) => {
         _id, 
         likes,
         retweets
-    }
-    console.log(returnUser);
-
+    };
+    
     // Reissue the JWT with the new info.
     const token = jwt.sign(clientData, process.env.JWT_SECRET);
     res.cookie("token", token, {
