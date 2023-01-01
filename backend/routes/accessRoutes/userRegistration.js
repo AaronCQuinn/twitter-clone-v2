@@ -53,12 +53,13 @@ router.post('/', async (req, res, next) => {
         })
         console.log('User successfully added to the database.');
 
-        const {username, profilePicture, _id, likes} = user;
+        const {username, profilePicture, _id, likes, retweets} = user;
         const clientData = {
             username,
             profilePicture,
             _id,
-            likes
+            likes,
+            retweets
         }
 
         const token = jwt.sign(clientData, process.env.JWT_SECRET);
