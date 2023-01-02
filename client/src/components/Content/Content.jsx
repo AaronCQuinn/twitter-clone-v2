@@ -47,7 +47,7 @@ const Content = ({ widthOption }) => {
                     <h1 className='titleContainerTitle'>Home</h1>
                 </div>
                 <PostForm setPosts={setPosts} getPosts={getPosts} />
-                <Posts posts={posts} user={state.user} setPosts={setPosts}/>
+                <Posts posts={posts} user={state.user} setPosts={setPosts} />
             </Col>
         )
     }

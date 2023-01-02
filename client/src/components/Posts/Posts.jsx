@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 
-
 const Posts = ({ posts, user, setPosts }) => {
     const [userLikes, setUserLikes] = useState(user.likes);
     const [userRetweets, setUserRetweets] = useState(user.retweets);
@@ -66,16 +65,15 @@ const Posts = ({ posts, user, setPosts }) => {
             }
             })
             .then(res => {
-                // const { updatePost } = res.data;
-                // const { retweets } = res.data.returnUser;
-                // const index = posts.findIndex(post => post._id === updatePost._id);
-                // setPosts((prevPosts) => {
-                //     prevPosts[index].retweetUsers = updatePost.retweetUsers;
-                //     const newPosts = [...prevPosts];
-                //     return newPosts;
-                // })
-                // setUserRetweets(retweets);
-                console.log(res.data.updatePost);
+                const { updatePost } = res.data;
+                const { retweets } = res.data.returnUser;
+                const index = posts.findIndex(post => post._id === updatePost._id);
+                setPosts((prevPosts) => {
+                    prevPosts[index].retweetUsers = updatePost.retweetUsers;
+                    const newPosts = [...prevPosts];
+                    return newPosts;
+                })
+                setUserRetweets(retweets);
             })      
             .catch(error => {
                 likeErrorToast();
@@ -93,51 +91,106 @@ const Posts = ({ posts, user, setPosts }) => {
         return (
         <>
             {posts.map((post) => {
-            return (
-                <div key={post._id} className="post">
-                <div className="mainContentContainer">
-                    <div className="userImageContainer">
-                    <img src={post.postedBy.profilePicture} alt="" />
-                    </div>
-                    <div className="postContentContainer">
-                    <div className="header">
-                        <Link className='headerLink' to={'/profile/' + post.postedBy.username}>
-                            <span>{post.postedBy.firstName + " " + post.postedBy.lastName}</span>
-                        </Link>
-                            <span className='username'>{"@" + post.postedBy.username}</span>
-                        <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
-                    </div>
-                    <div className="postBody">
-                        <span>{post.content}</span>
-                        <span>{post._id}</span>
-                    </div>
-                    <div className="postFooter">
-                        <div className='postButtonContainer'>
-                            <button>
-                                <FontAwesomeIcon icon={faComment} />
-                            </button>
-                            <button className={userRetweets?.includes(post._id) ? 'retweetButtonGreen' : 'retweetButtonHover'} onClick={() => {handleRetweetClick(post._id)}}>
-                                <FontAwesomeIcon icon={faRetweet} />
-                            </button>
-                            {likeAPICall ? 
-                                <div className="likeButtonContainer">
-                                    <Spinner />
+                if (post.retweetData === undefined) { 
+                    return (
+                        <div key={post._id} className="post">
+                        <div className="mainContentContainer">
+                            <div className="postUserImageContainer">
+                            <img src={post.postedBy.profilePicture} alt="" />
+                            </div>
+                            <div className="postContentContainer">
+                            <div className="header">
+                                <Link className='headerLink' to={'/profile/' + post.postedBy.username}>
+                                    <span>{post.postedBy.firstName + " " + post.postedBy.lastName}</span>
+                                </Link>
+                                    <span className='username'>{"@" + post.postedBy.username}</span>
+                                <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                            </div>
+                            <div className="postBody">
+                                <span>{post.content}</span>
+                                <span>{post._id}</span>
+                            </div>
+                            <div className="postFooter">
+                                <div className='postButtonContainer'>
+                                    <button>
+                                        <FontAwesomeIcon icon={faComment} />
+                                    </button>
+                                    <button  onClick={() => {handleRetweetClick(post._id)}}>
+                                        <FontAwesomeIcon icon={faRetweet} className={userRetweets?.includes(post._id) ? 'retweetButtonGreen' : 'retweetButtonHover'}/>
+                                        <span className='likeButtonCount'>{post.retweetUsers?.length > 0 ? post.retweetUsers.length : ''}</span>
+                                    </button>
+                                    {likeAPICall ? 
+                                        <div className="likeButtonContainer">
+                                            <Spinner />
+                                        </div>
+                                    :
+                                        <button onClick={() => handleLikeClick(post._id)}>
+                                            <div className='likeButtonContainer'>
+                                                <FontAwesomeIcon icon={faHeart} className={userLikes.includes(post._id) ? 'likeButtonRed' : 'likeButtonHover'} />
+                                                <span className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</span>
+                                            </div>
+                                        </button>
+                                    }
                                 </div>
-                            :
-                                <button onClick={() => handleLikeClick(post._id)}>
-                                    <div className='likeButtonContainer'>
-                                        <FontAwesomeIcon icon={faHeart} className={userLikes.includes(post._id) ? 'likeButtonRed' : 'likeButtonHover'} />
-                                        <span className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</span>
-                                    </div>
-                                </button>
-                            }
+                            </div>
+                            </div>
                         </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            );
-            })}
+                        </div>
+                    );
+                } else {
+                    const retweetedBy = post.postedBy.username;
+                    return (
+                        <div key={post._id} className="post">
+                        <div className="mainContentContainer">
+                            <div className="postUserImageContainer">
+                            <img src={post.postedBy.profilePicture} alt="" />
+                            </div>
+                            <div className="postContentContainer">
+                            <div className="header">
+                                <div className='postActionContainer'>
+                                    <span>
+                                        <FontAwesomeIcon icon={faRetweet} className='postActionContainerIcon' />
+                                        {"Retweeted by "} 
+                                        <Link className='postActionContainerLink' to={'/profile/' + retweetedBy}>
+                                            @{retweetedBy}
+                                        </Link>
+                                    </span>
+                                </div>
+                                <Link className='headerLink' to={'/profile/' + post.postedBy.username}>
+                                    <span>{post.postedBy.firstName + " " + post.postedBy.lastName}</span>
+                                </Link>
+                                    <span className='username'>{"@" + post.postedBy.username}</span>
+                                <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                            </div>
+                            <div className="postBody">
+                                <span>{post.content}</span>
+                            </div>
+                            <div className="postFooter">
+                                <div className='postButtonContainer'>
+                                    <button>
+                                        <FontAwesomeIcon icon={faComment} />
+                                    </button>
+                                    {likeAPICall ? 
+                                        <div className="likeButtonContainer">
+                                            <Spinner />
+                                        </div>
+                                    :
+                                        <button onClick={() => handleLikeClick(post._id)}>
+                                            <div className='likeButtonContainer'>
+                                                <FontAwesomeIcon icon={faHeart} className={userLikes.includes(post._id) ? 'likeButtonRed' : 'likeButtonHover'} />
+                                                <span className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</span>
+                                            </div>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    )
+                }
+            }
+            )}
         </>
         );
     };

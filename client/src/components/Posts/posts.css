@@ -93,3 +93,33 @@ button {
     color: green;
     transition: var(--transitionSetting);
 }
+
+.postActionContainer {
+    /* padding-left: 70px; */
+    font-size: 13px;
+    color: var(--greyText)
+}
+
+.postActionContainerLink {
+    text-decoration: none;
+    padding-right: 3px;
+}
+
+.postUserImageContainer {
+    width: 50px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.postUserImageContainer img {
+    width: 100%;
+    height: 50px;
+    border-radius: 50%;
+    /* If the user uploads a PNG with a transparent background, need the background to be white as well. */
+    background-color: white;
+}
+
+.postActionContainerIcon {
+    padding-right: 3px;
+}
