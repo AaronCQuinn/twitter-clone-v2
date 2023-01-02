@@ -5,10 +5,19 @@ const Post = require('../schemas/PostSchema');
 const User = require('../schemas/UserSchema');
 
 router.get('/', (req, res) => {
-    Post.find({}).sort({ createdAt: -1}).limit(10).exec(async (err, docs) => {
-        response = await Post.populate(docs, {path: "postedBy", select: "profilePicture username firstName lastName"});
+    Post.find()
+    .populate('postedBy')
+    .populate('retweetData')
+    .sort({ createdAt: -1})
+    .limit(10)
+    .then(async response => {
+        response = await User.populate(response, {path: "retweetData.postedBy"} )
         return res.status(200).send(response);
-    });
+    })
+    .catch(error => {
+        console.log(error);
+    })
+    ;
 })
 
 router.post('/', async(req, res) => {
@@ -134,7 +143,7 @@ router.post('/:id/retweet', async (req, res) => {
     
     // If user has already retweeted the post, it will pull it from the set, otherwise will add it.
     // The new flag returns the updated document rather then the one before the update.
-    const returnUser = await User.findByIdAndUpdate(user._id, { [option]: {retweets: repost._id} }, { new: true })
+    const returnUser = await User.findByIdAndUpdate(user._id, { [option]: {retweets: incomingRTPostId} }, { new: true })
     .catch(error => {
         console.error('User ' + user.username + " encountered an error while liking a tweet: " + error)
         res.sendStatus(500);
