@@ -8,9 +8,12 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import ReplyModal from '../ReplyModal/ReplyModal';
+import { useEffect } from 'react';
 
 const Posts = ({ posts, user, setPosts }) => {
     const [modalShow, setModalShow] = useState(false);
+    const [replyPostID, setReplyPostID] = useState("");
+    const [modalPost, setModalPost] = useState();
     const [userLikes, setUserLikes] = useState(user.likes);
     const [userRetweets, setUserRetweets] = useState(user.retweets);
     const [likeAPICall, setLikeAPICall] = useState(false);
@@ -30,7 +33,22 @@ const Posts = ({ posts, user, setPosts }) => {
         return;
     }
 
-    const handleReplyClick = () => {
+    const getModalPost = async(id) => {
+        try {
+            let res = await fetch(`/api/posts/${id}`);
+            let data = await res.json();
+            setModalPost(data);
+        } catch(error) {
+            console.log("Error trying to get posts from the database: " + error);
+        }
+    }
+
+    useEffect(() => {
+        Boolean(replyPostID) && setModalPost(getModalPost(replyPostID));
+    }, [replyPostID])
+
+    const handleReplyClick = (id) => {
+        setReplyPostID(id);
         setModalShow(true);
     }
 
@@ -126,11 +144,10 @@ const Posts = ({ posts, user, setPosts }) => {
                             </div>
                             <div className="postBody">
                                 <span>{post.content}</span>
-                                <span>{post._id}</span>
                             </div>
                             <div className="postFooter">
                                 <div className='postButtonContainer'>
-                                    <button onClick={handleReplyClick}>
+                                    <button onClick={() => handleReplyClick(post._id)}>
                                         <FontAwesomeIcon icon={faComment} />
                                     </button>
                                     {post.retweetData === undefined &&
@@ -158,7 +175,7 @@ const Posts = ({ posts, user, setPosts }) => {
                         </div>
                     );
                 })}
-            <ReplyModal modalShow={modalShow} setModalShow={setModalShow} />
+            <ReplyModal modalShow={modalShow} setModalShow={setModalShow} modalPost={modalPost} setReplyPostID={setReplyPostID} />
         </>
         );
     };

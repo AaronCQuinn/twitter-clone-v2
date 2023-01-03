@@ -1,0 +1,5 @@
+.modalPostFormContainer {
+    display: flex;
+    padding-top: var(--spacing);
+    border: none;
+}

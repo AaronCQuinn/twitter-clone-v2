@@ -20,6 +20,20 @@ router.get('/', (req, res) => {
     ;
 })
 
+router.get('/:id', async (req, res) => {
+    Post.findById({_id: req.params.id})
+    .populate('postedBy')
+    .populate('retweetData')
+    .sort({ createdAt: -1})
+    .then(async response => {
+        response = await User.populate(response, { path: 'retweetData.postedBy' });
+        return res.status(200).send(response);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+})
+
 router.post('/', async(req, res) => {
     const user = req.cookies.token;
     const {username, _id} = jwt.decode(user);
