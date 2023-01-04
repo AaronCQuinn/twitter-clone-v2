@@ -8,11 +8,9 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import ReplyModal from '../ReplyModal/ReplyModal';
-import { useEffect } from 'react';
 
 const Posts = ({ posts, user, setPosts }) => {
     const [modalShow, setModalShow] = useState(false);
-    const [replyPostID, setReplyPostID] = useState("");
     const [modalPost, setModalPost] = useState();
     const [userLikes, setUserLikes] = useState(user.likes);
     const [userRetweets, setUserRetweets] = useState(user.retweets);
@@ -33,23 +31,9 @@ const Posts = ({ posts, user, setPosts }) => {
         return;
     }
 
-    const getModalPost = async(id) => {
-        try {
-            let res = await fetch(`/api/posts/${id}`);
-            let data = await res.json();
-            setModalPost(data);
-        } catch(error) {
-            console.log("Error trying to get posts from the database: " + error);
-        }
-    }
-
-    useEffect(() => {
-        Boolean(replyPostID) && setModalPost(getModalPost(replyPostID));
-    }, [replyPostID])
-
-    const handleReplyClick = (id) => {
-        setReplyPostID(id);
+    const handleReplyClick = (post) => {
         setModalShow(true);
+        setModalPost(post);
     }
 
     const handleRetweetClick = async(id) => {
@@ -116,7 +100,6 @@ const Posts = ({ posts, user, setPosts }) => {
         return (
         <>
             {posts.map((post) => {
-                const retweetedBy = post.postedBy.username;
                     return (
                         <div key={post._id} className="post">
                         <div className="mainContentContainer">
@@ -130,26 +113,48 @@ const Posts = ({ posts, user, setPosts }) => {
                                         <span>
                                             <FontAwesomeIcon icon={faRetweet} className='postActionContainerIcon' />
                                             {"Retweeted by "} 
-                                            <Link className='postActionContainerLink' to={'/profile/' + retweetedBy}>
-                                                @{retweetedBy}
+                                            <Link className='postActionContainerLink' to={'/profile/' + post.postedBy.username}>
+                                                @{post.postedBy.username}
                                             </Link>
                                         </span>
                                     </div>
                                 }
-                                <Link className='headerLink' to={'/profile/' + post.postedBy.username}>
-                                    <span>{post.postedBy.firstName + " " + post.postedBy.lastName}</span>
-                                </Link>
-                                    <span className='username'>{"@" + post.postedBy.username}</span>
-                                <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                                {post.retweetData ?
+                                <>
+                                    <Link className='headerLink' to={'/profile/' + post.retweetData.postedBy.username}>
+                                        <span>{post.retweetData.postedBy.firstName + " " + post.retweetData.postedBy.lastName}</span>
+                                    </Link>
+                                    <span className='username'>{"@" + post.retweetData.postedBy.username}</span>
+                                    <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                                </>
+                                    :
+                                <>
+                                    <Link className='headerLink' to={'/profile/' + post.postedBy.username}>
+                                        <span>{post.postedBy.firstName + " " + post.postedBy.lastName}</span>
+                                    </Link>
+                                        <span className='username'>{"@" + post.postedBy.username}</span>
+                                    <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                                </>
+                                }
                             </div>
                             <div className="postBody">
-                                <span>{post.content}</span>
+                                {post.retweetData ? 
+                                    <span>{post.retweetData.content}</span> 
+                                    :
+                                    <span>{post.content}</span>
+                                }
                             </div>
                             <div className="postFooter">
                                 <div className='postButtonContainer'>
-                                    <button onClick={() => handleReplyClick(post._id)}>
-                                        <FontAwesomeIcon icon={faComment} />
-                                    </button>
+                                    {post.retweetData ? 
+                                        <button onClick={() => handleReplyClick(post.retweetData)}>
+                                            <FontAwesomeIcon icon={faComment} />
+                                        </button>
+                                        :
+                                        <button onClick={() => handleReplyClick(post)}>
+                                            <FontAwesomeIcon icon={faComment} />
+                                        </button>
+                                    }
                                     {post.retweetData === undefined &&
                                         <button onClick={() => {handleRetweetClick(post._id)}}>
                                             <FontAwesomeIcon icon={faRetweet} className={userRetweets?.includes(post._id) ? 'retweetButtonGreen' : 'retweetButtonHover'}/>
@@ -175,7 +180,7 @@ const Posts = ({ posts, user, setPosts }) => {
                         </div>
                     );
                 })}
-            <ReplyModal modalShow={modalShow} setModalShow={setModalShow} modalPost={modalPost} setReplyPostID={setReplyPostID} />
+            <ReplyModal modalShow={modalShow} setModalShow={setModalShow} modalPost={modalPost} />
         </>
         );
     };

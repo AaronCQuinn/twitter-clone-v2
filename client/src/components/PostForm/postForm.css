@@ -10,12 +10,13 @@
 }
 
 .userImageContainer {
-    width: 50px;
-    height: 50px;
+    display: flex;
+    align-items: center;
 }
 
 .userImageContainer img {
-    width: 100%;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     /* If the user uploads a PNG with a transparent background, need the background to be white as well. */
     background-color: white;

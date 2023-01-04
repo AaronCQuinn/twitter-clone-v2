@@ -3,3 +3,17 @@
     padding-top: var(--spacing);
     border: none;
 }
+
+.replyHeader {
+    font-size: 13px;
+    color: var(--greyText);
+}
+
+.underline {
+    padding-bottom: var(--spacing);
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.removeUnderline {
+    text-decoration: none;
+}

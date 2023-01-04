@@ -3,15 +3,15 @@ import Modal from 'react-bootstrap/Modal';
 import { AuthContext } from '../../context/AuthContext';
 import { useContext, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRetweet } from '@fortawesome/free-solid-svg-icons'
+import { faRetweet, faComment } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import { timeDifference } from '../../util/timeDifference';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import './replymodal.css'
 
-function ReplyModal({modalShow, setModalShow, modalPost, setReplyPostID}) {
-    const [content, setContent] = useState("");
+function ReplyModal({modalShow, setModalShow, modalPost}) {
+    const [reply, setReply] = useState("");
     const [postError, setPostError] = useState();
     const authContext = useContext(AuthContext);
     const { profilePicture } = authContext.state.user;
@@ -31,7 +31,7 @@ function ReplyModal({modalShow, setModalShow, modalPost, setReplyPostID}) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.modalPost('/api/posts', {content},
+        axios.post(`/api/posts/${modalPost._id}/reply`, {reply, id: modalPost._id},
             {
             headers: {
                 'Content-Type': 'application/json'
@@ -48,8 +48,10 @@ function ReplyModal({modalShow, setModalShow, modalPost, setReplyPostID}) {
             setPostError('There was an error posting your reply. Please try again!');
             console.log(`Axios request failed: ${error}`);
         })
-        setContent("");
-        e.target.reset();
+        setReply("");
+        setModalShow(false);
+        window.location.reload();
+
     }
 
     return (
@@ -59,18 +61,15 @@ function ReplyModal({modalShow, setModalShow, modalPost, setReplyPostID}) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         >
-        <Modal.Header closeButton         
-        onClick={() => { 
-                setModalShow(false) 
-                setReplyPostID("")
-            }}>
+        <Modal.Header closeButton onClick={() => { setModalShow(false) }}>
             <Modal.Title id="contained-modal-title-vcenter">
             Reply
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+            {modalPost &&
             <div key={modalPost._id} className="modalPost">
-                <div className="mainContentContainer">
+                <div className="mainContentContainer underline">
                     <div className="postUserImageContainer">
                     <img src={modalPost.postedBy.profilePicture} alt="" />
                     </div>
@@ -97,27 +96,27 @@ function ReplyModal({modalShow, setModalShow, modalPost, setReplyPostID}) {
                         <span>{modalPost.content}</span>
                     </div>
                 </div>
+                </div>
                 <div className="modalPostFormContainer">
                     <div className="userImageContainer">
                         <img src={profilePicture} alt="The users profile identifier." />
                     </div>
                     <div className="textareaContainer">
+                        <span className='replyHeader'>
+                        <FontAwesomeIcon icon={faComment} className='postActionContainerIcon' />
+                            Replying to <Link to={'/profile/' + modalPost.postedBy.username} className='removeUnderline'>@{modalPost.postedBy.username}</Link>
+                        </span>
                         <form onSubmit={onSubmit}>
-                            <textarea id="postTextArea" value={content} onChange={(e) => setContent(e.target.value)} placeholder="What's happening?" />
+                            <textarea id="postTextArea" value={reply} onChange={(e) => setReply(e.target.value)} placeholder="What's happening?" />
                         </form>
                     </div>
                 </div>
-                </div>
             </div>
+            }
         </Modal.Body>
         <Modal.Footer>
-            <Button type='submit' disabled={!Boolean(content.trim())}>Reply</Button>
-            <Button variant='secondary' 
-            onClick={() => { 
-                setModalShow(false) 
-                setReplyPostID("")
-            }}>
-            Close</Button>
+            <Button disabled={!Boolean(reply.trim())} onClick={onSubmit}>Reply</Button>
+            <Button variant='secondary' onClick={() => { setModalShow(false) }}>Close</Button>
         </Modal.Footer>
         </Modal>
     );
