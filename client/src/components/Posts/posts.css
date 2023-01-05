@@ -10,6 +10,11 @@
     padding: var(--spacing);
     border-bottom: 1px solid var(--lightGrey);
     flex-shrink: 0;
+    background-color: rgb(255,255,255);
+}
+
+.post:hover {
+    cursor: pointer;
 }
 
 .headerLink {
@@ -26,7 +31,6 @@
     display: flex;
     flex: 1;
 }
-
 
 .postContentContainer {
     padding-left: var(--spacing);
@@ -75,6 +79,11 @@ button {
     justify-content: center;
     max-height: 20px;
     max-width: 16px;
+}
+
+.commentButtonBlue:hover {
+    color: var(--twitter-blue);
+    transition: var(--transitionSetting);
 }
 
 .likeButtonRed {
