@@ -6,12 +6,12 @@ const User = require('../schemas/UserSchema');
 
 router.get('/', (req, res) => {
     Post.find()
-    .populate('postedBy')
-    .populate('retweetData')
-    .sort({ createdAt: -1})
+    .populate(['postedBy', 'retweetData', 'replyTo'])  // combine populate calls into a single call
+    .sort({ createdAt: -1 })
     .limit(10)
     .then(async response => {
-        response = await User.populate(response, {path: "retweetData.postedBy"} )
+        response = await User.populate(response, {path: "replyTo.postedBy", select: "username"})
+        response = await User.populate(response, {path: "retweetData.postedBy", select: '-password -email'})
         return res.status(200).send(response);
     })
     .catch(error => {
@@ -38,7 +38,7 @@ router.post('/', async(req, res) => {
 
     Post.create(postData)
     .then(async response => {
-        response = await User.populate(response, {path: "postedBy"})
+        response = await User.populate(response, {path: "postedBy", select: '-password -email'})
         return res.status(201).send(response);
     })
     .catch(error => {
@@ -66,7 +66,9 @@ router.post('/:id/reply', async (req, res) => {
 
     Post.create(postData)
     .then(async response => {
-        response = await User.populate(response, {path: "postedBy"})
+        await response.populate('replyTo')
+        response = await User.populate(response, {path: "postedBy", select: '-password -email'})
+        response = await User.populate(response, {path: "replyTo.postedBy", select: '-password -email'})
         return res.status(201).send(response);
     })
     .catch(error => {

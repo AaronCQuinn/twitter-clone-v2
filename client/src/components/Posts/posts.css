@@ -49,13 +49,14 @@
 }
 
 .postFooter .postButtonContainer {
+    padding-top: 3px;
     display: flex;
     flex: 1;
     justify-content: space-between;
 }
 
 .postFooter .postButtonContainer button {
-    padding: 2px 5px;
+    padding: 2px 0px;
 }
 
 button {
@@ -95,13 +96,23 @@ button {
 }
 
 .postActionContainer {
-    /* padding-left: 70px; */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 3px;
     font-size: 13px;
-    color: var(--greyText)
+    color: var(--greyText);
+    padding-bottom: 3px;
+    
 }
 
 .postActionContainerLink {
     text-decoration: none;
+    padding-right: 3px;
+}
+
+.postActionContainerLink:hover {
+    text-decoration: underline;
     padding-right: 3px;
 }
 

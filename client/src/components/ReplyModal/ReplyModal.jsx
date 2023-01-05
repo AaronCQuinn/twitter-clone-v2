@@ -51,7 +51,6 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
         setReply("");
         setModalShow(false);
         window.location.reload();
-
     }
 
     return (

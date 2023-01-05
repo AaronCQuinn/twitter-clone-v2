@@ -100,6 +100,7 @@ const Posts = ({ posts, user, setPosts }) => {
         return (
         <>
             {posts.map((post) => {
+                (post.replyTo && console.log(post))
                     return (
                         <div key={post._id} className="post">
                         <div className="mainContentContainer">
@@ -138,6 +139,17 @@ const Posts = ({ posts, user, setPosts }) => {
                                 }
                             </div>
                             <div className="postBody">
+                                {post.replyTo && 
+                                    <div className='postActionContainer'>
+                                        <FontAwesomeIcon icon={faComment} />
+                                        <span>Replying to</span>
+                                        <Link className='postActionContainerLink' to={'/profile/' + post.postedBy.username}>
+                                            <span>
+                                                {"@" + post.replyTo.postedBy.username}
+                                            </span>
+                                        </Link>
+                                    </div>
+                                }
                                 {post.retweetData ? 
                                     <span>{post.retweetData.content}</span> 
                                     :
