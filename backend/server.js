@@ -27,6 +27,8 @@ app.use('/api/user_logout', userLogoutRoute);
 // Api Routes
 const postsApiRoute = require('./routes/posts');
 app.use('/api/posts', postsApiRoute);
+const postApiRoute = require('./routes/post'); // Route for accessing a single post.
+app.use('/api/post', postApiRoute);
 
 const server = app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)

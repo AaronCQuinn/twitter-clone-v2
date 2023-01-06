@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import './postForm.css'
 
-const PostForm = ({ getPosts }) => {
+const PostForm = () => {
     const [content, setContent] = useState("");
     const [postError, setPostError] = useState();
     const authContext = useContext(AuthContext);
@@ -33,9 +33,8 @@ const PostForm = ({ getPosts }) => {
                 'Content-Type': 'application/json'
               }
             })
-            .then(res => {
-                console.log(res);
-                getPosts();
+            .then(() => {
+                window.location.reload();
             })              
             .catch(error => {
                 setPostError('There was an error posting your tweet. Please try again!');

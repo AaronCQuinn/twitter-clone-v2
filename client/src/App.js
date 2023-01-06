@@ -9,6 +9,7 @@ import {
 import ProtectedRoute from './util/ProtectedRoute';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import SinglePost from './pages/SinglePost/SinglePost';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route element={<ProtectedRoute />}>
             <Route path='/' element={<Home/>} />
+            <Route path='/post/:id' element={<SinglePost/>} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

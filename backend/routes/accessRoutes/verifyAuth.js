@@ -13,7 +13,8 @@ router.get('/', (req, res) => {
                 username: user.username,
                 profilePicture: user.profilePicture,
                 likes: user.likes,
-                retweets: user.retweets
+                retweets: user.retweets,
+                _id: user._id
             }
             res.status(200).send(clientData);
         } else {
