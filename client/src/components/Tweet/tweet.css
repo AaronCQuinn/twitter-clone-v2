@@ -1,0 +1,15 @@
+.tweetUserInfo {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.deleteButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deleteButton {
+    padding-right: 3px;
+}

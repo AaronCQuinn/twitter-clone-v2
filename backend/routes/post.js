@@ -17,5 +17,24 @@ router.get('/:id', async (req, res) => {
     res.status(200).send({tweet, replies: tweet.replies});
 })
 
+router.delete('/:id', async (req, res) => {
+    const postId = req.params.id;
+    const user = req.cookies.token;
+    const { _id } = jwt.decode(user);
+  
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.sendStatus(404);
+    }
+  
+    if (post.postedBy._id.toString() === _id) {
+      await post.delete();
+      res.sendStatus(202);
+    } else {
+      res.sendStatus(401);
+    }
+  });
+  
+
 
 module.exports = router;

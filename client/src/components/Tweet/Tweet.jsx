@@ -2,38 +2,35 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { showToast } from '../../components/Toast/showToast'
 import { Link, useNavigate } from 'react-router-dom';
-import { faComment, faRetweet, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faComment, faRetweet, faHeart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { timeDifference } from '../../util/timeDifference';
 import ReplyModal from '../ReplyModal/ReplyModal';
+import DeleteModal from '../DeleteModal/DeleteModal';
+import './tweet.css'
 
 const Tweet = ({ post, user }) => {
     const [modalShow, setModalShow] = useState(false);
     const [modalPost, setModalPost] = useState();
+    const [deleteModalShow, setDeleteModalShow] = useState();
     const navigate = useNavigate();
 
-    const handleReplyClick = (post) => {
+    const handleReplyClick = (post, event) => {
+        event.stopPropagation();
         setModalShow(true);
         setModalPost(post);
     }
 
-    const handleRetweetClick = async(id) => {
+    const handleRetweetClick = async(id, event) => {
+        event.stopPropagation();
         axios.post(`/api/posts/${id}/retweet`, {id},
             {
             headers: {
                 'Content-Type': 'application/json'
             }
             })
-            .then(res => {
-                // const { updatePost } = res.data;
-                // const { retweets } = res.data.returnUser;
-                // const index = posts.findIndex(post => post._id === updatePost._id);
-                // setPosts((prevPosts) => {
-                //     prevPosts[index].retweetUsers = updatePost.retweetUsers;
-                //     const newPosts = [...prevPosts];
-                //     return newPosts;
-                // })
-                // setUserRetweets(retweets);
+            .then(() => {
+                window.location.reload();
             })      
             .catch(error => {
                 showToast('There was an error liking the post, please try again!', 'error');
@@ -45,31 +42,25 @@ const Tweet = ({ post, user }) => {
         })
     }
 
-    const handleLikeClick = async(id) => {
-        axios.put(`/api/posts/${id}/like`, {id},
-            {
+    const handleLikeClick = async (id, event) => {
+        event.stopPropagation();
+        try {
+          await axios.put(`/api/posts/${id}/like`, { id }, {
             headers: {
-                'Content-Type': 'application/json'
-              }
-            })
-            .then(res => {
-                // const { updatePost } = res.data;
-                // const index = posts.findIndex(post => post._id === updatePost._id);
-                // setPosts((prevPosts) => {
-                //     prevPosts[index].likes = res.data.updatePost.likes;
-                //     const newPosts = [...prevPosts];
-                //     return newPosts;
-                // })
-                // setUserLikes(res.data.returnUser.likes);
-            })      
-            .catch(error => {
-                showToast('There was an error liking the post, please try again!', 'error');
-                console.log(`Error posting to back end: ${error}`);
-            })
-        .catch(error => {
-            showToast('There was an error liking the post, please try again!', 'error');
-            console.log(`Axios request failed: ${error}`);
-        })
+              'Content-Type': 'application/json',
+            },
+          });
+          window.location.reload();
+        } catch (error) {
+          showToast('There was an error liking the post, please try again!', 'error');
+          console.log(`Error posting to back end: ${error}`);
+        }
+    };
+      
+    const handleDeleteClick = (post, event) => {
+        event.stopPropagation();
+        setDeleteModalShow(true);
+        setModalPost(post);
     }
 
     const handlePostClick = (id) => {
@@ -107,12 +98,21 @@ const Tweet = ({ post, user }) => {
                     </div>
                 }
 
-                <Link className='headerLink' to={'/profile/' + username} >
-                    <span>{firstName + " " + lastName}</span>
-                </Link>
-                <span className='username'>{"@" + username}</span>
-                <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                <div className="tweetUserInfo">
+                    <div>
+                        <Link className='headerLink' to={'/profile/' + username} >
+                            <span>{firstName + " " + lastName}</span>
+                        </Link>
+                        <span className='username'>{"@" + username}</span>
+                        <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
+                    </div>
 
+                    {post.postedBy._id === user._id &&    
+                    <div className="deleteButtonContainer">                
+                        <FontAwesomeIcon icon={faTrashCan} className='deleteButton' onClick={(event) => handleDeleteClick(post.retweetData ? post.retweetData : post, event)} />
+                    </div>
+                    }
+                </div>
             </div>
 
         <div className="postBody">
@@ -136,18 +136,18 @@ const Tweet = ({ post, user }) => {
         <div className="postFooter">
             <div className='postButtonContainer'>
 
-                <button onClick={() => handleReplyClick(post.retweetData ? post.retweetData : post)}>
+                <button onClick={(e) => handleReplyClick(post.retweetData ? post.retweetData : post, e)}>
                     <FontAwesomeIcon icon={faComment} className='commentButtonBlue' />
                 </button>
 
                 {post.retweetData === undefined &&
-                    <button onClick={() => {handleRetweetClick(post._id)}}>
+                    <button onClick={(e) => {handleRetweetClick(post._id, e)}}>
                         <FontAwesomeIcon icon={faRetweet} className={post.retweetUsers.includes(user._id) ? 'retweetButtonGreen' : 'retweetButtonHover'}/>
                         <span className='likeButtonCount'>{post.retweetUsers?.length > 0 ? post.retweetUsers.length : ''}</span>
                     </button>
                 }
 
-                <button onClick={() => handleLikeClick(post._id)}>
+                <button onClick={(e) => handleLikeClick(post._id, e)}>
                     <div className='likeButtonContainer'>
                         <FontAwesomeIcon icon={faHeart} className={post.likes.includes(user._id) ? 'likeButtonRed' : 'likeButtonHover'} />
                         <span className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</span>
@@ -159,6 +159,7 @@ const Tweet = ({ post, user }) => {
         </div>
     </div>
     </div>
+    <DeleteModal deleteModalShow={deleteModalShow} setDeleteModalShow={setDeleteModalShow} modalPost={modalPost} />
     <ReplyModal modalShow={modalShow} setModalShow={setModalShow} modalPost={modalPost} />
     </>
     )
