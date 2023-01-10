@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
-const database = require('./database');
+require('./database');
 
 const PORT = 5000;
 app.use(cors({
@@ -29,7 +29,9 @@ const postsApiRoute = require('./routes/posts');
 app.use('/api/posts', postsApiRoute);
 const postApiRoute = require('./routes/post'); // Route for accessing a single post.
 app.use('/api/post', postApiRoute);
+const profileApiRoute = require('./routes/profile.js');
+app.use('/api/profile', profileApiRoute);
 
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)
 });

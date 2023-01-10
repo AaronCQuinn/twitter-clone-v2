@@ -23,7 +23,7 @@ router.delete('/:id', async (req, res) => {
     const { _id } = jwt.decode(user);
   
     const post = await Post.findById(postId);
-    if (!post) {
+    if (!post || post.retweetData) {
       return res.sendStatus(404);
     }
   

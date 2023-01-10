@@ -13,6 +13,7 @@ const Tweet = ({ post, user }) => {
     const [modalShow, setModalShow] = useState(false);
     const [modalPost, setModalPost] = useState();
     const [deleteModalShow, setDeleteModalShow] = useState();
+    const [postHover, setPostHover] = useState(false);
     const navigate = useNavigate();
 
     const handleReplyClick = (post, event) => {
@@ -75,7 +76,11 @@ const Tweet = ({ post, user }) => {
 
     return (
     <>   
-    <div className="post" onClick={() => handlePostClick(post._id)}>
+    <div
+      className={`post ${postHover ? 'hovered' : ''}`}
+      onMouseEnter={() => setPostHover(true)}
+      onMouseLeave={() => setPostHover(false)}
+    >
     <div className="mainContentContainer">
 
         <div className="postUserImageContainer">
@@ -91,7 +96,7 @@ const Tweet = ({ post, user }) => {
                         <span>
                             <FontAwesomeIcon icon={faRetweet} className='postActionContainerIcon' />
                             {"Retweeted by "} 
-                            <Link className='postActionContainerLink' to={'/profile/' + username}>
+                            <Link className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`} to={'/profile/' + username}>
                                 @{username}
                             </Link>
                         </span>
@@ -100,14 +105,14 @@ const Tweet = ({ post, user }) => {
 
                 <div className="tweetUserInfo">
                     <div>
-                        <Link className='headerLink' to={'/profile/' + username} >
+                        <Link className={`headerLink  ${postHover ? 'linkHovered' : ''}`} to={'/profile/' + username} >
                             <span>{firstName + " " + lastName}</span>
                         </Link>
                         <span className='username'>{"@" + username}</span>
                         <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
                     </div>
 
-                    {post.postedBy._id === user._id &&    
+                    {(post.postedBy._id === user._id && !post.retweetData) &&    
                     <div className="deleteButtonContainer">                
                         <FontAwesomeIcon icon={faTrashCan} className='deleteButton' onClick={(event) => handleDeleteClick(post.retweetData ? post.retweetData : post, event)} />
                     </div>
@@ -115,7 +120,7 @@ const Tweet = ({ post, user }) => {
                 </div>
             </div>
 
-        <div className="postBody">
+        <div className="postBody" onClick={() => handlePostClick(post._id)}>
 
             {post.replyTo && 
                 <div className='postActionContainer'>

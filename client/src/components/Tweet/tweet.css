@@ -13,3 +13,20 @@
 .deleteButton {
     padding-right: 3px;
 }
+
+.post {
+    background-color: transparent;
+}
+  
+.hovered {
+    background-color: rgba(29, 161, 242, 0.15);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.linkHovered {
+    background-color: rgba(29, 161, 242, 0.01355);
+}
+
+.headerLink {
+    transition: background-color 0.2s ease-in-out;
+}

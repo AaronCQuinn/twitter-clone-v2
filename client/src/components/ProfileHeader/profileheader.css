@@ -1,0 +1,22 @@
+.profileHeaderContainer {
+    height: 180px;
+    background-color: var(--twitter-blue);
+}
+
+.noPadding {
+    padding: 0;
+}
+
+.coverPhotoContainer {
+    position: relative;
+}
+
+.profileUserImageContainer img {
+    height: 132px;
+    width: 132px;
+    margin-left: var(--spacing);
+    position: absolute;
+    border-radius: 50%;
+    top: 116px;
+    border: 4px solid #fff;
+}
