@@ -6,7 +6,7 @@ const ProfileHeader = ({ user }) => {
         <div className="profileHeaderContainer">
             <div className="coverPhotoContainer">
                 <div className="profileUserImageContainer">
-                    <img src={user.profilePicture} alt="User profile image" />
+                    <img src={user.profilePicture} alt="" />
                 </div>
             </div>
         </div>

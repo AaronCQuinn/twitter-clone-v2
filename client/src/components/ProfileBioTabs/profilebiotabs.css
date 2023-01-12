@@ -1,0 +1,27 @@
+.tabsContainer {
+    display: flex;
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+
+.tab {
+    flex: 1;
+    height: 52px;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--greyText);
+    font-weight: bold;
+}
+
+.tab.active {
+    color: var(--twitter-blue);
+    border-bottom: 1px solid var(--twitter-blue);
+    transition: color 0.25s ease-in-out, border-bottom 0.5s ease-in-out;
+}
+
+.tab:hover {
+    color: var(--twitter-blue);
+    background-color: var(--blueBackground);
+    transition: color 0.25s ease-in-out, background-color 0.5s ease-in-out;
+}

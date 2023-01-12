@@ -4,8 +4,8 @@ import './posts.css'
 import Tweet from '../Tweet/Tweet';
 
 const Posts = ({ user }) => {
-    const [posts, setPosts] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState();
+    const [loading, setLoading] = useState();
     
     const getPosts = async() => {
         setLoading(true);
@@ -25,11 +25,11 @@ const Posts = ({ user }) => {
     }, [])
 
     if (loading) {
-        return <Spinner />
+        return <Spinner />;
     }
 
     if (!posts) {
-        return <div>No posts to display.</div>
+        return <div>No posts to display.</div>;
     }
 
     return (
