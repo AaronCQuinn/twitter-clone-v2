@@ -11,7 +11,8 @@
 }
 
 .messageButton,
-.followButton {
+.followButton,
+.editButton {
     border: 1px solid var(--twitter-blue);
     color: var(--twitter-blue);
     padding: 5px 15px;
@@ -23,7 +24,8 @@
 }
 
 .messageButton:hover,
-.followButton:hover {
+.followButton:hover,
+.editButton:hover {
     background-color: var(--blueBackground);
 }
 

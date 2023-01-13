@@ -10,15 +10,21 @@ const ProfileBioButtons = ({ user }) => {
     const { username } = useParams();
     return (
         <div className="profileButtonsContainer">
-            {username.toLowerCase() === user.username.toLowerCase() &&
+            {username.toLowerCase() === user.username.toLowerCase() ?
+                <button className='editButton'>
+                    Edit Profile
+                </button>
+                :
+                <>
                 <Link to={`/messages/${username}`} className='messageButton' >
                     <FontAwesomeIcon icon={faEnvelope} />
                 </Link>
+                <button className='followButton'>
+                    Follow
+                </button>
+                </>
             }
 
-            <button className='followButton'>
-                Follow
-            </button>
         </div>
     )
 }
