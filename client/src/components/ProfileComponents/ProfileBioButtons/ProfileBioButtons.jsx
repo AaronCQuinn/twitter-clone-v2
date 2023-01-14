@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './profilebiobuttons.css'
-import FollowButton from '../FollowButton/FollowButton';
-import { AuthContext } from '../../context/AuthContext';
+import FollowButton from '../../FollowButton/FollowButton';
+import { AuthContext } from '../../../context/AuthContext';
 
 const ProfileBioButtons = ({ profileData }) => {
     const { state } = useContext(AuthContext);

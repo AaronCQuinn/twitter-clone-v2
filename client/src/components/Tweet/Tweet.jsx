@@ -121,14 +121,13 @@ const Tweet = ({ post, user }) => {
             </div>
 
         <div className="postBody" onClick={() => handlePostClick(post._id)}>
-
             {post.replyTo && 
                 <div className='postActionContainer'>
                     <FontAwesomeIcon icon={faComment} className='commentButtonBlue' />
                     <span>Replying to</span>
                     <Link className='postActionContainerLink' to={'/profile/' + username}>
                         <span>
-                            {"@" + username}
+                            {"@" + post.postedBy.username}
                         </span>
                     </Link>
                 </div>

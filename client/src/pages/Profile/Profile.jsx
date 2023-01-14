@@ -2,18 +2,23 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
-import ProfileHeader from '../../components/ProfileHeader/ProfileHeader';
-import ProfileBioButtons from '../../components/ProfileBioButtons/ProfileBioButtons';
-import ProfileBioDetails from '../../components/ProfileBioDetails/ProfileBioDetails';
-import ProfileBioTabs from '../../components/ProfileBioTabs/ProfileBioTabs';
+import ProfileHeader from '../../components/ProfileComponents/ProfileHeader/ProfileHeader';
+import ProfileBioButtons from '../../components/ProfileComponents/ProfileBioButtons/ProfileBioButtons';
+import ProfileBioDetails from '../../components/ProfileComponents/ProfileBioDetails/ProfileBioDetails';
+import ProfileBioTabs from '../../components/ProfileComponents/ProfileBioTabs/ProfileBioTabs';
 import { useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner/Spinner';
+import ProfileFollowInfo from '../../components/ProfileComponents/ProfileFollowInfo/ProfileFollowInfo';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-
     const [loading, setLoading] = useState(true);
     const [profileData, setProfileData] = useState();
     const { username } = useParams();
+    const params = useParams();
+    const navigate = useNavigate();
 
     const getProfile = async() => {
         setLoading(true);
@@ -45,14 +50,28 @@ const Profile = () => {
                     
                     <>
                         <div className="titleContainer">
+                            {params.follow &&
+                                <FontAwesomeIcon icon={faArrowLeft} className='profileBackArrow' onClick={() => navigate(-1)}/>
+                            }
                             <h1 className='titleContainerTitle'>{profileData.twitterUser.username}</h1>
                         </div>
         
                         {/* Profile Header */}
-                        <ProfileHeader user={profileData.twitterUser} />
-                        <ProfileBioButtons profileData={profileData.twitterUser} />
-                        <ProfileBioDetails user={profileData.twitterUser} />
-                        <ProfileBioTabs user={profileData.twitterUser}/>
+                        {!params.follow &&
+                        <>
+                            <ProfileHeader user={profileData.twitterUser} />
+                            <ProfileBioButtons profileData={profileData.twitterUser} />
+                            <ProfileBioDetails user={profileData.twitterUser} />
+                            <ProfileBioTabs profile={profileData.posts} user={profileData.twitterUser} />
+                        </>
+                        }
+                        {params.follow === 'following' &&
+                        <>
+                            <ProfileFollowInfo />
+                        </>}
+                        {params.follow === 'followers' && 
+                            <ProfileFollowInfo />
+                        }
                     </>
                     }
 

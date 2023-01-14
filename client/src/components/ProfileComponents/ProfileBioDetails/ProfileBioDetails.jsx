@@ -24,9 +24,7 @@ const ProfileBioDetails = ({user}) => {
                 </Link>
                 <span className="value">{followers.length}</span>
                 <Link to={`/profile/${username}/followers`} >
-                    {
-                        followers.length === 1 ? 'Follower' : 'Followers'
-                    }
+                        {followers.length === 1 ? 'Follower' : 'Followers'}
                 </Link>
             </div>
         </div>

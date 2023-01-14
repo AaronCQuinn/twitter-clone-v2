@@ -12,7 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import SinglePost from './pages/SinglePost/SinglePost';
 import Profile from './pages/Profile/Profile'
 
-
 function App() {
   
   return (
@@ -24,6 +23,7 @@ function App() {
             <Route path='/' element={<Home/>} />
             <Route path='/post/:id' element={<SinglePost/>} />
             <Route path='/profile/:username' element={<Profile/>} />
+            <Route path='/profile/:username/:follow' element={<Profile/>} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

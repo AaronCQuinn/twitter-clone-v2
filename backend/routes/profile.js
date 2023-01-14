@@ -39,11 +39,12 @@ router.get('/:username', async (req, res) => {
 })
 
 router.get('/:username/replies', async (req, res) => {
-    const user = req.cookies.token;
-    const { _id } = jwt.decode(user);
+    const { username } = req.params;
+    twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 })
+
 
     // Combine the database queries into a group reducing time to get adata.
-    let posts = await Post.find({ postedBy: _id, replyTo: { $exists: true } })
+    let posts = await Post.find({ postedBy: twitterUser._id, replyTo: { $exists: true } })
     .populate({
         path: "postedBy", 
         select: '-password -email'
@@ -56,12 +57,17 @@ router.get('/:username/replies', async (req, res) => {
         }
     })
     .populate({
-        path: 'replyTo.postedBy',
-        select: "username"
+        path: 'replyTo',
     })
     .sort({createdAt: -1})
-
-    return res.status(200).send({posts});
+    .then(async response => {
+      response = await User.populate(response, {path: "replyTo.postedBy", select: "username"})
+      response = await User.populate(response, {path: "retweetData.postedBy", select: '-password -email'})
+      return res.status(200).send(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 })
 
 module.exports = router;

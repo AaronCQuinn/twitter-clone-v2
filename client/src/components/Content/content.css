@@ -7,6 +7,8 @@
     font-size: 19px;
     font-weight: 800;
     margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 .mainSectionContainer {
@@ -23,8 +25,22 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--lightGrey);
+    justify-content: center;
 }
 
 .titleContainer h1 {
     flex: 1;
+}
+
+.profileBackArrow {
+    margin-right: var(--spacing);
+    padding: 4px;
+}
+
+.profileBackArrow:hover {
+    padding: 4px;
+    background-color: var(--lightGrey);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: ease-in-out background-color .25s;
 }

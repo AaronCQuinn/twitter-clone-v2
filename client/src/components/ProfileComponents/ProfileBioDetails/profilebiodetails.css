@@ -15,6 +15,7 @@
 
 .followersContainer span:not(.value) {
     color: var(--greyText);
+    margin-right: 15px;
 }
 
 .followersContainer a {
@@ -23,7 +24,8 @@
     color: var(--greyText);
 }
 
-.followersContainer a:hover {
+.followersContainer span:not(.value):hover {
     border-bottom: 1px solid black;
     color: var(--greyText);
+    cursor: pointer;
 }
