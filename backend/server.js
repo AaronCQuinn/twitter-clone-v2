@@ -31,6 +31,8 @@ const postApiRoute = require('./routes/post'); // Route for accessing a single p
 app.use('/api/post', postApiRoute);
 const profileApiRoute = require('./routes/profile.js');
 app.use('/api/profile', profileApiRoute);
+const followApiRoute = require('./routes/followRoutes/follow.js');
+app.use('/api/follow', followApiRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)

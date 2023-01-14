@@ -29,7 +29,7 @@ const Posts = ({ user }) => {
     }
 
     if (!posts) {
-        return <div>No posts to display.</div>;
+        return <div className='noTweetError'>No posts to display.</div>;
     }
 
     return (

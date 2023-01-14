@@ -1,21 +1,37 @@
 import React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
-import { useContext } from 'react'
-import { AuthContext } from '../../context/AuthContext';
 import ProfileHeader from '../../components/ProfileHeader/ProfileHeader';
-import ProfileBioButtons from '../../components/ProfileBioSection/ProfileBioButtons';
+import ProfileBioButtons from '../../components/ProfileBioButtons/ProfileBioButtons';
 import ProfileBioDetails from '../../components/ProfileBioDetails/ProfileBioDetails';
 import ProfileBioTabs from '../../components/ProfileBioTabs/ProfileBioTabs';
-
+import { useParams } from 'react-router-dom';
+import Spinner from '../../components/Spinner/Spinner';
 
 const Profile = () => {
-    const { state } = useContext(AuthContext);
+
+    const [loading, setLoading] = useState(true);
+    const [profileData, setProfileData] = useState();
+    const { username } = useParams();
+
+    const getProfile = async() => {
+        setLoading(true);
+        try {
+            let res = await fetch(`/api/profile/${username}`);
+            let data = await res.json();
+            setProfileData(data);
+            document.title = `${data.twitterUser.username + ' ● Twitter'}`;
+            setLoading(false);
+        } catch(error) {
+            console.log("Error trying to get profile from the database: " + error);
+        }
+    }
 
     useEffect(() => {
-        document.title = `${state.user.username + ' ● Twitter'}`;
-    }, [state.user.username])
+        getProfile();
+        // eslint-disable-next-line
+    }, [username])
 
     return (
         <>
@@ -24,15 +40,21 @@ const Profile = () => {
                 <Navbar widthOption={2}/>
                 {/* The main section gets more room once the screen hits the different breakpoints. */}
                 <Col className={"mainSectionContainer col-10 col-md-8 col-lg-6"}>
-                    <div className="titleContainer">
-                        <h1 className='titleContainerTitle'>{state.user.username}</h1>
-                    </div>
-
-                    {/* Profile Header */}
-                    <ProfileHeader user={state.user} />
-                    <ProfileBioButtons user={state.user} />
-                    <ProfileBioDetails user={state.user} />
-                    <ProfileBioTabs user={state.user}/>
+                    {loading ? <Spinner />
+                    :
+                    
+                    <>
+                        <div className="titleContainer">
+                            <h1 className='titleContainerTitle'>{profileData.twitterUser.username}</h1>
+                        </div>
+        
+                        {/* Profile Header */}
+                        <ProfileHeader user={profileData.twitterUser} />
+                        <ProfileBioButtons profileData={profileData.twitterUser} />
+                        <ProfileBioDetails user={profileData.twitterUser} />
+                        <ProfileBioTabs user={profileData.twitterUser}/>
+                    </>
+                    }
 
                 </Col>
 

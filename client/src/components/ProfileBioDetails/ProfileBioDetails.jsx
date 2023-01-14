@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './profilebiodetails.css'
 
 const ProfileBioDetails = ({user}) => {
-    const {firstName, lastName, username, description} = user;
+    const {firstName, lastName, username, description, following, followers} = user;
 
     return (
         <div className="userDetailsContainer">
@@ -18,13 +18,15 @@ const ProfileBioDetails = ({user}) => {
             </span>
 
             <div className="followersContainer">
-                <span className="value">0</span>
+                <span className="value">{following.length}</span>
                 <Link to={`/profile/${username}/following`} >
                     Following
                 </Link>
-                <span className="value">0</span>
+                <span className="value">{followers.length}</span>
                 <Link to={`/profile/${username}/followers`} >
-                    Followers
+                    {
+                        followers.length === 1 ? 'Follower' : 'Followers'
+                    }
                 </Link>
             </div>
         </div>

@@ -16,7 +16,9 @@ router.get('/', (req, res) => {
                 retweets: user.retweets,
                 _id: user._id,
                 firstName: user.firstName,
-                lastName: user.lastName
+                lastName: user.lastName,
+                following: user.following,
+                follwers: user.followers,
             }
             res.status(200).send(clientData);
         } else {

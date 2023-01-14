@@ -6,7 +6,10 @@ const User = require('../schemas/UserSchema');
 
 router.get('/', (req, res) => {
     Post.find()
-    .populate(['postedBy', 'retweetData', 'replyTo'])  // combine populate calls into a single call
+    .populate({ 
+        path: 'postedBy', 
+        select: '-password -email' 
+    }).populate(['retweetData', 'replyTo']) // combine populate calls into a single call
     .sort({ createdAt: -1 })
     .limit(10)
     .then(async response => {

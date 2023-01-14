@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useParams } from 'react-router-dom'
 import './profilebiobuttons.css'
+import FollowButton from '../FollowButton/FollowButton';
+import { AuthContext } from '../../context/AuthContext';
 
-const ProfileBioButtons = ({ user }) => {
+const ProfileBioButtons = ({ profileData }) => {
+    const { state } = useContext(AuthContext);
+    const { username } = profileData;
 
-    const { username } = useParams();
     return (
         <div className="profileButtonsContainer">
-            {username.toLowerCase() === user.username.toLowerCase() ?
+            {profileData.username.toLowerCase() === state.user.username.toLowerCase() ?
                 <button className='editButton'>
                     Edit Profile
                 </button>
@@ -19,9 +21,7 @@ const ProfileBioButtons = ({ user }) => {
                 <Link to={`/messages/${username}`} className='messageButton' >
                     <FontAwesomeIcon icon={faEnvelope} />
                 </Link>
-                <button className='followButton'>
-                    Follow
-                </button>
+                <FollowButton id={profileData._id} />
                 </>
             }
 

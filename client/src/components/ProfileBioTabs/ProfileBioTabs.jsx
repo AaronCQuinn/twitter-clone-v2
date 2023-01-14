@@ -24,7 +24,6 @@ const ProfileBioTabs = ({user}) => {
         }
     }
 
-    
     const getReplies = async(username) => {
         setLoading(true);
         try {
@@ -71,10 +70,12 @@ const ProfileBioTabs = ({user}) => {
                     return <Tweet post={post} key={post._id} user={user} />
                 })
             :
-            isSelected === 'replies' && 
-                replies.map((post) => {
-                    return <Tweet post={post} key={post._id} user={user} />
-                })
+            isSelected === 'replies' &&
+            replies.length === 0 ? <div className='noTweetError'>This user has no replies to show yet!</div>
+            :
+            replies.map((post) => {
+                return <Tweet post={post} key={post._id} user={user} />
+            })
         }
         </>
     )
