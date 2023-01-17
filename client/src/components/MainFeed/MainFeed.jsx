@@ -4,18 +4,20 @@ import PostForm from '../PostForm/PostForm';
 import Posts from '../Posts/Posts';
 import { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext';
-import './content.css'
+import './mainfeed.css'
+import { useParams } from 'react-router-dom';
 
-const Content = ({ widthOption }) => {
-    const { state } = useContext(AuthContext);
-
+const Content = () => {
+    const { loggedInUser } = useContext(AuthContext);
+    const params = useParams();
+    
     return (
-        <Col className={"mainSectionContainer " + widthOption}>
+        <Col className={"mainSectionContainer"}>
             <div className="titleContainer">
                 <h1 className='titleContainerTitle'>Home</h1>
             </div>
             <PostForm />
-            <Posts user={state.user} />
+            <Posts user={loggedInUser} />
         </Col>
     )
 }

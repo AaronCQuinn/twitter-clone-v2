@@ -1,7 +1,3 @@
-:root {
-    --blueLight: #9BD1F9;
-}
-
 .postFormContainer {
     display: flex;
     padding: var(--spacing);

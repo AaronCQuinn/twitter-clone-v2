@@ -1,0 +1,21 @@
+:root {
+    --twitter-blue: #1FA2F1;
+    --buttonHoverBH: #d4edff;
+    --blueLight: #9BD1F9;
+    --lightGrey: rgb(230, 236, 240);
+    --blueBackground: rgba(212, 237, 255, 0.6);
+    --greyText: rgb(101, 119, 134);
+    --greyButtonText: rgba(0,0,0, 0.34);
+    --transition-ease: all 0.3s ease-in-out;
+    --spacing: 15px;
+}
+
+ul, li {
+    list-style: none;
+}
+
+.row > *, .col {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+

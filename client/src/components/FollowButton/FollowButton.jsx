@@ -12,7 +12,6 @@ const FollowButton = ({ id }) => {
                 'Content-Type': 'application/json',
               },
             });
-            window.location.reload();
         } catch (error) {
             showToast('There was an error following this user, please try again!', 'error');
             console.log(`Error posting to back end: ${error}`);

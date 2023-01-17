@@ -44,15 +44,15 @@ const ProfileBioTabs = ({user, profile}) => {
             loading ? <Spinner /> 
             :
             isSelected === 'posts' ?
-                profile.map((post) => {
-                    return <Tweet post={post} key={post._id} user={user} />
+                profile.map((post, index) => {
+                    return <Tweet post={post} key={index} user={user} />
                 })
             :
             isSelected === 'replies' &&
             replies.length === 0 ? <div className='noTweetError'>This user has no replies to show yet!</div>
             :
-            replies.map((post) => {
-                return <Tweet post={post} key={post._id} user={user} />
+            replies.map((post, index) => {
+                return <Tweet post={post} key={index} user={user} />
             })
         }
         </>

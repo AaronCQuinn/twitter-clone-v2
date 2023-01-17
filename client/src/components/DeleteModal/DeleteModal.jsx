@@ -45,7 +45,6 @@ function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
             console.log(`Axios request failed: ${error}`);
         })
         setDeleteModalShow(false);
-        window.location.reload();
     }
 
     return (
@@ -62,7 +61,7 @@ function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
         </Modal.Header>
         <Modal.Body>
             {modalPost &&
-                <div key={modalPost._id} className="modalPost">
+                <div className="modalPost">
 
                     <div className="mainContentContainer">
 

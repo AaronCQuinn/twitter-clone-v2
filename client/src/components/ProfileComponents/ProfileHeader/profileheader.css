@@ -20,3 +20,100 @@
     top: 116px;
     border: 4px solid #fff;
 }
+
+.profileButtonsContainer {
+    padding: var(--spacing);
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.messageButton,
+.followButton,
+.editButton {
+    border: 1px solid var(--twitter-blue);
+    color: var(--twitter-blue);
+    padding: 5px 15px;
+    border-radius: 60px;
+    display: inline-block;
+    margin-left: var(--spacing);
+    font-weight: bold;
+    min-height: 100%;
+}
+
+.messageButton:hover,
+.followButton:hover,
+.editButton:hover {
+    background-color: var(--blueBackground);
+}
+
+.followButton.following {
+    background-color: var(--twitter-blue);
+    color: #fff;
+}
+
+.userDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--spacing)
+}
+
+.userDetailsContainer .displayName {
+    font-weight: bold;
+}
+
+.followersContainer .value {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.followersContainer span:not(.value) {
+    color: var(--greyText);
+    margin-right: 15px;
+}
+
+.followersContainer a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: var(--greyText);
+}
+
+.followersContainer span:not(.value):hover {
+    border-bottom: 1px solid black;
+    color: var(--greyText);
+    cursor: pointer;
+}
+
+.tabsContainer {
+    display: flex;
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+
+.tab {
+    flex: 1;
+    height: 52px;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--greyText);
+    font-weight: bold;
+}
+
+.tab.active {
+    color: var(--twitter-blue);
+    border-bottom: 1px solid var(--twitter-blue);
+    transition: color 0.25s ease-in-out, border-bottom 0.5s ease-in-out;
+}
+
+.tab:hover {
+    color: var(--twitter-blue);
+    background-color: var(--blueBackground);
+    transition: color 0.25s ease-in-out, background-color 0.5s ease-in-out;
+}
+
+.noTweetError {
+    text-align: center;
+    padding-top: var(--spacing);
+}

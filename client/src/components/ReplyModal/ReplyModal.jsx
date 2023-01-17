@@ -13,8 +13,7 @@ import './replymodal.css'
 function ReplyModal({modalShow, setModalShow, modalPost}) {
     const [reply, setReply] = useState("");
     const [postError, setPostError] = useState();
-    const authContext = useContext(AuthContext);
-    const { profilePicture } = authContext.state.user;
+    const {loggedInUser} = useContext(AuthContext);
 
     useEffect(() => {
         toast.error(postError, {
@@ -50,7 +49,6 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
         })
         setReply("");
         setModalShow(false);
-        window.location.reload();
     }
 
     return (
@@ -67,7 +65,7 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
         </Modal.Header>
         <Modal.Body>
             {modalPost &&
-            <div key={modalPost._id} className="modalPost">
+            <div className="modalPost">
                 <div className="mainContentContainer underline">
                     <div className="postUserImageContainer">
                     <img src={modalPost.postedBy.profilePicture} alt="" />
@@ -98,7 +96,7 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
                 </div>
                 <div className="modalPostFormContainer">
                     <div className="userImageContainer">
-                        <img src={profilePicture} alt="The users profile identifier." />
+                        <img src={loggedInUser.profilePicture} alt="The users profile identifier." />
                     </div>
                     <div className="textareaContainer">
                         <span className='replyHeader'>

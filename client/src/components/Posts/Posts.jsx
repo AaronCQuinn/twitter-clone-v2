@@ -33,8 +33,8 @@ const Posts = ({ user }) => {
     }
 
     return (
-        posts.map((post) => {
-            return <Tweet post={post} key={post._id} user={user} />
+        posts.map((post, index) => {
+            return <Tweet post={post} key={index} user={user} />
         })
     )
   };    

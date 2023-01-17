@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, } from 'react'
 import axios from 'axios';
 import { showToast } from '../../components/Toast/showToast'
 import { Link, useNavigate } from 'react-router-dom';
@@ -31,7 +31,6 @@ const Tweet = ({ post, user }) => {
             }
             })
             .then(() => {
-                window.location.reload();
             })      
             .catch(error => {
                 showToast('There was an error liking the post, please try again!', 'error');
@@ -51,7 +50,6 @@ const Tweet = ({ post, user }) => {
               'Content-Type': 'application/json',
             },
           });
-          window.location.reload();
         } catch (error) {
           showToast('There was an error liking the post, please try again!', 'error');
           console.log(`Error posting to back end: ${error}`);
@@ -93,21 +91,19 @@ const Tweet = ({ post, user }) => {
 
                 {post.retweetData &&
                     <div className='postActionContainer'>
-                        <span>
+                        <Link className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`} to={'profile/' + username + '/posts'}>
                             <FontAwesomeIcon icon={faRetweet} className='postActionContainerIcon' />
-                            {"Retweeted by "} 
-                            <Link className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`} to={'/profile/' + username}>
-                                @{username}
-                            </Link>
-                        </span>
+                            <span className='postActionContainerText'>Retweeted by </span>
+                            <span>@{username}</span>
+                        </Link>
                     </div>
                 }
 
                 <div className="tweetUserInfo">
                     <div>
-                        <Link className={`headerLink  ${postHover ? 'linkHovered' : ''}`} to={'/profile/' + username} >
-                            <span>{firstName + " " + lastName}</span>
-                        </Link>
+                        <Link 
+                        className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`}
+                        to={'/profile/' + username + '/posts'}>{firstName + " " + lastName}</Link>
                         <span className='username'>{"@" + username}</span>
                         <span className='date'>{timeDifference(new Date(), new Date(post.createdAt))}</span>
                     </div>
@@ -125,11 +121,11 @@ const Tweet = ({ post, user }) => {
                 <div className='postActionContainer'>
                     <FontAwesomeIcon icon={faComment} className='commentButtonBlue' />
                     <span>Replying to</span>
-                    <Link className='postActionContainerLink' to={'/profile/' + username}>
-                        <span>
+                        <span className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`}
+                        onClick={() => navigate('/profile/' + username)}
+                        >
                             {"@" + post.postedBy.username}
                         </span>
-                    </Link>
                 </div>
             }
 

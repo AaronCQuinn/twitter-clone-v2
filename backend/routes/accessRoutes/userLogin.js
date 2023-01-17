@@ -38,7 +38,6 @@ router.post('/', async(req, res) => {
         }
 
         const {username, profilePicture, _id, likes, retweets, firstName, lastName, following, followers} = existingUser;
-        console.log(existingUser);
         const clientData = {
             username,
             profilePicture,
@@ -56,7 +55,7 @@ router.post('/', async(req, res) => {
         res.cookie('token', token, {
             httpOnly: true
         })
-        return res.sendStatus(201);
+        return res.status(201).send(clientData);
     }
 })
 

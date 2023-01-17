@@ -1,80 +1,72 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
 import ProfileHeader from '../../components/ProfileComponents/ProfileHeader/ProfileHeader';
-import ProfileBioButtons from '../../components/ProfileComponents/ProfileBioButtons/ProfileBioButtons';
-import ProfileBioDetails from '../../components/ProfileComponents/ProfileBioDetails/ProfileBioDetails';
-import ProfileBioTabs from '../../components/ProfileComponents/ProfileBioTabs/ProfileBioTabs';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Spinner from '../../components/Spinner/Spinner';
-import ProfileFollowInfo from '../../components/ProfileComponents/ProfileFollowInfo/ProfileFollowInfo';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate } from 'react-router-dom';
+import { ProfileContext } from '../../context/ProfileContext';
+import { useEffect, useState } from 'react';
 
 const Profile = () => {
-    const [loading, setLoading] = useState(true);
-    const [profileData, setProfileData] = useState();
-    const { username } = useParams();
     const params = useParams();
-    const navigate = useNavigate();
-
-    const getProfile = async() => {
-        setLoading(true);
-        try {
-            let res = await fetch(`/api/profile/${username}`);
-            let data = await res.json();
-            setProfileData(data);
-            document.title = `${data.twitterUser.username + ' ● Twitter'}`;
-            setLoading(false);
-        } catch(error) {
-            console.log("Error trying to get profile from the database: " + error);
-        }
-    }
+    const { userProfile, loading, getProfile } = useContext(ProfileContext);
+    const [isSelected, setIsSelected] = useState(params.option);
 
     useEffect(() => {
-        getProfile();
+        getProfile(params.username);
         // eslint-disable-next-line
-    }, [username])
+    }, [params.username])
+
+    useEffect(() => {
+        setIsSelected(params.option);
+    }, [params.option])
 
     return (
-        <>
         <Container>
             <Row>
-                <Navbar widthOption={2}/>
-                {/* The main section gets more room once the screen hits the different breakpoints. */}
-                <Col className={"mainSectionContainer col-10 col-md-8 col-lg-6"}>
-                    {loading ? <Spinner />
-                    :
-                    
+                <Col xs={2}>
+                    <Navbar />
+                </Col>
+
+                <Col className={"mainSectionContainer"}>
+                    {loading ? <Spinner /> :
                     <>
                         <div className="titleContainer">
-                            {params.follow &&
-                                <FontAwesomeIcon icon={faArrowLeft} className='profileBackArrow' onClick={() => navigate(-1)}/>
+                            {(isSelected === 'following' || isSelected === 'followers' || !isSelected) &&
+                                <Link to={'/profile/' + params.username + '/posts'}>
+                                    <FontAwesomeIcon icon={faArrowLeft} className='profileBackArrow' />
+                                </Link>
                             }
-                            <h1 className='titleContainerTitle'>{profileData.twitterUser.username}</h1>
+                            <h1 className='titleContainerTitle'>{userProfile.username}</h1>
                         </div>
         
                         {/* Profile Header */}
-                        {!params.follow &&
-                        <>
-                            <ProfileHeader user={profileData.twitterUser} />
-                            <ProfileBioButtons profileData={profileData.twitterUser} />
-                            <ProfileBioDetails user={profileData.twitterUser} />
-                            <ProfileBioTabs profile={profileData.posts} user={profileData.twitterUser} />
-                        </>
-                        }
-                        {params.follow === 'following' &&
-                        <>
-                            <ProfileFollowInfo />
-                        </>}
-                        {params.follow === 'followers' && 
-                            <ProfileFollowInfo />
+                        <ProfileHeader />
+
+                        {isSelected === "posts" || isSelected === 'replies' || !isSelected ? 
+                            <div className="tabsContainer">
+                                <span className={`tab ${isSelected === 'posts' && 'active'}`} onClick={() => setIsSelected('posts')}>
+                                    Posts
+                                </span>
+                                <span className={`tab ${isSelected === 'replies' && 'active'}`} onClick={() => setIsSelected('replies')}>
+                                    Replies
+                                </span>
+                            </div>
+                        :
+                            <div className="tabsContainer">
+                                <span className={`tab ${isSelected === 'following' && 'active'}`} onClick={() => setIsSelected('following')}>
+                                    Following
+                                </span>
+                                <span className={`tab ${isSelected === 'followers' && 'active'}`} onClick={() => setIsSelected('followers')}>
+                                    Followers
+                                </span>
+                            </div>
                         }
                     </>
-                    }
-
+                }
                 </Col>
 
                 <Col xs={2} className='d-none d-md-block col-md-2 col-lg-4'>
@@ -82,7 +74,6 @@ const Profile = () => {
                 </Col>
             </Row>
         </Container>
-        </>
     )
 }
 

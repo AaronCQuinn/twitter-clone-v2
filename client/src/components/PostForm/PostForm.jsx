@@ -9,8 +9,7 @@ import './postForm.css'
 const PostForm = () => {
     const [content, setContent] = useState("");
     const [postError, setPostError] = useState();
-    const authContext = useContext(AuthContext);
-    const { profilePicture } = authContext.state.user;
+    const {loggedInUser} = useContext(AuthContext);
 
     useEffect(() => {
         toast.error(postError, {
@@ -34,7 +33,6 @@ const PostForm = () => {
               }
             })
             .then(() => {
-                window.location.reload();
             })              
             .catch(error => {
                 setPostError('There was an error posting your tweet. Please try again!');
@@ -51,7 +49,7 @@ const PostForm = () => {
     return (
         <div className="postFormContainer">
             <div className="userImageContainer">
-                <img src={profilePicture} alt="The users profile identifier." />
+                <img src={loggedInUser.profilePicture} alt="The users profile identifier." />
             </div>
                 <div className="textareaContainer">
                     <form onSubmit={onSubmit}>

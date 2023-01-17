@@ -1,17 +1,13 @@
-:root {
-    --twitter-blue: #1FA2F1;
-    --buttonHoverBH: #d4edff;
-}
-
-.homeNav {
+.navbar {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-end !important;
     height: 100%;
     padding-top: 5px;
+    padding-right: var(--spacing) !important;
 }
 
-.homeNavAnchor {
+.navbarLink {
     padding: 10px;
     width: 30px;
     height: 30px;
@@ -21,10 +17,11 @@
     color: #282929;
 }
 
-.homeNavAnchor:hover {
+.navbarLink:hover {
     background-color: var(--buttonHoverBH);
     color: var(--twitter-blue);
     border-radius: 50%;
+    transition: var(--transition-ease);
 }
 
 .blue {

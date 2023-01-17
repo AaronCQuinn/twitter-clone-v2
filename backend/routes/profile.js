@@ -10,9 +10,9 @@ router.get('/:username', async (req, res) => {
     const { _id } = jwt.decode(user);
 
     // Combine the database queries into a group reducing time to get adata.
-    twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 })
+    userProfile = await User.findOne({ username: username }, { email: 0, password: 0 })
 
-    const posts = await Post.find({ postedBy: twitterUser._id, replyTo: { $exists: false } })
+    const posts = await Post.find({ postedBy: userProfile._id, replyTo: { $exists: false } })
         .populate({
           path: "postedBy", 
           select: '-password -email'
@@ -35,7 +35,7 @@ router.get('/:username', async (req, res) => {
         return res.sendStatus(400);
     };
       
-    return res.status(200).send({twitterUser, posts});
+    return res.status(200).send({userProfile, posts});
 })
 
 router.get('/:username/replies', async (req, res) => {

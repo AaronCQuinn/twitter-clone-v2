@@ -1,24 +1,55 @@
-import { createContext, useReducer } from "react"
+import { createContext, useState } from "react"
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 export const AuthContext = createContext();
-export const authReducer = (state, action) => {
-    switch (action.type) {
-        case 'LOGIN':
-            return { user: action.payload }
-        case 'LOGOUT':
-            return { user: null }
-        default: 
-            return state
-    }
-}
 
 export const AuthContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(authReducer, {
-        user: null
-    });
+    const [loggedInUser, setLoggedInUser] = useState({});
+    const [loginError, setLoginError] = useState();
+    const navigate = useNavigate();
     
+    const handleLogin = async (formValues) => {
+        try {
+            const response = await axios.post('/api/user_login', formValues, {
+            headers: { 'Content-Type': 'application/json' }})
+            if (response.status) {
+                setLoggedInUser(response.data)
+                navigate('/');
+                return;
+            }
+       
+        } catch(error) {
+            switch (error.response.status) {
+                case 404:
+                    setLoginError("No user found which matched those credentials.");
+                    break;
+                case 401:
+                    setLoginError("No user found which matched those credentials.")
+                    break;
+                case 500:
+                    setLoginError('There was a server error. Please try again.')
+                    break;
+                case 400:
+                    setLoginError("All fields must be submitted with a valid value in order to login.")
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/user_logout');
+            navigate('/login');
+        } catch(error) {
+            
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{state, dispatch}}>
+        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser}}>
             { children }
         </AuthContext.Provider>
     )
