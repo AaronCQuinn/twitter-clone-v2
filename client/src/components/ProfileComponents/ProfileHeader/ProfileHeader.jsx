@@ -34,7 +34,7 @@ const ProfileHeader = () => {
                 <Link to={`/messages/${userProfile.username}`} className='messageButton'>
                     <FontAwesomeIcon icon={faEnvelope} />
                 </Link>
-                <FollowButton id={userProfile._id} />
+                <FollowButton user={userProfile._id} styles={'profileFollowButton'}/>
                 </>
             }
         </div>

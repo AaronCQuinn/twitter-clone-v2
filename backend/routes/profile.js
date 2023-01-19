@@ -63,11 +63,23 @@ router.get('/:username/replies', async (req, res) => {
     .then(async response => {
       response = await User.populate(response, {path: "replyTo.postedBy", select: "username"})
       response = await User.populate(response, {path: "retweetData.postedBy", select: '-password -email'})
-      return res.status(200).send(response);
+      return res.status(200).send({posts: response});
     })
     .catch(error => {
       console.log(error);
     });
+})
+
+router.get('/:username/following', async (req, res) => {
+  const { username } = req.params;
+  const twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 }).populate('following', '_id firstName lastName username profilePicture description');
+  res.status(200).send(twitterUser.following);
+})
+
+router.get('/:username/followers', async (req, res) => {
+  const { username } = req.params;
+  const twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 }).populate('followers', '_id firstName lastName username profilePicture description');
+  res.status(200).send(twitterUser.followers);
 })
 
 module.exports = router;

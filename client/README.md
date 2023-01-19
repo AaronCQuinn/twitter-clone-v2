@@ -1,2 +1,5 @@
 Acknowledgements of what could be changed or improved on:
     1. At the moment, under the <ProtectedRoutes /> component, the client checks with the server to insure the user is still authenticated. This causes a slight flicker in UI elements as the async all goes out and the child elements are suspended while that check is complete. This is a byproduct of strictly using JWT, I explored other options such as localStorage or sessionStorage but placing authentication in those poses a security risk from other websites taking the token. For the time being, I swapped the ternary operator to allow for the UI element to load optimistically and then if the auth check fails, kicks them back to the login page. This allows users to directly navigate to a protected route for a split second while that check happens. Should this of been a production large scale app, this would have to be addressed. The solutions are large scale: 1. Server Side Rendering 2. Caching 3. Pre-fetching for example.
+
+    TODO:
+    Protect all API routes by checking for presense of JWT, possibly other verifications.

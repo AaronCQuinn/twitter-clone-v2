@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import { showToast } from '../Toast/showToast';
 import { AuthContext } from '../../context/AuthContext';
 
-const FollowButton = ({ id }) => {
-    const { state } = useContext(AuthContext);
+const FollowButton = ({ user, styles }) => {
+    const { loggedInUser } = useContext(AuthContext);
     const handleClick = async (id) => {
         try {
             await axios.put(`/api/follow/${id}`, {id}, {
@@ -19,8 +19,12 @@ const FollowButton = ({ id }) => {
     }
    
     return (
-    <button className={`${state.user.following.includes(id) && 'following'} followButton`}  onClick={() => handleClick(id)}>
-        {state.user.following.includes(id) ? 'Following'
+    user !== loggedInUser._id &&    
+    <button 
+    className={`${loggedInUser.following.includes(user) && 'following'} ${styles}`}
+    onClick={() => handleClick(user)}
+    >
+        {loggedInUser.following.includes(user) ? 'Following'
         :
         'Follow'
         }

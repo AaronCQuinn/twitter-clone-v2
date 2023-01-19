@@ -9,10 +9,12 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ProfileContext } from '../../context/ProfileContext';
 import { useEffect, useState } from 'react';
+import Tweet from '../../components/Tweet/Tweet';
+import UserCard from '../../components/UserCard/UserCard';
 
 const Profile = () => {
     const params = useParams();
-    const { userProfile, loading, getProfile } = useContext(ProfileContext);
+    const { userProfile, loading, getProfile, userProfilePosts, userProfileReplies, userProfileFollowing, userProfileFollowers} = useContext(ProfileContext);
     const [isSelected, setIsSelected] = useState(params.option);
 
     useEffect(() => {
@@ -46,6 +48,7 @@ const Profile = () => {
                         {/* Profile Header */}
                         <ProfileHeader />
 
+                        {/* Profile Tabs */}
                         {isSelected === "posts" || isSelected === 'replies' || !isSelected ? 
                             <div className="tabsContainer">
                                 <span className={`tab ${isSelected === 'posts' && 'active'}`} onClick={() => setIsSelected('posts')}>
@@ -64,6 +67,49 @@ const Profile = () => {
                                     Followers
                                 </span>
                             </div>
+                        }
+
+                        {/* Profile Selection */}
+                        {
+                        isSelected === 'posts' ?
+
+                            userProfilePosts.length === 0 ? 
+                                <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
+                            :
+                            userProfilePosts.map((post) => {
+                                return <Tweet post={post} key={post._id} user={userProfile} />
+                            })
+
+                        :
+                        isSelected === 'replies' ?
+
+                            userProfileReplies.length === 0 ? 
+                                <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
+                            :
+                            userProfileReplies.map((post) => {
+                                return <Tweet post={post} key={post._id} user={userProfile}/>
+                            })
+
+                        :
+                        isSelected === 'followers' ?
+
+                            userProfileFollowers.length === 0 ? 
+                                <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
+                            :
+                            userProfileFollowers.map((post) => {
+                                return <UserCard post={post} key={post._id} />
+                            })
+
+                        :
+                        isSelected === 'following' &&
+
+                            userProfileFollowing.length === 0 ? 
+                            <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
+                            :
+                            userProfileFollowing.map((post) => {
+                                return <UserCard post={post} key={post._id} />
+                            })
+
                         }
                     </>
                 }

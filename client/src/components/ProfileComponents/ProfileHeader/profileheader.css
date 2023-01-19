@@ -30,7 +30,7 @@
 }
 
 .messageButton,
-.followButton,
+.profileFollowButton,
 .editButton {
     border: 1px solid var(--twitter-blue);
     color: var(--twitter-blue);
@@ -43,12 +43,12 @@
 }
 
 .messageButton:hover,
-.followButton:hover,
+.profileFollowButton:hover,
 .editButton:hover {
     background-color: var(--blueBackground);
 }
 
-.followButton.following {
+.profileFollowButton.following {
     background-color: var(--twitter-blue);
     color: #fff;
 }

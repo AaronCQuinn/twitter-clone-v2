@@ -5,7 +5,11 @@ const Post = require('../schemas/PostSchema');
 const User = require('../schemas/UserSchema');
 
 router.get('/', (req, res) => {
-    Post.find()
+    const user = req.cookies.token;
+    const { following, _id } = jwt.decode(user);
+    following.push(_id);
+
+    Post.find({ postedBy: { $in: following } })
     .populate({ 
         path: 'postedBy', 
         select: '-password -email' 

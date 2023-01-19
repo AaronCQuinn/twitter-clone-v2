@@ -1,0 +1,43 @@
+.userCardContainer {
+    padding: var(--spacing);
+    display: flex;
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.userCardDetailsContainer {
+    flex-direction: column;
+    padding: 0 var(--spacing);
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.userCardFollowBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.userCardFollowBtn {
+    border: 1px solid var(--twitter-blue);
+    color: var(--twitter-blue);
+    padding: 5px 15px;
+    border-radius: 60px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.userCardFollowBtn:hover {
+    background-color: var(--blueBackground);
+}
+
+.userCardFollowBtn:hover  {
+    background-color: var(--twitter-blue);
+    color: #fff;
+}
+
+.description {
+    font-size: smaller;
+}
+
+
