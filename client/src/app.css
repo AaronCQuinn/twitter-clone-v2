@@ -19,3 +19,10 @@ ul, li {
     padding: 0 !important;
 }
 
+.noPadding {
+    padding: 0;
+}
+
+.pointer {
+    cursor: pointer;
+}

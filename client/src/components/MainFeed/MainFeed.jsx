@@ -5,11 +5,9 @@ import Posts from '../Posts/Posts';
 import { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import './mainfeed.css'
-import { useParams } from 'react-router-dom';
 
 const Content = () => {
     const { loggedInUser } = useContext(AuthContext);
-    const params = useParams();
     
     return (
         <Col className={"mainSectionContainer"}>

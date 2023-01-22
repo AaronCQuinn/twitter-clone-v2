@@ -5,8 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faComment, faRetweet, faHeart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { timeDifference } from '../../util/timeDifference';
-import ReplyModal from '../ReplyModal/ReplyModal';
-import DeleteModal from '../DeleteModal/DeleteModal';
+import ReplyModal from '../Modals/ReplyModal/ReplyModal';
+import DeleteModal from '../Modals/DeleteModal/DeleteModal';
 import './tweet.css'
 
 const Tweet = ({ post, user }) => {
@@ -110,7 +110,7 @@ const Tweet = ({ post, user }) => {
 
                     {(post.postedBy._id === user._id && !post.retweetData) &&    
                     <div className="deleteButtonContainer">                
-                        <FontAwesomeIcon icon={faTrashCan} className='deleteButton' onClick={(event) => handleDeleteClick(post.retweetData ? post.retweetData : post, event)} />
+                        <FontAwesomeIcon icon={faTrashCan} className='deleteButton pointer' onClick={(event) => handleDeleteClick(post.retweetData ? post.retweetData : post, event)} />
                     </div>
                     }
                 </div>

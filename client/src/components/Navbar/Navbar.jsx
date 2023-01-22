@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDove, faHouseUser, faMagnifyingGlass, faBell, faUser, faEnvelope, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import './navbar.css'
-import { useState } from 'react';
 
 const Navbar = () => {
     const { handleLogout } = useContext(AuthContext);

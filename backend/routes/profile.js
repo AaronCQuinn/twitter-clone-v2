@@ -3,6 +3,10 @@ const router = express.Router();
 const jwt = require('jsonwebtoken')
 const User = require('../schemas/UserSchema');
 const Post = require('../schemas/PostSchema');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const upload = multer({ dest: "uploads/profilePictures/" })
 
 router.get('/:username', async (req, res) => {
     const { username } = req.params;
@@ -80,6 +84,32 @@ router.get('/:username/followers', async (req, res) => {
   const { username } = req.params;
   const twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 }).populate('followers', '_id firstName lastName username profilePicture description');
   res.status(200).send(twitterUser.followers);
+})
+
+router.post('/:username/profilePicture', upload.single('profilePictureImage'), async (req, res) => {
+  const user = req.cookies.token;
+  const { username } = jwt.decode(user);
+  const requestedUsername = req.params.username;
+
+  if (username !== requestedUsername) {
+    return res.sendStatus(401);
+  }
+
+  if (!req.file) {
+    return res.sendStatus(400);
+  }
+
+  const filepath = `/backend/uploads/profilePictures/${req.file.filename}.png`;
+  const targetPath = path.join(__dirname, `../../${filepath}`);
+
+  fs.rename(req.file.path, targetPath, error => {
+    if (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+  });
+
+  return res.sendStatus(200);
 })
 
 module.exports = router;

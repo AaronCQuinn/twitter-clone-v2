@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRetweet } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
-import { timeDifference } from '../../util/timeDifference';
+import { timeDifference } from '../../../util/timeDifference';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import '../ReplyModal/replymodal.css'
@@ -27,24 +27,17 @@ function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.delete(`/api/post/${modalPost._id}/`, {},
-            {
-            headers: {
-                'Content-Type': 'application/json'
-              }
-            })
+        try { 
+        axios.delete(`/api/post/${modalPost._id}/`, {}, { headers: { 'Content-Type': 'application/json' }})
             .then(res => {
                 console.log(res);
-            })              
-            .catch(error => {
-                setPostError('There was an error posting your reply. Please try again!');
-                console.log(`Error posting to back end: ${error}`);
             })
-        .catch(error => {
+        } catch (error) {
             setPostError('There was an error posting your reply. Please try again!');
-            console.log(`Axios request failed: ${error}`);
-        })
-        setDeleteModalShow(false);
+            console.error(`Error posting to back end: ${error}`);
+        } finally {
+            setDeleteModalShow(false);
+        }
     }
 
     return (

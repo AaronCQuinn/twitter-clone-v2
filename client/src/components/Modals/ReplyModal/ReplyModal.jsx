@@ -1,11 +1,11 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../../context/AuthContext';
 import { useContext, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRetweet, faComment } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
-import { timeDifference } from '../../util/timeDifference';
+import { timeDifference } from '../../../util/timeDifference';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import './replymodal.css'
@@ -30,25 +30,15 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.post(`/api/posts/${modalPost._id}/reply`, {reply, id: modalPost._id},
-            {
-            headers: {
-                'Content-Type': 'application/json'
-              }
-            })
-            .then(res => {
-                console.log(res);
-            })              
-            .catch(error => {
-                setPostError('There was an error posting your reply. Please try again!');
-                console.log(`Error posting to back end: ${error}`);
-            })
-        .catch(error => {
+        try {
+            axios.post(`/api/posts/${modalPost._id}/reply`, {reply, id: modalPost._id}, { headers: { 'Content-Type': 'application/json' }})
+        } catch (error) {
             setPostError('There was an error posting your reply. Please try again!');
             console.log(`Axios request failed: ${error}`);
-        })
-        setReply("");
-        setModalShow(false);
+        } finally {
+            setReply("");
+            setModalShow(false);
+        }
     }
 
     return (

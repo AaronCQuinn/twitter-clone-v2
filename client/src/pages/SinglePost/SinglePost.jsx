@@ -12,9 +12,13 @@ const SinglePost = () => {
     return (
         <Container>
             <Row>
-                <Navbar widthOption={2}/>
-                {/* The main section gets more room once the screen hits the different breakpoints. */}
-                <PostFocus widthOption={"col-10 col-md-8 col-lg-6"} />
+                <Col xs={2}>
+                    <Navbar />
+                </Col>
+
+                <Col className="col-10 col-md-8 col-lg-6">
+                    <PostFocus />
+                </Col>
 
                 <Col xs={2} className='d-none d-md-block col-md-2 col-lg-4'>
                     <span>third column</span>

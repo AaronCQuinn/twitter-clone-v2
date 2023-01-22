@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/AuthContext';
 import './postfocus.css'
 
 const PostFocus = ({widthOption}) => {
-    const { state } = useContext(AuthContext);
+    const { loggedInUser } = useContext(AuthContext);
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [post, setPost] = useState();
@@ -31,19 +31,20 @@ const PostFocus = ({widthOption}) => {
     }, [])
 
     return (
-        <Col className={"mainSectionContainer " + widthOption}>
+        <Col className={"mainSectionContainer "}>
             <div className="titleContainer">
                 <h1 className='titleContainerTitle'>View Tweet</h1>
             </div>
 
-            {loading ? <Spinner /> : <Tweet post={post} user={state.user} />}
+            {loading ? <Spinner /> : <Tweet post={post} user={loggedInUser} />}
             <div className="titleContainer">
                 <h1 className='titleContainerTitle'>Replies</h1>
             </div>
+
             {loading ? <Spinner /> 
                 : postReplies.length > 0 ?          
                 postReplies.map((post) => {
-                    return <Tweet post={post} key={post._id} user={state.user} />
+                    return <Tweet post={post} key={post._id} user={loggedInUser} />
                 })
                 : 
                 <>
