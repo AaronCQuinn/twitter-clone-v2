@@ -103,7 +103,7 @@ router.post('/:username/profilePicture', upload.single('profilePictureImage'), a
     return res.sendStatus(400);
   }
 
-  const filepath = `/backend/uploads/profilePictures/${req.file.filename}.png`;
+  const filepath = `/backend/uploads/${req.file.filename}.png`;
   const targetPath = path.join(__dirname, `../../${filepath}`);
 
   fs.rename(req.file.path, targetPath, error => {
@@ -113,7 +113,7 @@ router.post('/:username/profilePicture', upload.single('profilePictureImage'), a
     }
   });
 
-  const returnUser = await User.findOneAndUpdate(_id, {profilePicture: filepath }, { new: true });
+  const returnUser = await User.findOneAndUpdate(_id, {profilePicture: `/api/uploads/images/${req.file.filename}.png` }, { new: true });
   const clientData = issueClientData(returnUser);
   const token = jwt.sign(clientData, process.env.JWT_SECRET);
   res.cookie('token', token, { httpOnly: true })
