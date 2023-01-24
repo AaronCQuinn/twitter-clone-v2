@@ -13,7 +13,7 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
     const [image, setImage] = useState();
     const [cropper, setCropper] = useState();
     const [postError, setPostError] = useState();
-    const { loggedInUser } = useContext(AuthContext);
+    const { loggedInUser, setLoggedInUser } = useContext(AuthContext);
 
     useEffect(() => {
         showToast(postError, 'error');
@@ -41,10 +41,13 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
     const onSubmit = (e) => {
         e.preventDefault();
         try { 
-            cropper.getCroppedCanvas().toBlob((blob) => {
+            cropper.getCroppedCanvas().toBlob(async (blob) => {
                 const formData = new FormData();
                 formData.append('profilePictureImage', blob);
-                axios.post(`/api/profile/${loggedInUser.username}/profilePicture`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+                await axios.post(`/api/profile/${loggedInUser.username}/profilePicture`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+                .then(response => {
+                    setLoggedInUser(prevState => ({...prevState, profilePicture: response.data.profilePicture}));
+                })
             });
         } catch(error) {
             setPostError('There was an error uploading your image. Please try again.');

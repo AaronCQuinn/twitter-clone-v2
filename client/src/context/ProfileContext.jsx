@@ -21,7 +21,6 @@ function ProfileContextProvider({ children }) {
                 fetch(`/api/profile/${username}/followers`),
             ]);
             const data = await res.json();
-            console.log(data);
             const repliesData = await replies.json();
             const followingData = await following.json();
             const followersData = await followers.json();
