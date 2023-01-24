@@ -6,12 +6,16 @@ const Post = require('../schemas/PostSchema');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const upload = multer({ dest: "uploads/profilePictures/" })
+const upload = multer({ dest: "uploads/" });
+const issueClientData = require('../util/issueClientData');
 
 router.get('/:username', async (req, res) => {
     const { username } = req.params;
     const user = req.cookies.token;
-    const { _id } = jwt.decode(user);
+
+    if (!user) {
+      return res.sendStatus(401);
+    }
 
     // Combine the database queries into a group reducing time to get adata.
     userProfile = await User.findOne({ username: username }, { email: 0, password: 0 })
@@ -88,7 +92,7 @@ router.get('/:username/followers', async (req, res) => {
 
 router.post('/:username/profilePicture', upload.single('profilePictureImage'), async (req, res) => {
   const user = req.cookies.token;
-  const { username } = jwt.decode(user);
+  const { username, _id } = jwt.decode(user);
   const requestedUsername = req.params.username;
 
   if (username !== requestedUsername) {
@@ -109,7 +113,12 @@ router.post('/:username/profilePicture', upload.single('profilePictureImage'), a
     }
   });
 
-  return res.sendStatus(200);
+  const returnUser = await User.findOneAndUpdate(_id, {profilePicture: filepath }, { new: true });
+  const clientData = issueClientData(returnUser);
+  const token = jwt.sign(clientData, process.env.JWT_SECRET);
+  res.cookie('token', token, { httpOnly: true })
+
+  return res.sendStatus(204);
 })
 
 module.exports = router;

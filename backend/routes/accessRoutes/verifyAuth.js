@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const issueClientData = require('../../util/issueClientData');
 
 router.get('/', (req, res) => {
     const token = req.cookies?.token;
@@ -9,21 +10,8 @@ router.get('/', (req, res) => {
     try {
         const user = jwt.verify(token, process.env.JWT_SECRET);
         if (user) {
-            const clientData = {
-                username: user.username,
-                profilePicture: user.profilePicture,
-                likes: user.likes,
-                retweets: user.retweets,
-                _id: user._id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                following: user.following,
-                follwers: user.followers,
-            }
+            const clientData = issueClientData(user);
             res.status(200).send(clientData);
-        } else {
-            res.clearCookie('token');
-            return res.sendStatus(401);
         }
     } catch(error) {
         res.clearCookie('token');

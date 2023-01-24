@@ -11,15 +11,17 @@ function ProfileContextProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     const getProfile = async(username) => {
+        // this can definitely be improved, possibly combining the state and using a reducer
         setLoading(true);
         try {
             const [res, replies, following, followers] = await Promise.all([
                 fetch(`/api/profile/${username}`),
                 fetch(`/api/profile/${username}/replies`),
                 fetch(`/api/profile/${username}/following`),
-                fetch(`/api/profile/${username}/followers`)
+                fetch(`/api/profile/${username}/followers`),
             ]);
             const data = await res.json();
+            console.log(data);
             const repliesData = await replies.json();
             const followingData = await following.json();
             const followersData = await followers.json();

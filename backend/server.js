@@ -27,12 +27,16 @@ app.use('/api/user_logout', userLogoutRoute);
 // Api Routes
 const postsApiRoute = require('./routes/posts');
 app.use('/api/posts', postsApiRoute);
-const postApiRoute = require('./routes/post'); // Route for accessing a single post.
+const postApiRoute = require('./routes/post');
 app.use('/api/post', postApiRoute);
 const profileApiRoute = require('./routes/profile.js');
 app.use('/api/profile', profileApiRoute);
 const followApiRoute = require('./routes/followRoutes/follow.js');
 app.use('/api/follow', followApiRoute);
+
+// Upload Routes
+const uploadRoute = require('./routes/uploadRoutes/uploadRoutes');
+app.use('/api/uploads', uploadRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)

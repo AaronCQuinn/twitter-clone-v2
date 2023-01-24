@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const Post = require('../schemas/PostSchema');
-const User = require('../schemas/UserSchema');
+const User = require('../schemas/UserSchema')
 
 router.get('/', (req, res) => {
     const user = req.cookies.token;
@@ -203,6 +203,7 @@ router.post('/:id/retweet', async (req, res) => {
     
     // Reissue the JWT with the new info.
     const token = jwt.sign(clientData, process.env.JWT_SECRET);
+
     res.cookie("token", token, {
             httpOnly: true
         }

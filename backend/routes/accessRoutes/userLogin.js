@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../../schemas/UserSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const issueClientData = require('../../util/issueClientData');
+require('../../util/issueClientData')
 
 router.post('/', async(req, res) => {
     const trimValues = {};
@@ -37,24 +39,14 @@ router.post('/', async(req, res) => {
             return res.sendStatus(401);
         }
 
-        const {username, profilePicture, _id, likes, retweets, firstName, lastName, following, followers} = existingUser;
-        const clientData = {
-            username,
-            profilePicture,
-            _id,
-            likes,
-            retweets,
-            firstName,
-            lastName,
-            following,
-            followers
-        }
+        const clientData = issueClientData(existingUser);
 
         console.log("User provided correct credentials.");
+
         const token = jwt.sign(clientData, process.env.JWT_SECRET);
-        res.cookie('token', token, {
-            httpOnly: true
-        })
+        
+        res.cookie('token', token, { httpOnly: true });
+
         return res.status(201).send(clientData);
     }
 })
