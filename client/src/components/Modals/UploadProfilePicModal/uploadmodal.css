@@ -11,3 +11,7 @@
     display: block;
     max-width: 100%;
 }
+
+.uploadMainContentContainer input {
+    margin: var(--spacing) 0px;
+}

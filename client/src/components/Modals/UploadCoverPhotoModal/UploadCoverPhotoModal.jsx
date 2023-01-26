@@ -9,7 +9,7 @@ import '../ReplyModal/replymodal.css'
 import '../UploadProfilePicModal/uploadmodal.css'
 import "cropperjs/dist/cropper.css";
 
-const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfilePicModal }) => {
+const UploadCoverPhotoModal = ({ setShowUploadCoverPhotoModal, showUploadCoverPhotoModal }) => {
     const [image, setImage] = useState();
     const [cropper, setCropper] = useState();
     const [postError, setPostError] = useState();
@@ -44,9 +44,9 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
             cropper.getCroppedCanvas().toBlob(async (blob) => {
                 const formData = new FormData();
                 formData.append('profilePictureImage', blob);
-                await axios.post(`/api/profile/${loggedInUser.username}/profilePicture`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+                await axios.post(`/api/profile/${loggedInUser.username}/coverPhoto`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
                 .then(response => {
-                    setLoggedInUser(prevState => ({...prevState, profilePicture: response.data.profilePicture}));
+                    setLoggedInUser(prevState => ({...prevState, coverPhoto: response.data.coverPhoto}));
                 })
             });
         } catch(error) {
@@ -59,14 +59,14 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
 
     return (
         <Modal
-            show={showUploadProfilePicModal}
+            show={showUploadCoverPhotoModal}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-        <Modal.Header closeButton onClick={() => { setShowUploadProfilePicModal(false) }}>
+        <Modal.Header closeButton onClick={() => { setShowUploadCoverPhotoModal(false) }}>
             <Modal.Title id="contained-modal-title-vcenter">
-            Upload a New Profile Picture
+            Upload a New Cover Photo
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -76,7 +76,7 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
                     <Cropper
                         style={{ width: "100%" }}
                         zoomTo={0.5}
-                        initialAspectRatio={1}
+                        initialAspectRatio={16 / 9}
                         preview=".img-preview"
                         src={image}
                         viewMode={1}
@@ -97,10 +97,10 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
             <Button variant='primary' onClick={onSubmit}>
                 Upload
             </Button>
-            <Button variant='secondary' onClick={() => { setShowUploadProfilePicModal(false) }}>Close</Button>
+            <Button variant='secondary' onClick={() => { setShowUploadCoverPhotoModal(false) }}>Close</Button>
         </Modal.Footer>
         </Modal>
     );
 }
 
-export default UploadProfilePicModal
+export default UploadCoverPhotoModal

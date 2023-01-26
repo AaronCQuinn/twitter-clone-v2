@@ -1,5 +1,5 @@
 function issueClientData(user) {
-    const {username, _id, profilePicture, likes, retweets, firstName, lastName, following, followers} = user;
+    const {username, _id, profilePicture, likes, retweets, firstName, lastName, following, followers, coverPhoto} = user;
 
     const clientData = {
         username,
@@ -10,7 +10,8 @@ function issueClientData(user) {
         firstName,
         lastName,
         following,
-        followers
+        followers,
+        coverPhoto
     }
 
     return clientData;

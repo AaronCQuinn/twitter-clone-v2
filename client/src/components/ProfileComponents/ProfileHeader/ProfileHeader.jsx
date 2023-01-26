@@ -7,28 +7,48 @@ import { ProfileContext } from '../../../context/ProfileContext';
 import FollowButton from '../../FollowButton/FollowButton';
 import './profileheader.css'
 import UploadProfilePicModal from '../../Modals/UploadProfilePicModal/UploadProfilePicModal';
+import UploadCoverPhotoModal from '../../Modals/UploadCoverPhotoModal/UploadCoverPhotoModal';
 
 const ProfileHeader = () => {
     const { userProfile } = useContext(ProfileContext);
     const { loggedInUser } = useContext(AuthContext);
     const [pictureHovered, setPictureHovered] = useState(false);
+    const [coverHovered, setCoverHovered] = useState(false);
     const [showUploadProfilePicModal, setShowUploadProfilePicModal] = useState(false);
+    const [showUploadCoverPhotoModal, setShowUploadCoverPhotoModal] = useState(false);
 
     return (
         <>
         <UploadProfilePicModal setShowUploadProfilePicModal={setShowUploadProfilePicModal} showUploadProfilePicModal={showUploadProfilePicModal}/>
+        <UploadCoverPhotoModal setShowUploadCoverPhotoModal={setShowUploadCoverPhotoModal} showUploadCoverPhotoModal={showUploadCoverPhotoModal} />
         {/* Header Image */}
         <div className="profileHeaderContainer">
-            <div className="coverPhotoContainer">
+
+            <div 
+                onClick={() => setShowUploadCoverPhotoModal(true)} 
+                onMouseEnter={() => setCoverHovered(true)} 
+                onMouseLeave={() => setCoverHovered(false)} 
+                className={`${coverHovered && 'pointer'} coverPhotoContainer`}
+            >
+                <img src={userProfile.coverPhoto} alt="" /> 
+                {(userProfile._id === loggedInUser._id && coverHovered) &&
+                    <FontAwesomeIcon icon={faCamera} className={"coverPhotoIcon"} />
+                }
+
             </div>
 
-            <div className="profileUserImageContainer">
-                <div onClick={() => setShowUploadProfilePicModal(true)} onMouseEnter={() => setPictureHovered(true)} onMouseLeave={() => setPictureHovered(false)} className={`${pictureHovered && 'pointer'}`}>
-                    <img src={userProfile.profilePicture} alt="" /> 
-                    {(userProfile._id === loggedInUser._id && pictureHovered) &&
-                        <FontAwesomeIcon icon={faCamera} className={"profilePictureButton"} />
-                    }
-                </div>
+            <div 
+                onClick={() => setShowUploadProfilePicModal(true)} 
+                onMouseEnter={() => setPictureHovered(true)} 
+                onMouseLeave={() => setPictureHovered(false)} 
+                className={`${pictureHovered && 'pointer'} profileUserImageContainer`}
+            >
+
+                <img src={userProfile.profilePicture} alt="" /> 
+                {(userProfile._id === loggedInUser._id && pictureHovered) &&
+                    <FontAwesomeIcon icon={faCamera} className={"profilePictureButton"} />
+                }
+
             </div>
         </div>
         

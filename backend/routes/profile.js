@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const upload = multer({ dest: "uploads/" });
 const issueClientData = require('../util/issueClientData');
+const { log } = require('console');
 
 router.get('/:username', async (req, res) => {
     const { username } = req.params;
@@ -118,7 +119,40 @@ router.post('/:username/profilePicture', upload.single('profilePictureImage'), a
   const token = jwt.sign(clientData, process.env.JWT_SECRET);
   res.cookie('token', token, { httpOnly: true })
 
-  return res.sendStatus(204);
+  console.log(clientData);
+  return res.status(200).send(clientData);
+})
+
+router.post('/:username/coverPhoto', upload.single('profilePictureImage'), async (req, res) => {
+    const user = req.cookies.token;
+    const { username, _id } = jwt.decode(user);
+    const requestedUsername = req.params.username;
+
+    if (username !== requestedUsername) {
+      return res.sendStatus(401);
+    }
+
+    if (!req.file) {
+      return res.sendStatus(400);
+    }
+
+    const filepath = `/backend/uploads/${req.file.filename}.png`;
+    const targetPath = path.join(__dirname, `../../${filepath}`);
+
+    fs.rename(req.file.path, targetPath, error => {
+      if (error) {
+        console.log(error);
+        return res.sendStatus(400);
+      }
+    });
+
+    const returnUser = await User.findOneAndUpdate(_id, { coverPhoto: `/api/uploads/images/${req.file.filename}.png` }, { new: true });
+    const clientData = issueClientData(returnUser);
+    const token = jwt.sign(clientData, process.env.JWT_SECRET);
+    res.cookie('token', token, { httpOnly: true })
+
+    console.log(clientData);
+    return res.status(200).send(clientData);
 })
 
 module.exports = router;
