@@ -8,7 +8,6 @@ const path = require('path');
 const fs = require('fs');
 const upload = multer({ dest: "uploads/" });
 const issueClientData = require('../util/issueClientData');
-const { log } = require('console');
 
 router.get('/:username', async (req, res) => {
     const { username } = req.params;
@@ -21,7 +20,7 @@ router.get('/:username', async (req, res) => {
     // Combine the database queries into a group reducing time to get adata.
     userProfile = await User.findOne({ username: username }, { email: 0, password: 0 })
 
-    const posts = await Post.find({ postedBy: userProfile._id, replyTo: { $exists: false } })
+    let posts = await Post.find({ postedBy: userProfile._id, replyTo: { $exists: false } })
         .populate({
           path: "postedBy", 
           select: '-password -email'
@@ -39,6 +38,10 @@ router.get('/:username', async (req, res) => {
         })
         .sort({createdAt: '-1'}
     );
+
+    const pinnedPosition = posts.findIndex(post => post.pinned === true);
+    const removedPinned = posts.splice(pinnedPosition, 1);
+    posts.unshift(removedPinned[0]);
 
     if (!user) {
         return res.sendStatus(400);

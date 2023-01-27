@@ -103,6 +103,14 @@ const Tweet = ({ post, user }) => {
 
             <div className="header">
 
+                {
+                    post.pinned === true && 
+                    <span className='pinnedPostText'>
+                        <FontAwesomeIcon icon={faThumbTack} className='postActionContainerIcon' />
+                        Pinned Post
+                    </span>
+                }
+
                 {post.retweetData &&
                     <div className='postActionContainer'>
                         <Link className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`} to={'profile/' + username + '/posts'}>
