@@ -8,10 +8,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 7px;
 }
 
 .deleteButton {
     padding-right: 3px;
+}
+
+.deleteButton:hover {
+    color: red;
+}
+
+.pinned {
+    color: var(--twitter-blue)
+}
+
+.pinButton:hover {
+    color: var(--twitter-blue);
 }
 
 .post {

@@ -2,7 +2,7 @@ import React, { useState, } from 'react'
 import axios from 'axios';
 import { showToast } from '../../components/Toast/showToast'
 import { Link, useNavigate } from 'react-router-dom';
-import { faComment, faRetweet, faHeart, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { faComment, faRetweet, faHeart, faTrashCan, faThumbTack } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { timeDifference } from '../../util/timeDifference';
 import ReplyModal from '../Modals/ReplyModal/ReplyModal';
@@ -62,8 +62,22 @@ const Tweet = ({ post, user }) => {
         setModalPost(post);
     }
 
-    const handlePostClick = (id) => {
+    const handlePostClick = (id, event) => {
+        event.stopPropagation();
         navigate(`/post/${id}`);
+    }
+
+    const handlePinClick = async (id) => {
+        try {
+            await axios.put(`/api/post/${id}`, { id }, {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+          } catch (error) {
+            showToast('There was an error liking the post, please try again!', 'error');
+            console.log(`Error posting to back end: ${error}`);
+          }
     }
 
     let username, firstName, lastName, profilePicture;
@@ -109,7 +123,8 @@ const Tweet = ({ post, user }) => {
                     </div>
 
                     {(post.postedBy._id === user._id && !post.retweetData) &&    
-                    <div className="deleteButtonContainer">                
+                    <div className="deleteButtonContainer">
+                        <FontAwesomeIcon icon={faThumbTack} className={`pointer pinButton ${post.pinned && 'pinned'}`} onClick={(event) => handlePinClick(post._id, event)} />
                         <FontAwesomeIcon icon={faTrashCan} className='deleteButton pointer' onClick={(event) => handleDeleteClick(post.retweetData ? post.retweetData : post, event)} />
                     </div>
                     }

@@ -33,7 +33,26 @@ router.delete('/:id', async (req, res) => {
     } else {
       res.sendStatus(401);
     }
-  });
+});
+
+router.put('/:id', async (req, res, next) => {
+  const postId = req.params.id;
+  const user = req.cookies.token;
+  const { _id } = jwt.decode(user);
+  
+  const post = await Post.findById(postId);
+  if (!post || post.retweetData) {
+    return res.sendStatus(404);
+  }
+
+  if (post.postedBy._id.toString() === _id) {
+    await Post.updateMany({postedBy: _id}, { $set: {pinned: false }});
+    await Post.updateOne({_id: postId}, { $set: { pinned: true } });    
+    res.sendStatus(204);
+  } else {
+    res.sendStatus(401);
+  }
+})
   
 
 

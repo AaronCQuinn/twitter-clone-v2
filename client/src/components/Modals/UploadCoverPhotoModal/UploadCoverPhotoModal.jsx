@@ -79,6 +79,7 @@ const UploadCoverPhotoModal = ({ setShowUploadCoverPhotoModal, showUploadCoverPh
                         initialAspectRatio={16 / 9}
                         preview=".img-preview"
                         src={image}
+                        cropBoxResizable={false}
                         viewMode={1}
                         minCropBoxHeight={10}
                         minCropBoxWidth={10}
