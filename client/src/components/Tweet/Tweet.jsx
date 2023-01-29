@@ -1,7 +1,7 @@
 import React, { useState, } from 'react'
 import axios from 'axios';
 import { showToast } from '../../components/Toast/showToast'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { faComment, faRetweet, faHeart, faTrashCan, faThumbTack } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { timeDifference } from '../../util/timeDifference';
@@ -15,6 +15,7 @@ const Tweet = ({ post, user }) => {
     const [deleteModalShow, setDeleteModalShow] = useState();
     const [postHover, setPostHover] = useState(false);
     const navigate = useNavigate();
+    const params = useParams();
 
     const handleReplyClick = (post, event) => {
         event.stopPropagation();
@@ -87,7 +88,7 @@ const Tweet = ({ post, user }) => {
     ({ username, firstName, lastName, profilePicture } = post.postedBy);
 
     return (
-    <>   
+        <>   
     <div
       className={`post ${postHover ? 'hovered' : ''}`}
       onMouseEnter={() => setPostHover(true)}
@@ -104,7 +105,8 @@ const Tweet = ({ post, user }) => {
             <div className="header">
 
                 {
-                    post.pinned === true && 
+
+                    (post.pinned === true && params.username) && 
                     <span className='pinnedPostText'>
                         <FontAwesomeIcon icon={faThumbTack} className='postActionContainerIcon' />
                         Pinned Post
