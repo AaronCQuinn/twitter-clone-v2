@@ -45,12 +45,21 @@ router.put('/:id', async (req, res, next) => {
     return res.sendStatus(404);
   }
 
+  if (post.pinned) {
+    try {
+      await Post.updateOne({_id: postId}, { $set: { pinned: false } });    
+      return res.sendStatus(204);
+    } catch(error) {
+      return res.sendStatus(500);
+    }
+  }
+
   if (post.postedBy._id.toString() === _id) {
     await Post.updateMany({postedBy: _id}, { $set: {pinned: false }});
     await Post.updateOne({_id: postId}, { $set: { pinned: true } });    
-    res.sendStatus(204);
+    return res.sendStatus(204);
   } else {
-    res.sendStatus(401);
+    return res.sendStatus(401);
   }
 })
   
