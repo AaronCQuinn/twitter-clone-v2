@@ -21,7 +21,7 @@ const Navbar = () => {
                         <FontAwesomeIcon icon={faHouseUser} className='navbarLink' />
                     </Link>
                 </li>
-                    <Link to='/search'>
+                    <Link to='/search/posts'>
                         <FontAwesomeIcon icon={faMagnifyingGlass} className='navbarLink' />
                     </Link>
                 <li>

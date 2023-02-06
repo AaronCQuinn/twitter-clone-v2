@@ -5,15 +5,14 @@ import Posts from '../Posts/Posts';
 import { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import './mainfeed.css'
+import PageHeader from '../PageHeader.jsx/PageHeader';
 
 const Content = () => {
     const { loggedInUser } = useContext(AuthContext);
     
     return (
         <Col className={"mainSectionContainer"}>
-            <div className="titleContainer">
-                <h1 className='titleContainerTitle'>Home</h1>
-            </div>
+            <PageHeader title={"Home"}/>
             <PostForm />
             <Posts user={loggedInUser} />
         </Col>

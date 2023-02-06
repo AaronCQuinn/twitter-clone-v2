@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Col } from 'react-bootstrap/';
 import Spinner from '../Spinner/Spinner';
+import PageHeader from '../PageHeader.jsx/PageHeader';
 import { useParams } from 'react-router-dom';
 import Tweet from '../Tweet/Tweet';
 import { AuthContext } from '../../context/AuthContext';
@@ -32,14 +33,10 @@ const PostFocus = ({widthOption}) => {
 
     return (
         <Col className={"mainSectionContainer "}>
-            <div className="titleContainer">
-                <h1 className='titleContainerTitle'>View Tweet</h1>
-            </div>
+            <PageHeader title={'View Tweet'} />
 
             {loading ? <Spinner /> : <Tweet post={post} user={loggedInUser} />}
-            <div className="titleContainer">
-                <h1 className='titleContainerTitle'>Replies</h1>
-            </div>
+            <PageHeader title={'Replies'} />
 
             {loading ? <Spinner /> 
                 : postReplies.length > 0 ?          

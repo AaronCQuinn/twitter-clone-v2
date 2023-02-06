@@ -11,6 +11,7 @@ import { ProfileContext } from '../../context/ProfileContext';
 import { useEffect, useState } from 'react';
 import Tweet from '../../components/Tweet/Tweet';
 import UserCard from '../../components/UserCard/UserCard';
+import PageHeader from '../../components/PageHeader.jsx/PageHeader';
 
 const Profile = () => {
     const params = useParams();
@@ -36,14 +37,13 @@ const Profile = () => {
                 <Col className={"mainSectionContainer"}>
                     {loading ? <Spinner /> :
                     <>
-                        <div className="titleContainer">
-                            {(isSelected === 'following' || isSelected === 'followers' || !isSelected) &&
-                                <Link to={'/profile/' + params.username + '/posts'}>
-                                    <FontAwesomeIcon icon={faArrowLeft} className='profileBackArrow' />
-                                </Link>
-                            }
-                            <h1 className='titleContainerTitle'>{userProfile.username}</h1>
-                        </div>
+                        <PageHeader title={userProfile.username}>
+                        {(isSelected === 'following' || isSelected === 'followers' || !isSelected) &&
+                            <Link to={'/profile/' + params.username + '/posts'}>
+                                <FontAwesomeIcon icon={faArrowLeft} className='profileBackArrow' />
+                            </Link>
+                        }
+                        </PageHeader>
         
                         {/* Profile Header */}
                         <ProfileHeader />

@@ -2,6 +2,7 @@ import React from 'react'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register'
+import Search from './pages/Search/Search'
 import {
   Route,
   Routes
@@ -27,6 +28,7 @@ function App() {
             <Route path='/post/:id' element={<SinglePost/>} />
             <Route path='/profile/:username' element={<Profile />} />
             <Route path='/profile/:username/:option' element={<Profile/>} />
+            <Route path='/search/' element={<Search/>} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
