@@ -29,6 +29,7 @@ function App() {
             <Route path='/profile/:username' element={<Profile />} />
             <Route path='/profile/:username/:option' element={<Profile/>} />
             <Route path='/search/' element={<Search/>} />
+            <Route path='/search/:option' element={<Search/>} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
