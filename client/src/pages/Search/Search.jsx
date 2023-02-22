@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
-import PageHeader from '../../components/PageHeader.jsx/PageHeader';
+import PageHeader from '../../components/PageHeader/PageHeader';
 import { useParams } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Spinner from '../../components/Spinner/Spinner';

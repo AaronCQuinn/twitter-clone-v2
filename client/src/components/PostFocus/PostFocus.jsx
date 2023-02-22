@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Col } from 'react-bootstrap/';
 import Spinner from '../Spinner/Spinner';
-import PageHeader from '../PageHeader.jsx/PageHeader';
+import PageHeader from '../PageHeader/PageHeader';
 import { useParams } from 'react-router-dom';
 import Tweet from '../Tweet/Tweet';
 import { AuthContext } from '../../context/AuthContext';

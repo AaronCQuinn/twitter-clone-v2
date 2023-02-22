@@ -5,7 +5,7 @@ import Posts from '../Posts/Posts';
 import { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import './mainfeed.css'
-import PageHeader from '../PageHeader.jsx/PageHeader';
+import PageHeader from '../PageHeader/PageHeader';
 
 const Content = () => {
     const { loggedInUser } = useContext(AuthContext);

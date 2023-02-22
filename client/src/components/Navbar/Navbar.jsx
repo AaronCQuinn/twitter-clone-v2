@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import './navbar.css'
 
 const Navbar = () => {
-    const { handleLogout } = useContext(AuthContext);
+    const { handleLogout, loggedInUser } = useContext(AuthContext);
 
     return (
         <nav className='navbar'>
@@ -33,7 +33,7 @@ const Navbar = () => {
                         <FontAwesomeIcon icon={faEnvelope} className='navbarLink' />
                     </Link>
                 <li>
-                    <Link to='/profile'>
+                    <Link to={'/profile/' + loggedInUser.username + '/posts'}>
                         <FontAwesomeIcon icon={faUser} className='navbarLink' />
                     </Link>
                 </li>

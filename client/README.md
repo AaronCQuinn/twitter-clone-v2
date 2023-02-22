@@ -6,3 +6,4 @@ Acknowledgements of what could be changed or improved on:
 
     TODO:
     Protect all API routes by checking for presense of JWT, possibly other verifications.
+    When following, unfollowing, deleting, making tweets etc UI should update without the need for a refresh.

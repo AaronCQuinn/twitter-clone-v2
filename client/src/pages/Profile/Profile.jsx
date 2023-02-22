@@ -11,7 +11,7 @@ import { ProfileContext } from '../../context/ProfileContext';
 import { useEffect, useState } from 'react';
 import Tweet from '../../components/Tweet/Tweet';
 import UserCard from '../../components/UserCard/UserCard';
-import PageHeader from '../../components/PageHeader.jsx/PageHeader';
+import PageHeader from '../../components/PageHeader/PageHeader';
 
 const Profile = () => {
     const params = useParams();
