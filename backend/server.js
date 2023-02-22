@@ -33,9 +33,12 @@ const profileApiRoute = require('./routes/profile.js');
 app.use('/api/profile', profileApiRoute);
 const followApiRoute = require('./routes/followRoutes/follow.js');
 app.use('/api/follow', followApiRoute);
+const searchApiRoute = require('./routes/searchRoutes/search');
+app.use('/api/search', searchApiRoute);
 
 // Upload Routes
 const uploadRoute = require('./routes/uploadRoutes/uploadRoutes');
+const { search } = require('./routes/posts');
 app.use('/api/uploads', uploadRoute);
 
 app.listen(PORT, () => {

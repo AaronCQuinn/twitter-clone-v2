@@ -63,8 +63,7 @@ const Tweet = ({ post, user }) => {
         setModalPost(post);
     }
 
-    const handlePostClick = (id, event) => {
-        event.stopPropagation();
+    const handlePostClick = (id) => {
         navigate(`/post/${id}`);
     }
 

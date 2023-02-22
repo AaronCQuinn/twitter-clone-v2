@@ -8,6 +8,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import Spinner from '../../components/Spinner/Spinner';
 import Tweet from '../../components/Tweet/Tweet'
 import { AuthContext } from '../../context/AuthContext';
+import UserCard from '../../components/UserCard/UserCard';
 
 function Home() {
     const [isSelected, setIsSelected] = useState('posts');
@@ -31,7 +32,7 @@ function Home() {
                 <Col className="col-10 col-md-8 col-lg-6">
                     <PageHeader title="Search" />
 
-                    <SearchBar setLoading={setLoading} setSearchResults={setSearchResults} />
+                    <SearchBar setLoading={setLoading} setSearchResults={setSearchResults} isSelected={isSelected}/>
 
                     <div className="tabsContainer">
                         <span className={`tab ${isSelected === 'posts' && 'active'}`} onClick={() => setIsSelected('posts')}>
@@ -42,17 +43,18 @@ function Home() {
                         </span>
                     </div>
 
-                    {loading ? 
-                        <Spinner />
-                        : 
-                        searchResults ? 
+                    {loading ? <Spinner />
+                    :
+                    searchResults ?
+                        isSelected === 'posts' ?
                         searchResults.map((item, index) => {
                             return <Tweet post={item} user={loggedInUser} key={index} />
                         })
-
                         :
-
-                        ''
+                        searchResults.map((item, index) => {
+                            return <UserCard post={item} key={index} />
+                        })
+                    : ''
                     }
 
                 </Col>

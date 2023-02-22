@@ -3,13 +3,11 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 import './searchbar.css'
-import { useParams } from 'react-router-dom';
 import { showToast } from '../Toast/showToast';
 
 
-const SearchBar = ({ setLoading, setSearchResults }) => {
+const SearchBar = ({ setLoading, setSearchResults, isSelected }) => {
     const [input, setInput] = useState('');
-    const params = useParams();
 
     useEffect(() => {
         if (input) {
@@ -27,12 +25,11 @@ const SearchBar = ({ setLoading, setSearchResults }) => {
     }, [input])
 
     const handleSearch = async (value) => {
-        const apiRoute = params.option === 'user' ? '/api/users' : '/api/posts';
+        const apiRoute = isSelected === 'users' ? '/api/search/users' : '/api/search/posts';
         try {
-            const search = await fetch(apiRoute + `/search?term=${encodeURIComponent(value)}`);
+            const search = await fetch(apiRoute + `?term=${encodeURIComponent(value)}`);
             if (search.ok) {
                 let searchData = await search.json();
-                console.log(searchData);
                 setSearchResults(searchData);
             } else {
                 throw new Error();
