@@ -1,14 +1,20 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
 import PageHeader from '../../components/PageHeader.jsx/PageHeader';
 import { useParams } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import Spinner from '../../components/Spinner/Spinner';
+import Tweet from '../../components/Tweet/Tweet'
+import { AuthContext } from '../../context/AuthContext';
 
 function Home() {
     const [isSelected, setIsSelected] = useState('posts');
+    const [loading, setLoading] = useState(false);
+    const [searchResults, setSearchResults] = useState();
     const params = useParams();
+    const { loggedInUser } = useContext(AuthContext);
 
     useEffect(() => {
         document.title = 'Search ● Twitter';
@@ -25,7 +31,7 @@ function Home() {
                 <Col className="col-10 col-md-8 col-lg-6">
                     <PageHeader title="Search" />
 
-                    <SearchBar />
+                    <SearchBar setLoading={setLoading} setSearchResults={setSearchResults} />
 
                     <div className="tabsContainer">
                         <span className={`tab ${isSelected === 'posts' && 'active'}`} onClick={() => setIsSelected('posts')}>
@@ -35,6 +41,20 @@ function Home() {
                             Users
                         </span>
                     </div>
+
+                    {loading ? 
+                        <Spinner />
+                        : 
+                        searchResults ? 
+                        searchResults.map((item, index) => {
+                            return <Tweet post={item} user={loggedInUser} key={index} />
+                        })
+
+                        :
+
+                        ''
+                    }
+
                 </Col>
 
                 <Col xs={2} className='d-none d-md-block col-md-2 col-lg-4'>
