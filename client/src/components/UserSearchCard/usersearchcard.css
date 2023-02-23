@@ -1,0 +1,25 @@
+.userSearchCard {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing);
+    background-color: var(--blueLight);
+    border-radius: 7px;
+    text-align: center;
+    position: relative;
+}
+
+.userSearchCard span {
+    font-size: small;
+    font-weight: 100;
+    padding: 0;
+    color: var(--greyText);
+    border: none;
+}
+
+.userSearchCardClose {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    padding-bottom: var(--spacing);
+    color: var(--greyText);
+}

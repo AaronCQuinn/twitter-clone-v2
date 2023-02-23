@@ -54,7 +54,10 @@ function Home() {
                         searchResults.map((item, index) => {
                             return <UserCard post={item} key={index} />
                         })
-                    : ''
+                    :                     
+                    <div className='noResult'>
+                        There are no results to show.
+                    </div>
                     }
 
                 </Col>

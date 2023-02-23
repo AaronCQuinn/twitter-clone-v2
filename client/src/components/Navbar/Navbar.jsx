@@ -29,7 +29,7 @@ const Navbar = () => {
                         <FontAwesomeIcon icon={faBell} className='navbarLink' />
                     </Link>
                 </li>
-                    <Link to='/messages'>
+                    <Link to='/inbox'>
                         <FontAwesomeIcon icon={faEnvelope} className='navbarLink' />
                     </Link>
                 <li>
