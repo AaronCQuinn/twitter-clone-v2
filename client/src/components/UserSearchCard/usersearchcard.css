@@ -1,25 +1,35 @@
 .userSearchCard {
     display: flex;
     flex-direction: column;
-    padding: var(--spacing);
-    background-color: var(--blueLight);
+    padding: 10px;
+    background-color: #f7f7f7;
     border-radius: 7px;
     text-align: center;
     position: relative;
-}
+    box-shadow: 0 0 0 2px var(--blueLight);
+    transition: box-shadow 0.2s ease-in-out;
+  }
 
-.userSearchCard span {
-    font-size: small;
-    font-weight: 100;
-    padding: 0;
-    color: var(--greyText);
-    border: none;
-}
-
-.userSearchCardClose {
+  .userSearchCard:hover {
+    box-shadow: 0 0 0 2px var(--greyText);
+  }
+  
+  .userSearchCardClose {
     position: absolute;
     top: 5px;
     right: 7px;
-    padding-bottom: var(--spacing);
-    color: var(--greyText);
-}
+    color: var(--twitter-blue);
+    cursor: pointer;
+  }
+
+  .userSearchCardName {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 7px;
+  }
+  
+  .userSearchCardUsername {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
