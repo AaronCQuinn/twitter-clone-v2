@@ -59,14 +59,15 @@ const Inbox = () => {
             setLoading(false);
         }
     }
-    
-    const handleCardClick = (item) => {
-        if (selectedUsers.includes(item)) {
+
+    const handleAddUser = (item) => {
+        console.log('fired');
+        if (selectedUsers.some((user) => user._id === item._id)) {
             return;
         }
         setSelectedUsers([...selectedUsers, item]);
     }
-
+         
     return (
         <Container>
             <Row>
@@ -88,9 +89,13 @@ const Inbox = () => {
                             <input type="text" name='userSearchTextBox' id='userSearchTextBox' className='userSearchTextbox' placeholder='Search your message history.' onChange={(e) => setInput(e.target.value)} />
                         </div>
                         <div className="selectedUserContainer">
-                            {selectedUsers.map((item, index) => {
-                                console.log(item.firstName);
-                                return <UserSearchCard key={index} firstName={item.firstName} lastName={item.lastName} username={item.username}/>
+                            {selectedUsers.map((item) => {
+                                return <UserSearchCard
+                                key={item._id}
+                                item={item}
+                                selectedUsers={selectedUsers}
+                                setSelectedUsers={setSelectedUsers}
+                              />
                             })}
                         </div>
                         <Button className='createChatButton' disabled={selectedUsers.length === 0}>Create Chat</Button>
@@ -100,7 +105,7 @@ const Inbox = () => {
                     :
                     searchResults ?
                     searchResults.map((item, index) => {
-                        return <div onClick={() => handleCardClick(item)} key={index}><UserCard post={item}/></div>
+                        return <div onClick={() => handleAddUser(item)} key={index}><UserCard post={item} /></div>
                     })
                     : 
                     <div className='noResult'>

@@ -37,5 +37,5 @@
 .selectedUserContainer {
     display: flex;
     padding: 10px;
-    gap: calc(var(--spacing) / 2);
+    gap: calc(var(--spacing));
 }
