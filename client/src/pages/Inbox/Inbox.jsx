@@ -61,7 +61,10 @@ const Inbox = () => {
     }
 
     const handleAddUser = (item) => {
-        console.log('fired');
+        if (selectedUsers.length >= 10) {
+            return;
+        }
+
         if (selectedUsers.some((user) => user._id === item._id)) {
             return;
         }

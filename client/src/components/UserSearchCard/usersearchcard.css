@@ -1,37 +1,40 @@
-.userSearchCard {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    background-color: #f7f7f7;
-    border-radius: 7px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 0 0 2px var(--blueLight);
-    transition: box-shadow 0.2s ease-in-out, transform 0.3s ease-in-out;
-    transform: scale(0);
-    opacity: 0;
-  }
-
-  .userSearchCard:hover {
-    box-shadow: 0 0 0 2px var(--greyText);
-  }
+    .userSearchCard {
+        display: flex;
+        flex-direction: column;
+        background-color: #CBE5FE;
+        border-radius: 7px;    
+        box-shadow: 0 0 0 2px var(--blueLight);
+        transition: box-shadow 0.2s ease-in-out, transform 0.3s ease-in-out;
+        height: 90px;
+        max-width: 100%;
+    }
   
-  .userSearchCardClose {
-    position: absolute;
-    top: 5px;
-    right: 7px;
-    color: var(--twitter-blue);
-    cursor: pointer;
-  }
-
-  .userSearchCardName {
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 7px;
-  }
+    .userSearchCardInfo {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
   
-  .userSearchCardUsername {
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
+    .userSearchCard:hover {
+        box-shadow: 0 0 0 2px var(--greyText);
+    }
+
+    .userSearchCardIconContainer {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 5px;
+        padding-top: 5px;
+    }
+
+    .userSearchCardName {
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .userSearchCardUsername {
+        font-size: 12px;
+    }
 
