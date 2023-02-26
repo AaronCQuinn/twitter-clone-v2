@@ -23,6 +23,8 @@ const Tweet = ({ post, user }) => {
         setModalPost(post);
     }
 
+    console.log(post);
+
     const handleRetweetClick = async(id, event) => {
         event.stopPropagation();
         axios.post(`/api/posts/${id}/retweet`, {id},
@@ -147,8 +149,8 @@ const Tweet = ({ post, user }) => {
                     <span>Replying to</span>
                         <span className={`postActionContainerLink ${postHover ? 'linkHovered' : ''}`}
                         onClick={() => navigate('/profile/' + username)}
-                        >
-                            {"@" + post.postedBy.username}
+                        >   
+                            {post.replyTo.postedBy.username ? "@" + post.replyTo.postedBy.username : username}
                         </span>
                 </div>
             }

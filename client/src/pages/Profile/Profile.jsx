@@ -27,6 +27,42 @@ const Profile = () => {
         setIsSelected(params.option);
     }, [params.option])
 
+    const renderSwitch = (isSelected) => {
+
+        const errorText = (text) => {
+            return <div className='noTweetError'>{userProfile.username} has no {text} to show yet!</div>;
+        }
+
+        switch (isSelected) {
+            case 'posts':
+                if (!userProfilePosts) return errorText(isSelected);
+                return userProfilePosts.map((post) => {
+                    return <Tweet post={post} key={post._id} user={userProfile} />
+                })
+
+                case 'replies':
+                    if (!userProfileReplies) return errorText(isSelected);
+                    return userProfileReplies.map((post) => {
+                        return <Tweet post={post} key={post._id} user={userProfile}/>
+                    })
+
+                case 'followers':
+                    if (!userProfileFollowers) return errorText(isSelected);
+                    return userProfileFollowers.map((post) => {
+                        return <UserCard post={post} key={post._id} />
+                    });
+            
+                case 'following':
+                    if (!userProfileFollowing) return errorText(isSelected);
+                    return userProfileFollowing.map((post) => {
+                        return <UserCard post={post} key={post._id} />
+                    })
+          
+            default:
+              return <div className='noTweetError'>An error happened when getting the user's information. Please try again.</div>;
+        }          
+    }
+
     return (
         <Container>
             <Row>
@@ -71,48 +107,7 @@ const Profile = () => {
 
                         {/* Profile Selection */}
  
-
-                        {
-                        isSelected === 'posts' ?
-
-                            userProfilePosts.length === 0 ? 
-                                <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
-                            :
-                            userProfilePosts.map((post) => {
-                                return <Tweet post={post} key={post._id} user={userProfile} />
-                            })
-
-                        :
-                        isSelected === 'replies' ?
-
-                            userProfileReplies.length === 0 ? 
-                                <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
-                            :
-                            userProfileReplies.map((post) => {
-                                return <Tweet post={post} key={post._id} user={userProfile}/>
-                            })
-
-                        :
-                        isSelected === 'followers' ?
-
-                            userProfileFollowers.length === 0 ? 
-                                <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
-                            :
-                            userProfileFollowers.map((post) => {
-                                return <UserCard post={post} key={post._id} />
-                            })
-
-                        :
-                        isSelected === 'following' &&
-
-                            userProfileFollowing.length === 0 ? 
-                            <div className='noTweetError'>{userProfile.username} has no replies to show yet!</div>
-                            :
-                            userProfileFollowing.map((post) => {
-                                return <UserCard post={post} key={post._id} />
-                            })
-
-                        }
+                        {renderSwitch(isSelected)}
                     </>
                 }
                 </Col>

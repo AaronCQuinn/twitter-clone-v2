@@ -5,17 +5,22 @@ const Post = require('../schemas/PostSchema');
 const User = require('../schemas/UserSchema');
 
 router.get('/:id', async (req, res) => {
-    let tweet = await Post.findById(req.params.id)
-    .populate(['postedBy', 'retweetData'])
-    .sort({ "createdAt": -1 })
-    .catch(error => console.error("Error fetching single tweet " + req.params.id + " " + error))
+  // Find the tweet that is focused.
+  let tweet = await Post.findById(req.params.id)
+    .populate(['postedBy', 'retweetData', 'replyTo'])
+    .sort({"createdAt": -1 })
+    .catch(error => console.error("Error fetching single tweet " + req.params.id + " " + error));
 
-    tweet = await User.populate(tweet, { path: "retweetData.postedBy", select: '-password -email'});
-    tweet.replies = await Post.find({ replyTo: req.params.id })
-    .populate(['postedBy', 'retweetData'])
+    let replies = await Post.find({ replyTo: req.params.id })
+    .populate([
+      { path: 'postedBy', select: '-password -email' },
+      { path: 'retweetData.postedBy', select: '-password -email' },
+      { path: 'replyTo', select: '-password -email', populate: { path: 'postedBy', model: 'User' } },
+    ])
 
-    res.status(200).send({tweet, replies: tweet.replies});
+    res.status(200).send({tweet, replies: replies});
 })
+
 
 router.delete('/:id', async (req, res) => {
     const postId = req.params.id;

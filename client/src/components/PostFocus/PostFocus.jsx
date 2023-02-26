@@ -7,12 +7,13 @@ import Tweet from '../Tweet/Tweet';
 import { AuthContext } from '../../context/AuthContext';
 import './postfocus.css'
 
-const PostFocus = ({widthOption}) => {
+const PostFocus = () => {
     const { loggedInUser } = useContext(AuthContext);
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [post, setPost] = useState();
     const [postReplies, setPostReplies] = useState();
+
 
     const getPost = async(id) => {
         setLoading(true);
