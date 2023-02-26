@@ -23,8 +23,6 @@ const Tweet = ({ post, user }) => {
         setModalPost(post);
     }
 
-    console.log(post);
-
     const handleRetweetClick = async(id, event) => {
         event.stopPropagation();
         axios.post(`/api/posts/${id}/retweet`, {id},
