@@ -32,7 +32,7 @@ function App() {
             <Route path='/search/' element={<Search/>} />
             <Route path='/search/:option' element={<Search/>} />
             <Route path='/inbox' element={<Inbox />} />
-            <Route path='/inbox/:new' element={<Inbox />} />
+            <Route path='/inbox/:chat' element={<Inbox />} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

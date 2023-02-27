@@ -1,0 +1,28 @@
+.resultListItem {
+    padding: 7px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--lightGrey);
+    color: black;
+    text-decoration: none;
+}
+
+.resultListItem:hover {
+    background-color: #F2F2F2;
+}
+
+.resultsDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.resultsDetailsContainer .heading {
+    font-weight: 500;
+}
+
+.resultsDetailsContainer .subText {
+    color: var(--greyText);
+    font-size: 14px;
+}
