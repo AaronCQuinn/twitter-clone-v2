@@ -29,6 +29,7 @@ router.get('/users', async (req, res) => {
             { username: { $regex: searchTerm, $options: "i"}}
             ] 
         })
+        .select('-email -password')
         .then(async response => {
             return res.status(200).send(response);
         })

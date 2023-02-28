@@ -1,0 +1,5 @@
+.chatUnauthorized {
+    padding-top: var(--spacing);
+    text-align: center;
+    font-size: smaller;
+}

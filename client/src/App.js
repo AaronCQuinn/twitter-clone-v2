@@ -16,6 +16,7 @@ import Profile from './pages/Profile/Profile';
 import { AuthContextProvider } from './context/AuthContext';
 import { ProfileContextProvider } from './context/ProfileContext';
 import './app.css'
+import Chat from './pages/Chat/Chat';
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
             <Route path='/search/' element={<Search/>} />
             <Route path='/search/:option' element={<Search/>} />
             <Route path='/inbox' element={<Inbox />} />
-            <Route path='/inbox/:chat' element={<Inbox />} />
+            <Route path='/inbox/:chatId' element={<Chat />} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

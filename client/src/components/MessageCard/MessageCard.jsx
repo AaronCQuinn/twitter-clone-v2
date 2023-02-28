@@ -5,7 +5,6 @@ import './messagecard.css'
 
 const MessageCard = ({ chat }) => {
     const { loggedInUser } = useContext(AuthContext);
-    console.log(chat);
     const latestMessage = 'Latest message.'
 
     const setChatName = () => {
@@ -24,13 +23,31 @@ const MessageCard = ({ chat }) => {
         return users.filter(user => user._id !== loggedInUser._id);
     }
 
-    const chatName = setChatName();
+    const renderChatImageElement = (users) => {
+        const otherChatUser = otherChatUsers(users);
+        let chatImage = [users[0].profilePicture];
+
+        if (otherChatUser.length > 1) {
+            chatImage.push(users[1].profilePicture);
+        }
+
+        return (
+            <div className={`resultsImageContainer ${otherChatUser.length > 1 && 'groupChatImage'}`}>
+                {
+                chatImage.map((item, index) => {
+                    return <img src={item} alt="" key={index} />
+                })
+                }
+            </div>
+        );
+    }
 
     return (
-        <Link to={`/inbox/messages/${chat._id}`} className='resultListItem'>
-            <div className='resultsDetailsContainer'>
-                <span className='heading'>{chatName}</span>
-                <span className='subText'>{latestMessage}</span>
+        <Link to={`/inbox/${chat._id}`} className='resultListItem'>
+            {renderChatImageElement(chat.users)}
+            <div className='resultsDetailsContainer ellipsis'>
+                <span className='heading ellipsis'>{setChatName()}</span>
+                <span className='subText ellipsis'>{latestMessage}</span>
             </div>
         </Link>
     )
