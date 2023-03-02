@@ -3,7 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Chat = require('../../schemas/ChatSchema');
-const User = require('../../schemas/UserSchema')
+const User = require('../../schemas/UserSchema');
+const { ObjectId } = require('mongodb');
 
 router.get('/', (req, res) => {
     const reqToken = req.cookies?.token;
@@ -36,67 +37,60 @@ router.get('/:chatId', async (req, res) => {
     const reqToken = req.cookies?.token;
     const user = jwt.verify(reqToken, process.env.JWT_SECRET);
 
-    if (!reqToken || !user || !chatId ) {
+    if (!reqToken || !user || !chatId || chatId === user._id) {
         return res.sendStatus(401);
     }
 
     try {
-        const isValidId = mongoose.isValidObjectId(chatId);
+        const isValidId = mongoose.isValidObjectId(chatId); // Checks to see if the string passed in is a valid mongoose object.
 
         if (!isValidId) {
             throw new Error();
         }
 
-        let chat = await Chat.findOne( { _id: chatId, users: { $elemMatch: { $eq: user._id }}} )
-        .populate('users')
+        let fetchUser = await User.findById(chatId);
 
-        if (!chat) {
-            let userFound = await User.findById(chatId);
-    
-            if (!userFound) {
-                throw new Error();
+        const filter = {
+            isGroupChat: false,
+            users: {$size: 2, $all: [ObjectId(user._id), ObjectId(chatId)]}
+        } 
+
+        let fetchChat;
+
+        if (fetchUser) {
+            // If the ID returns a user, either a DM already exists or one wants to be created.
+            fetchChat = await Chat.findOne(filter);
+
+            if (fetchChat) {
+                res.status(200).send(fetchChat);
+                return;
             }
-        }
-    
-        chat = await getChatByUserId(user._id, chatId);
 
-        res.status(200).send(chat);
+            fetchChat = await Chat.create({
+                isGroupChat: false,
+                users: [user._id, chatId]           
+            })
+            .then(response => response.populate('users'))
+
+            res.status(200).send(fetchChat);
+            return;
+        }
+
+        fetchChat = await Chat.findOne( { _id: chatId, users: { $elemMatch: { $eq: user._id }}} ).populate('users')
+
+        if (!fetchChat) {
+            // If this returns false, it means there's no other user or group chat related to the ID passed in a param and nothing can be fetched or created.
+            throw new Error();
+        }
+
+        res.status(200).send(fetchChat);
+
 
     } catch(error) {
+        console.log('Error fetching a chat: ' + error);
         return res.sendStatus(401);
     }
 })
-
-function getChatByUserId(userLoggedIn, otherUser) {
-    return Chat.findOneAndUpdate({
-        // This bit acts as a filter, the chat must be a 1 on 1 between two users.
-        // It must only include two of the users being the one queried, and the one logged in.
-        isGroupChat: false,
-        users: {
-            $size: 2,
-            $all: [
-                {   
-                    $elemMatch: { $eq: mongoose.Types.ObjectId(userLoggedIn) }, 
-                    $elemMatch: { $eq: mongoose.Types.ObjectId(otherUser) }
-                }
-            ]}
-        },
-        // If we're inserting a document, place an array with that information.
-        {
-            $setOnInsert: {
-                users: [userLoggedIn, otherUser]
-            }
-        },
-
-
-        {
-            new: true, // Return the newly created document back after creation.
-            upsert: true, // If we didn't find an object matching, create it.
-        }
-    )
-    .populate('users');
-}
-
 
 router.post('/', (req, res) => {
     const { selectedUsers } = req.body;

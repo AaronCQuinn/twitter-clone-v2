@@ -62,7 +62,7 @@ const ProfileHeader = () => {
                 </button>
                 :
                 <>
-                <Link to={`/messages/${userProfile.username}`} className='messageButton'>
+                <Link to={`/inbox/${userProfile._id}`} className='messageButton'>
                     <FontAwesomeIcon icon={faEnvelope} />
                 </Link>
                 <FollowButton user={userProfile._id} styles={'profileFollowButton'}/>
