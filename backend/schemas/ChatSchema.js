@@ -6,7 +6,7 @@ const ChatSchema = new Schema({
     isGroupChat: {type: Boolean, default: false},
     users: [{ type: Schema.Types.ObjectId, ref: 'User'}],
     latestMessage: { type: Schema.Types.ObjectId, ref: 'Message'}
-}, {timeStamps: true});
+}, {timestamps: true});
 
 let Chat = mongoose.model('Chat', ChatSchema);
 module.exports = Chat;

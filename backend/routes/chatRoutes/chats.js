@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
     // Search the chat table, all the property of the chat schema called users, where the element (elemMatch) has a value equal (eq) to the logged in user's ID.
     Chat.find({ users: { $elemMatch: { $eq: user._id }}})
     .populate('users')
-    .sort({ createdAt: -1 })
+    .sort({ updatedAt: -1 })
     .limit(10) 
     .then(results => 
         res.status(200).send(results)
@@ -68,10 +68,16 @@ router.get('/:chatId', async (req, res) => {
 
             fetchChat = await Chat.create({
                 isGroupChat: false,
-                users: [user._id, chatId]           
+                users: [user._id, chatId]
             })
-            .then(response => response.populate('users'))
-
+            .then(response => {
+                return Chat.findById(response._id).populate('users');
+            })
+            .catch(error => {
+                console.error(error);
+            });
+              
+              
             res.status(200).send(fetchChat);
             return;
         }

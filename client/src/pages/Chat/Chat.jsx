@@ -3,6 +3,8 @@ import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
 import { useParams } from 'react-router-dom';
 import { showToast } from '../../components/Toast/showToast';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './chat.css'
 
 const Chat = () => {
@@ -41,7 +43,7 @@ const Chat = () => {
                     <Navbar />
                 </Col>
 
-                <Col className="col-10 col-md-8 col-lg-6">
+                <Col className="col-10 col-md-8 col-lg-6 h-100 flex">
                     <div className="titleContainer">
                         <h1 className='titleContainerTitle'>Chat</h1>
                     </div>
@@ -51,9 +53,28 @@ const Chat = () => {
                         <div>The chat you tried to access either does not exist, or you are not a part of.</div>
                         <div>Please try again.</div>
                     </div>
-                    : <></>
-                    }
+                    : 
+                    <div className="chatPageContainer">
+                        <div className="chatTitleBarContainer">
+                            <span id="chatName">This is the chat.</span>
+                        </div>
 
+                        <div className="mainContentContainer">
+                            <div className="chatContainer">
+                                <div className="chatMessages">
+                                    a
+                                </div>
+                                <div className="footer">
+                                    <textarea name="messageInput" placeholder='Type a message...'></textarea>
+                                    <button className="sendMessageButton">
+                                        <FontAwesomeIcon icon={faPaperPlane} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    }
                 </Col>
 
                 <Col xs={2} className='d-none d-md-block col-md-2 col-lg-4'>
@@ -61,7 +82,7 @@ const Chat = () => {
                 </Col>
             </Row>
         </Container>
-)
+    )
 }
 
 export default Chat

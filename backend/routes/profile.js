@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const upload = multer({ dest: "uploads/" });
 const issueClientData = require('../util/issueClientData');
+const { log } = require('console');
 
 router.get('/:username', async (req, res) => {
     const { username } = req.params;
@@ -39,9 +40,11 @@ router.get('/:username', async (req, res) => {
         .sort({createdAt: '-1'}
     );
 
-    const pinnedPosition = posts.findIndex(post => post.pinned === true);
-    const removedPinned = posts.splice(pinnedPosition, 1);
-    posts.unshift(removedPinned[0]);
+    if (posts.length > 0) {
+      const pinnedPosition = posts.findIndex(post => post.pinned === true);
+      const removedPinned = posts.splice(pinnedPosition, 1);
+      posts.unshift(removedPinned[0]);
+    }
 
     if (!user) {
         return res.sendStatus(400);

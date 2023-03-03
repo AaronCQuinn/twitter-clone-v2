@@ -3,3 +3,60 @@
     text-align: center;
     font-size: smaller;
 }
+
+.chatPageContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.chatTitleBarContainer {
+    border-bottom: 1px solid var(--lightGrey);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing);
+}
+
+#chatName {
+    width: 100%;
+    border: 1px solid transparent;
+    padding: 0 5px;
+}
+
+#chatName:hover {
+    border: 1px solid var(--lightGrey);
+    cursor: text;
+}
+
+.chatContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.chatContainer .footer {
+    display: flex;
+    padding: var(--spacing);
+}
+
+.chatContainer .footer textarea {
+    flex: 1;
+    resize: none;
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 18px;
+    border: none;
+    height: 38px;
+    padding: 5px 10px;
+}
+
+.chatContainer .footer button {
+    background-color: transparent;
+    color: var(--twitter-blue);
+    font-size: 24px;
+}
+
+.chatMessages {
+    display: flex;
+    flex: 1;
+}

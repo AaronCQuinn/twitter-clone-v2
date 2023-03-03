@@ -25,10 +25,10 @@ const MessageCard = ({ chat }) => {
 
     const renderChatImageElement = (users) => {
         const otherChatUser = otherChatUsers(users);
-        let chatImage = [users[0].profilePicture];
+        let chatImage = [users[1].profilePicture];
 
         if (otherChatUser.length > 1) {
-            chatImage.push(users[1].profilePicture);
+            chatImage.push(users[0].profilePicture);
         }
 
         return (
