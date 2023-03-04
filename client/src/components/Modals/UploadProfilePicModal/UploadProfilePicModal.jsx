@@ -46,7 +46,7 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
                 formData.append('profilePictureImage', blob);
                 await axios.post(`/api/profile/${loggedInUser.username}/profilePicture`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
                 .then(response => {
-                    setLoggedInUser(prevState => ({...prevState, profilePicture: response.data.profilePicture}));
+                    setLoggedInUser(response.data);
                 })
             });
         } catch(error) {
