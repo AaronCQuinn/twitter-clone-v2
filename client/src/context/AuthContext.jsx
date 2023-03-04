@@ -44,7 +44,7 @@ export const AuthContextProvider = ({ children }) => {
             await fetch('/api/user_logout');
             navigate('/login');
         } catch(error) {
-            
+            console.log(error);
         }
     }
 

@@ -120,12 +120,11 @@ router.post('/:username/profilePicture', upload.single('profilePictureImage'), a
     }
   });
 
-  const returnUser = await User.findOneAndUpdate(_id, {profilePicture: `/api/uploads/images/${req.file.filename}.png` }, { new: true });
+  const returnUser = await User.findOneAndUpdate({_id: _id}, {profilePicture: `/api/uploads/images/${req.file.filename}.png` }, { new: true });
   const clientData = issueClientData(returnUser);
   const token = jwt.sign(clientData, process.env.JWT_SECRET);
   res.cookie('token', token, { httpOnly: true })
 
-  console.log(clientData);
   return res.status(200).send(clientData);
 })
 
