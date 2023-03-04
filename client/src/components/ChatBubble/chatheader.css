@@ -27,3 +27,9 @@
     font-size: 14px;
     border: 2px solid #fff;
 }
+
+.chatTitle {
+    margin-left: var(--spacing);
+    border: 1px solid transparent;
+    cursor: pointer;
+}

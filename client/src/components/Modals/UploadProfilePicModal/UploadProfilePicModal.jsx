@@ -53,7 +53,7 @@ const UploadProfilePicModal = ({ setShowUploadProfilePicModal, showUploadProfile
             setPostError('There was an error uploading your image. Please try again.');
             console.log(`Error posting to back end: ${error}`);
         } finally {
-            window.location.reload();
+            setShowUploadProfilePicModal(false);
         }
     }
 

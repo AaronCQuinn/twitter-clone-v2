@@ -130,6 +130,29 @@ router.post('/', (req, res) => {
     } catch(error) {
         return res.sendStatus(500);
     }
-})  
+})
+
+router.put('/update/:chatId', async (req, res) => {
+    const { chatName } = req.body;
+    const reqToken = req.cookies?.token;
+    const user = jwt.verify(reqToken, process.env.JWT_SECRET);
+
+    console.log(req.body);
+
+    if (!chatName || !reqToken || !user) {
+        res.sendStatus(401);
+        return;
+    }
+
+    try {
+        const response = await Chat.findOneAndUpdate({_id: req.params.chatId}, {chatName: req.body.chatName }, {new: true} )
+        res.status(201).send(response);
+        return;
+    } catch(error) {
+        res.sendStatus(500)
+    }
+})
+
+
 
 module.exports = router;

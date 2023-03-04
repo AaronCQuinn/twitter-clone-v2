@@ -17,16 +17,6 @@
     padding: var(--spacing);
 }
 
-#chatName {
-    width: 100%;
-    border: 1px solid transparent;
-}
-
-#chatName:hover {
-    border: 1px solid var(--lightGrey);
-    cursor: text;
-}
-
 .chatContainer {
     flex: 1;
     display: flex;

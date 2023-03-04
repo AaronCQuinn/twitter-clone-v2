@@ -1,16 +1,20 @@
 import React from 'react'
 import { AuthContext } from '../../context/AuthContext';
-import { useContext } from 'react';
-import './chatbubble.css'
+import { useContext, useState } from 'react';
+import './chatheader.css'
+import ChatNameModal from '../Modals/ChatNameModal/ChatNameModal';
 
-const ChatBubble = (fetchedChat) => {
+const ChatHeader = (fetchedChat) => {
+    const { users, _id, chatName } = fetchedChat.fetchedChat;
+
+    let [chatNameModalShow, setChatNameModalShow] = useState(false);
+    let [chatTitle, setChatTitle] = useState(chatName);
     const { loggedInUser } = useContext(AuthContext);
 
     if (!fetchedChat) {
         return;
     }
 
-    const { users } = fetchedChat.fetchedChat;
     const filteredUsers = users.filter(chatUser => chatUser._id !== loggedInUser._id);
 
     function renderImages(users) {
@@ -49,8 +53,17 @@ const ChatBubble = (fetchedChat) => {
                 "+" + renderCount()
             }
         </div>
+        
+        <div className="chatTitle" onClick={() => setChatNameModalShow(true)}>
+            {chatTitle ?
+                chatTitle
+                :
+                users.length > 2 ? "Your group message." : "Your one-on-one message."
+            }
+        </div>
+        <ChatNameModal modalShow={chatNameModalShow} setModalShow={setChatNameModalShow} id={_id} setChatTitle={setChatTitle} />
         </>
     )
 }
 
-export default ChatBubble
+export default ChatHeader

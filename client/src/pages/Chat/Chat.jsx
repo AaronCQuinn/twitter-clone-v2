@@ -8,7 +8,7 @@ import { showToast } from '../../components/Toast/showToast';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './chat.css'
-import ChatBubble from '../../components/ChatBubble/ChatBubble';
+import ChatHeader from '../../components/ChatBubble/ChatHeader';
 
 
 const Chat = () => {
@@ -16,7 +16,6 @@ const Chat = () => {
     const [chatError, setChatError] = useState(false);
     const [chat, setChat] = useState();
     const params = useParams();
-
 
     useEffect(() => {
         getMessages();
@@ -61,7 +60,7 @@ const Chat = () => {
                     <div className="chatPageContainer">
                         <PageHeader title={"Chat"} />
                         <div className="chatTitleBarContainer">
-                            <ChatBubble fetchedChat={chat} />
+                            <ChatHeader fetchedChat={chat} />
                         </div>
                         <div className="mainContentContainer">
                             <div className="chatContainer">

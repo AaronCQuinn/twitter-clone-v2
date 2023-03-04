@@ -44,7 +44,7 @@ const ProfileHeader = () => {
                 className={`${pictureHovered && 'pointer'} profileUserImageContainer`}
             >
 
-                <img src={userProfile.profilePicture} alt="" /> 
+                {loggedInUser._id === userProfile._id ? <img src={loggedInUser.profilePicture} alt="" /> : <img src={userProfile.profilePicture} alt="" />}
                 {(userProfile._id === loggedInUser._id && pictureHovered) &&
                     <FontAwesomeIcon icon={faCamera} className={"profilePictureButton"} />
                 }
