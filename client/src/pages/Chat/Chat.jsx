@@ -9,39 +9,45 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import './chat.css'
-import ChatHeader from '../../components/ChatBubble/ChatHeader';
-
+import ChatHeader from '../../components/ChatHeader/ChatHeader';
+import ChatBubble from '../../components/ChatBubble/ChatBubble';
 
 const Chat = () => {
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
     const [message, setMessage] = useState();
-    const [chat, setChat] = useState();
+    const [messageArray, setMessageArray] = useState();
+    const [chat, setChat] = useState([]);
     const params = useParams();
 
     useEffect(() => {
-        getMessages();
+        getChatInfo();
         //eslint-disable-next-line
     }, [])
 
-    const getMessages = async() => {
+    const getChatInfo = async() => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/chats/${params.chatId}`);
-            if (response.ok) {
-                const messages = await response.json();
-                setChat(messages);
-            } else if (response.status === 401) {
-                setChatError(true)
+            const [chatInfoResponse, messagesResponse] = await Promise.all([
+                fetch(`/api/chats/${params.chatId}`),
+                fetch(`/api/messages/${params.chatId}`)
+            ]);
+            if (chatInfoResponse.ok && messagesResponse.ok) {
+                const chatInfo = await chatInfoResponse.json();
+                const messages = await messagesResponse.json();
+                setChat(chatInfo);
+                setMessageArray(messages);
+            } else if (chatInfoResponse.status === 401 || messagesResponse.status === 401) {
+                setChatError(true);
             }
         } catch(error) {
             console.log(error);
-            showToast('error', 'There was an error getting your chat. Please try again.')
+            showToast('error', 'There was an error getting your chat. Please try again.');
         } finally {
             setLoading(false);
         }
     }
-
+    
     const handleChange = (e) => {
         const content = e.target.value;
         if (!content) {
@@ -66,14 +72,16 @@ const Chat = () => {
             return showToast('You cannot send a message without any content.', 'error');
         }
 
-        console.log(chat._id);
-
         try {
             axios.post(`/api/messages/`, {content: message, _id: chat._id}, { headers: { 'Content-Type': 'application/json' }})
-            .then(response => console.log(response.data))
+            .then(response => {
+                console.log(response);
+                setMessageArray([...messageArray, response.data])
+                setMessage('');
+            });
         } catch (error) {
             showToast('There was an error sending your message. Please try again!', 'error');
-        } finally {
+            setMessage(message);
         }
     }
 
@@ -102,13 +110,17 @@ const Chat = () => {
                         <div className="mainContentContainer">
                             <div className="chatContainer">
 
-                                <div className="chatMessages">
-                                    aghjvcghcgfcgfcgf
-                                </div>
+                                <ul className="chatMessages">
+                                    {messageArray &&
+                                        messageArray.map((message) => {
+                                            return <ChatBubble message={message}/> 
+                                        })
+                                    }
+                                </ul>
 
                                 <form method="post" onSubmit={e => handleSubmit(e)}>
                                     <div className="footer" >
-                                        <textarea name="messageInput" placeholder='Type a message...' onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)}/>
+                                        <textarea name="messageInput" placeholder='Type a message...' value={message} onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)}/>
                                         <button className="sendMessageButton" type='submit'>
                                             <FontAwesomeIcon icon={faPaperPlane} />
                                         </button>
