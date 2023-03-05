@@ -37,6 +37,8 @@ const searchApiRoute = require('./routes/searchRoutes/search');
 app.use('/api/search', searchApiRoute);
 const chatsRoute = require('./routes/chatRoutes/chats');
 app.use('/api/chats', chatsRoute);
+const messagesRoute = require('./routes/chatRoutes/messages');
+app.use('/api/messages', messagesRoute);
 
 // Upload Routes
 const uploadRoute = require('./routes/uploadRoutes/uploadRoutes');

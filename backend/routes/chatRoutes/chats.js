@@ -145,11 +145,11 @@ router.put('/update/:chatId', async (req, res) => {
     }
 
     try {
-        const response = await Chat.findOneAndUpdate({_id: req.params.chatId}, {chatName: req.body.chatName }, {new: true} )
+        const response = await Chat.findOneAndUpdate({_id: req.params.chatId}, {chatName: req.body.chatName.trim() }, {new: true} )
         res.status(201).send(response);
         return;
     } catch(error) {
-        res.sendStatus(500)
+        res.sendStatus(500);
     }
 })
 

@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { showToast } from '../../components/Toast/showToast';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import './chat.css'
 import ChatHeader from '../../components/ChatBubble/ChatHeader';
 
@@ -14,6 +15,7 @@ import ChatHeader from '../../components/ChatBubble/ChatHeader';
 const Chat = () => {
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
+    const [message, setMessage] = useState();
     const [chat, setChat] = useState();
     const params = useParams();
 
@@ -37,6 +39,41 @@ const Chat = () => {
             showToast('error', 'There was an error getting your chat. Please try again.')
         } finally {
             setLoading(false);
+        }
+    }
+
+    const handleChange = (e) => {
+        const content = e.target.value;
+        if (!content) {
+            return;
+        }
+
+        setMessage(content);
+    }
+
+    const handleEnterPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit(e);
+            return false;
+        }
+
+        return;
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!message.trim()) {
+            return showToast('You cannot send a message without any content.', 'error');
+        }
+
+        console.log(chat._id);
+
+        try {
+            axios.post(`/api/messages/`, {content: message, _id: chat._id}, { headers: { 'Content-Type': 'application/json' }})
+            .then(response => console.log(response.data))
+        } catch (error) {
+            showToast('There was an error sending your message. Please try again!', 'error');
+        } finally {
         }
     }
 
@@ -64,15 +101,19 @@ const Chat = () => {
                         </div>
                         <div className="mainContentContainer">
                             <div className="chatContainer">
-                            <div className="chatMessages">
-                                aghjvcghcgfcgfcgf
-                            </div>
-                            <div className="footer">
-                                <textarea name="messageInput" placeholder='Type a message...'></textarea>
-                                <button className="sendMessageButton">
-                                <FontAwesomeIcon icon={faPaperPlane} />
-                                </button>
-                            </div>
+
+                                <div className="chatMessages">
+                                    aghjvcghcgfcgfcgf
+                                </div>
+
+                                <form method="post" onSubmit={e => handleSubmit(e)}>
+                                    <div className="footer" >
+                                        <textarea name="messageInput" placeholder='Type a message...' onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)}/>
+                                        <button className="sendMessageButton" type='submit'>
+                                            <FontAwesomeIcon icon={faPaperPlane} />
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

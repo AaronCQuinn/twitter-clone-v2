@@ -37,6 +37,9 @@
     border: none;
     height: 38px;
     padding: 7px 15px;
+    white-space: nowrap;
+    overflow-y: scroll;
+    overflow: hidden;
 }
 
 .chatContainer .footer button {
