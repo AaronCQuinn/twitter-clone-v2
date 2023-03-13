@@ -112,8 +112,10 @@ const Chat = () => {
 
                                 <ul className="chatMessages">
                                     {messageArray &&
-                                        messageArray.map((message) => {
-                                            return <ChatBubble message={message}/> 
+                                        messageArray.map((message, index) => {
+                                            return (
+                                                <ChatBubble message={message} key={index} index={index} prevMessage={index <= 1? messageArray[0] : messageArray[index - 1]} nextMessage={messageArray[index + 1]} /> 
+                                            )
                                         })
                                     }
                                 </ul>

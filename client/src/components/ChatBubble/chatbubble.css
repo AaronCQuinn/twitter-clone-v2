@@ -20,10 +20,46 @@
 }
 
 .chatMessages .message.isUsers {
-    flex-direction: row-reverse;
+    flex-direction: column;
 }
 
 .chatMessages .message.isUsers .messageBody {
     background-color: var(--twitter-blue);
     color: #fff;
+}
+
+.message.isUsers.firstMessage .messageBody {
+    border-bottom-right-radius: 2px;
+}
+
+.message.isUsers:not(.firstMessage):not(.lastMessage) .messageBody {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.message.isUsers.lastMessage .messageBody {
+    border-bottom-right-radius: 18px;
+}
+
+.message.isUsers.lastMessage:not(.firstMessage) .messageBody {
+    border-top-right-radius: 2px;
+}
+
+/* Other users */ 
+
+.message.isOthers.lastMessage .messageBody {
+    border-bottom-left-radius: 18px;
+}
+
+.message.isOthers.firstMessage .messageBody {
+    border-bottom-left-radius: 2px;
+}
+
+.message.isOthers:not(.firstMessage):not(.lastMessage) .messageBody {
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+}
+
+.message.isOthers.lastMessage:not(.firstMessage) .messageBody {
+    border-top-left-radius: 2px;
 }

@@ -7,3 +7,4 @@ Acknowledgements of what could be changed or improved on:
     TODO:
     Protect all API routes by checking for presense of JWT, possibly other verifications.
     When following, unfollowing, deleting, making tweets etc UI should update without the need for a refresh.
+    DM message container overflows depending on the amount of messages in the DM. The container is currently a fixed height of 85VH, could be an issue with different sized devices. At the moment in different mobile views it seems to be fine.

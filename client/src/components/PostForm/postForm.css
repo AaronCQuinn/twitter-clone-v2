@@ -1,7 +1,7 @@
 .postFormContainer {
     display: flex;
     padding: var(--spacing);
-    border-bottom: 5px solid rgb(230, 236, 240);
+    border-bottom: 3px solid rgb(230, 236, 240);
     flex-shrink: 0;
 }
 
