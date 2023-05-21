@@ -140,7 +140,6 @@ const Chat = () => {
                                                 lastMessageFromUser = true;
                                             }
 
-            
                                             return (
                                                 <ChatBubble 
                                                     message={message} 

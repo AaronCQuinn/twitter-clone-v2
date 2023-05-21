@@ -1,4 +1,9 @@
-.chatMessages .message {
+.senderName {
+    color: rgba(0,0,0,0.6);
+    font-size: small;
+}
+
+.message {
     padding-bottom: 2px;
     list-style: none;
     display: flex;
@@ -6,7 +11,7 @@
     flex-shrink: 0;
 }
 
-.chatMessages .message .messageBody {
+.message .messageBody {
     background-color: #f1f0f0;
     padding: 6px 12px;
     border-radius: 18px;
@@ -19,52 +24,25 @@
     max-width: 55%;
 }
 
+/* Appends logged in users messages to the right hand side. */
 .chatMessages .message.isUsers {
     flex-direction: column;
 }
 
+/* Changes background colour based on if it's the logged in user's message. */
 .chatMessages .message.isUsers .messageBody {
     background-color: var(--twitter-blue);
     color: #fff;
 }
 
-.message.isUsers.firstMessage .messageBody {
-    border-bottom-right-radius: 2px;
-}
-
-.message.isUsers:not(.firstMessage):not(.lastMessage) .messageBody {
-    border-bottom-right-radius: 2px;
-    border-top-right-radius: 2px;
-}
-
+/* Slightly change the last message corner as it is on Twitter */
 .message.isUsers.lastMessage .messageBody {
-    border-bottom-right-radius: 18px;
-}
-
-.message.isUsers.lastMessage:not(.firstMessage) .messageBody {
-    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
 }
 
 /* Other users */ 
 
+/* Slightly change the last message top right corner as it is on Twitter */
 .message.isOthers.lastMessage .messageBody {
-    border-bottom-left-radius: 18px;
-}
-
-.message.isOthers.firstMessage .messageBody {
-    border-bottom-left-radius: 2px;
-}
-
-.message.isOthers:not(.firstMessage):not(.lastMessage) .messageBody {
-    border-bottom-left-radius: 2px;
     border-top-left-radius: 2px;
-}
-
-.message.isOthers.lastMessage:not(.firstMessage) .messageBody {
-    border-top-left-radius: 2px;
-}
-
-.senderName {
-    color: rgba(0,0,0,0.6);
-    font-size: small;
 }
