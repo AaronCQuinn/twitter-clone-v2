@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Spinner from '../../components/Spinner/Spinner'
 import Navbar from '../../components/Navbar/Navbar';
@@ -18,6 +18,8 @@ const Chat = () => {
     const [message, setMessage] = useState();
     const [messageArray, setMessageArray] = useState();
     const [chat, setChat] = useState([]);
+    const [disabled, setDisabled] = useState(false);
+    const chatMessagesRef = useRef(null);
     const params = useParams();
 
     useEffect(() => {
@@ -37,6 +39,15 @@ const Chat = () => {
                 const messages = await messagesResponse.json();
                 setChat(chatInfo);
                 setMessageArray(messages);
+
+                if (chatMessagesRef.current) {
+                    chatMessagesRef.current.classList.add('scrolling');
+                    chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+                    chatMessagesRef.current.addEventListener('transitionend', () => {
+                      chatMessagesRef.current.classList.remove('scrolling');
+                    });
+                }
+
             } else if (chatInfoResponse.status === 401 || messagesResponse.status === 401) {
                 setChatError(true);
             }
@@ -68,20 +79,24 @@ const Chat = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setDisabled(true);
+
         if (!message.trim()) {
+            setDisabled(false);
             return showToast('You cannot send a message without any content.', 'error');
         }
 
         try {
             axios.post(`/api/messages/`, {content: message, _id: chat._id}, { headers: { 'Content-Type': 'application/json' }})
             .then(response => {
-                console.log(response);
                 setMessageArray([...messageArray, response.data])
                 setMessage('');
             });
         } catch (error) {
             showToast('There was an error sending your message. Please try again!', 'error');
             setMessage(message);
+        } finally {
+            setDisabled(false);
         }
     }
 
@@ -102,15 +117,15 @@ const Chat = () => {
                             <div>Please try again.</div>
                         </div>
                     ) : (
-                    <div className="chatPageContainer">
+                    <div className="chatPageContainer" >
                         <PageHeader title={"Chat"} />
                         <div className="chatTitleBarContainer">
                             <ChatHeader fetchedChat={chat} />
                         </div>
-                        <div className="mainContentContainer">
+                        <div className="mainContentContainer" >
                             <div className="chatContainer">
 
-                                <ul className="chatMessages">
+                                <ul className="chatMessages" ref={chatMessagesRef}>
                                     {messageArray &&
                                         messageArray.map((message, index) => {
                                             // First and last message, as if they're in a row, non-interupted by another user.
@@ -155,7 +170,7 @@ const Chat = () => {
 
                                 <form method="post" onSubmit={e => handleSubmit(e)}>
                                     <div className="footer" >
-                                        <textarea name="messageInput" placeholder='Type a message...' value={message} onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)}/>
+                                        <textarea name="messageInput" placeholder='Type a message...' value={message} onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)} disabled={disabled}/>
                                         <button className="sendMessageButton" type='submit'>
                                             <FontAwesomeIcon icon={faPaperPlane} />
                                         </button>

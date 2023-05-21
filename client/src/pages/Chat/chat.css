@@ -8,6 +8,8 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-height: 0;
+    flex-basis: 0;
 }
 
 .chatTitleBarContainer {
@@ -21,8 +23,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: hidden;
-    max-height: 85vh; /* this needs to be a more appropriate height */
 }
 
 .chatContainer .footer {
@@ -54,4 +54,9 @@
     flex-direction: column;
     overflow-y: auto;
     padding: var(--spacing);
+    transition: scroll-behavior 0.3s ease-in-out;
+}
+
+.chatMessages.scrolling {
+    scroll-behavior: smooth;
 }
