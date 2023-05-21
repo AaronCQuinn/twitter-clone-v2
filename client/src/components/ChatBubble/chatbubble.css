@@ -63,3 +63,8 @@
 .message.isOthers.lastMessage:not(.firstMessage) .messageBody {
     border-top-left-radius: 2px;
 }
+
+.senderName {
+    color: rgba(0,0,0,0.6);
+    font-size: small;
+}
