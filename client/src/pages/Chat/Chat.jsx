@@ -20,7 +20,6 @@ const Chat = () => {
     const [message, setMessage] = useState();
     const [messageArray, setMessageArray] = useState();
     const [chat, setChat] = useState([]);
-    const [disabled, setDisabled] = useState(false);
     const params = useParams();
 
     useEffect(() => {
@@ -75,10 +74,8 @@ const Chat = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setDisabled(true);
 
         if (!message.trim()) {
-            setDisabled(false);
             return showToast('You cannot send a message without any content.', 'error');
         }
 
@@ -91,8 +88,6 @@ const Chat = () => {
         } catch (error) {
             showToast('There was an error sending your message. Please try again!', 'error');
             setMessage(message);
-        } finally {
-            setDisabled(false);
         }
     }
 
@@ -127,7 +122,7 @@ const Chat = () => {
 
                                 <form method="post" onSubmit={e => handleSubmit(e)}>
                                     <div className="footer" >
-                                        <textarea name="messageInput" placeholder='Type a message...' value={message} onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)} disabled={disabled}/>
+                                        <textarea name="messageInput" placeholder='Type a message...' value={message} onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)} />
                                         <button className="sendMessageButton" type='submit'>
                                             <FontAwesomeIcon icon={faPaperPlane} />
                                         </button>

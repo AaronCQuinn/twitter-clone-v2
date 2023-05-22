@@ -1,9 +1,9 @@
+require('./database');
 const express = require('express');
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
-require('./database');
 
 const PORT = 5000;
 app.use(cors({
@@ -45,6 +45,11 @@ const uploadRoute = require('./routes/uploadRoutes/uploadRoutes');
 const { search } = require('./routes/posts');
 app.use('/api/uploads', uploadRoute);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)
 });
+
+const io = require('socket.io')(server, { pingTimeout: 60000 });
+io.on('connection', (socket) => {
+    console.log('Socket.io connection established.');
+})
