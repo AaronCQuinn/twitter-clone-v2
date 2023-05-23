@@ -4,13 +4,35 @@ import MessageCard from '../MessageCard/MessageCard';
 import Spinner from '../Spinner/Spinner';
 
 const InboxMessageContainer = () => {
-    const [chats, setChats] = useState();
-    const [input, setInput] = useState('');
+    const [chats, setChats] = useState([]);
+    const [filteredChats, setFilteredChats] = useState([]);
+    const [input, setInput] = useState();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getMessages();
     }, [])
+
+    useEffect(() => {
+        setFilteredChats(chats.filter(chat => {
+            const { chatName, users } = chat;
+            const userNames = users.map(user => `${user.firstName} ${user.lastName}`);
+            
+            if (chatName) {
+                return (
+                chatName.toLowerCase().includes(input.toLowerCase()) ||
+                userNames.some(userName =>
+                    userName.toLowerCase().includes(input.toLowerCase())
+                )
+                );
+            }
+            
+            return userNames.some(userName =>
+                userName.toLowerCase().includes(input.toLowerCase())
+            );
+        }));              
+        //eslint-disable-next-line
+    }, [input])
     
     const getMessages = async() => {
         setLoading(true);
@@ -28,6 +50,8 @@ const InboxMessageContainer = () => {
         }
     }
 
+    let chatArrayToRender = input ? filteredChats : chats;
+
     return (
         <>
         <div className="titleBarContainer">
@@ -39,9 +63,9 @@ const InboxMessageContainer = () => {
         {loading ? 
             <Spinner />
             :
-            chats.map((chat) => {
+            chatArrayToRender.map((chat) => {
                 return <MessageCard chat={chat} key={chat._id} />
-            })
+            }) 
         }
         </>
     )

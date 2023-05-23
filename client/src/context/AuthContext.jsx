@@ -8,6 +8,7 @@ export const AuthContextProvider = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState({});
     const [loginError, setLoginError] = useState();
     const navigate = useNavigate();
+
     
     const handleLogin = async (formValues) => {
         try {

@@ -49,7 +49,16 @@ const server = app.listen(PORT, () => {
     console.log(`Server is now listening on PORT ${PORT}.`)
 });
 
-const io = require('socket.io')(server, { pingTimeout: 60000 });
+const io = require('socket.io')(server, { 
+    pingTimeout: 60000,
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST']
+    }
+});
+
 io.on('connection', (socket) => {
-    console.log('Socket.io connection established.');
+    socket.on('setup', (userData) => {
+        console.log('User data received:' + userData);
+    })
 })
