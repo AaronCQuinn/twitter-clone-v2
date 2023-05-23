@@ -19,12 +19,7 @@ const InboxMessageContainer = () => {
             const userNames = users.map(user => `${user.firstName} ${user.lastName}`);
             
             if (chatName) {
-                return (
-                chatName.toLowerCase().includes(input.toLowerCase()) ||
-                userNames.some(userName =>
-                    userName.toLowerCase().includes(input.toLowerCase())
-                )
-                );
+                return (chatName.toLowerCase().includes(input.toLowerCase()));
             }
             
             return userNames.some(userName =>

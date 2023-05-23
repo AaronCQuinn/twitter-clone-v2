@@ -26,7 +26,7 @@ const PostForm = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/posts', {content},
+        axios.post('/api/tweets/post_tweet', {content},
             {
             headers: {
                 'Content-Type': 'application/json'

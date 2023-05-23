@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
-const User = require('../../schemas/UserSchema');
-const Post = require('../../schemas/PostSchema');
+const User = require('../../models/UserSchema');
+const Post = require('../../models/PostSchema');
 
 router.get('/users', async (req, res) => {
     const searchTerm = req.query.term;

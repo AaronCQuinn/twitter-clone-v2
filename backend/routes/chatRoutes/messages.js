@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const Message = require('../../schemas/MessageSchema');
+const Message = require('../../models/MessageSchema');
 
 router.get('/:chatId', async (req, res) => {
     const reqToken = req.cookies?.token;

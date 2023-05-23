@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const User = require('../../schemas/UserSchema')
+const User = require('../../models/UserSchema')
 
 router.put('/:id', async (req, res) => {
     const { id } = req.body;

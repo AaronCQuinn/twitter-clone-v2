@@ -10,7 +10,7 @@ const Posts = ({ user }) => {
     const getPosts = async() => {
         setLoading(true);
         try {
-            let res = await fetch(`/api/posts`);
+            let res = await fetch(`/api/feed/main_feed`);
             let data = await res.json();
             setPosts(data);
             setLoading(false);

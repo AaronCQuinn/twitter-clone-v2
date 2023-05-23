@@ -18,7 +18,7 @@ const PostFocus = () => {
     const getPost = async(id) => {
         setLoading(true);
         try {
-            let res = await fetch(`/api/post/${id}`);
+            let res = await fetch(`/api/feed/focused_tweet/${id}`);
             let data = await res.json();
             setPost(data.tweet);
             setPostReplies(data.replies);

@@ -9,7 +9,6 @@ export const AuthContextProvider = ({ children }) => {
     const [loginError, setLoginError] = useState();
     const navigate = useNavigate();
 
-    
     const handleLogin = async (formValues) => {
         try {
             const response = await axios.post('/api/user_login', formValues, {

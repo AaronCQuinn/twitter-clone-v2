@@ -28,7 +28,7 @@ function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
     const onSubmit = (e) => {
         e.preventDefault();
         try { 
-        axios.delete(`/api/post/${modalPost._id}/`, {}, { headers: { 'Content-Type': 'application/json' }})
+        axios.delete(`/api/tweets/delete_tweet/${modalPost._id}/`, {}, { headers: { 'Content-Type': 'application/json' }})
             .then(res => {
                 console.log(res);
             })

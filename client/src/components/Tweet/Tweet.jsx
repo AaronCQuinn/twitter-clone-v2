@@ -46,7 +46,7 @@ const Tweet = ({ post, user }) => {
     const handleLikeClick = async (id, event) => {
         event.stopPropagation();
         try {
-          await axios.put(`/api/posts/${id}/like`, { id }, {
+          await axios.put(`/api/tweets/like_tweet/${id}`, { id }, {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -69,7 +69,7 @@ const Tweet = ({ post, user }) => {
 
     const handlePinClick = async (id) => {
         try {
-            await axios.put(`/api/post/${id}`, { id }, {
+            await axios.put(`/api/tweets/pin_tweet/${id}`, { id }, {
               headers: {
                 'Content-Type': 'application/json',
               },

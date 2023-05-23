@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const Chat = require('../../schemas/ChatSchema');
-const User = require('../../schemas/UserSchema');
+const Chat = require('../../models/ChatSchema');
+const User = require('../../models/UserSchema');
 const { ObjectId } = require('mongodb');
 
 router.get('/', (req, res) => {

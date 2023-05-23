@@ -44,7 +44,7 @@ const UploadCoverPhotoModal = ({ setShowUploadCoverPhotoModal, showUploadCoverPh
             cropper.getCroppedCanvas().toBlob(async (blob) => {
                 const formData = new FormData();
                 formData.append('profilePictureImage', blob);
-                await axios.post(`/api/profile/${loggedInUser.username}/coverPhoto`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+                await axios.post(`/api/images/${loggedInUser.username}/coverPhoto`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
                 .then(response => {
                     setLoggedInUser(prevState => ({...prevState, coverPhoto: response.data.coverPhoto}));
                 })
