@@ -10,7 +10,7 @@ const ChatNameModal = ({modalShow, setModalShow, id, setChatTitle}) => {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`/api/chats/update/${id}`, {chatName: chatName}, {
+            await axios.put(`/api/chats/update_dm_name/${id}`, {chatName: chatName}, {
               headers: {'Content-Type': 'application/json'}
             })
             .then(response => {

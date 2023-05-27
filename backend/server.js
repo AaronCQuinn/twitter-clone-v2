@@ -15,20 +15,6 @@ app.use(cookieParser());
 // Routes bundled into this file for organization.
 require('./routes.js')(app);
 
-// Api Routes
-const followApiRoute = require('./routes/followRoutes/follow.js');
-app.use('/api/follow', followApiRoute);
-const searchApiRoute = require('./routes/searchRoutes/search');
-app.use('/api/search', searchApiRoute);
-const chatsRoute = require('./routes/chatRoutes/chats');
-app.use('/api/chats', chatsRoute);
-const messagesRoute = require('./routes/chatRoutes/messages');
-app.use('/api/messages', messagesRoute);
-
-// Upload Routes
-const uploadRoute = require('./routes/imageRoutes.js');
-app.use('/api/uploads', uploadRoute);
-
 const server = http.createServer(app);
 const io = createSocketConnection(server);
 

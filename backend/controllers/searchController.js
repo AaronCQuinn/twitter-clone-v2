@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
 const jwt = require('jsonwebtoken')
-const User = require('../../models/UserSchema');
-const Post = require('../../models/PostSchema');
+const User = require('../models/UserSchema');
+const Post = require('../models/PostSchema');
 
-router.get('/users', async (req, res) => {
+// DESCRIPTION - Returns an array of users that match the given search term.
+// route GET /api/search/users
+// @access Private
+const searchForUser = async(req, res) => {
     const searchTerm = req.query.term;
 
     if (!searchTerm) {
@@ -37,9 +38,12 @@ router.get('/users', async (req, res) => {
         console.error(error);
         return res.sendStatus(500);
     }
-})
+}
 
-router.get('/posts', async (req, res) => {
+// DESCRIPTION - Returns an array of posts that match the given search term.
+// route GET /api/search/posts
+// @access Private
+const searchForPost = async(req, res) => {
     const searchTerm = req.query.term;
 
     if (!searchTerm) {
@@ -73,6 +77,6 @@ router.get('/posts', async (req, res) => {
         console.error(error);
         return res.sendStatus(500);
     }
-})
+}
 
-module.exports = router;
+module.exports = { searchForUser, searchForPost };

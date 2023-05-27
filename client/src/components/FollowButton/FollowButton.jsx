@@ -7,7 +7,7 @@ const FollowButton = ({ user, styles }) => {
     const { loggedInUser } = useContext(AuthContext);
     const handleClick = async (id) => {
         try {
-            await axios.put(`/api/follow/${id}`, {id}, {
+            await axios.put(`/api/toggle_follow/${id}`, {id}, {
               headers: {
                 'Content-Type': 'application/json',
               },

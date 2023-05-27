@@ -32,8 +32,8 @@ const Chat = () => {
 
         try {
             const [chatInfoResponse, messagesResponse] = await Promise.all([
-                fetch(`/api/chats/${params.chatId}`),
-                fetch(`/api/messages/${params.chatId}`)
+                fetch(`/api/chats/fetch_dm/${params.chatId}`),
+                fetch(`/api/fetch_dm/messages/${params.chatId}`)
             ]);
 
             if (chatInfoResponse.ok && messagesResponse.ok) {
@@ -80,7 +80,7 @@ const Chat = () => {
         }
 
         try {
-            axios.post(`/api/messages/`, {content: message, _id: chat._id}, { headers: { 'Content-Type': 'application/json' }})
+            axios.post(`/api/chats/post_message`, {content: message, _id: chat._id}, { headers: { 'Content-Type': 'application/json' }})
             .then(response => {
                 setMessageArray([...messageArray, response.data])
                 setMessage('');

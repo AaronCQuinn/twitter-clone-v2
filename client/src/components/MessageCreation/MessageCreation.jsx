@@ -70,7 +70,7 @@ const MessageCreation = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`/api/chats`, {selectedUsers}, { headers: { 'Content-Type': 'application/json' }})
+            const response = await axios.post(`/api/chats/create_dm`, {selectedUsers}, { headers: { 'Content-Type': 'application/json' }})
             const chat = response.data;
             console.log(chat);
 

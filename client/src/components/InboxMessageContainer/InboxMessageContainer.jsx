@@ -32,7 +32,7 @@ const InboxMessageContainer = () => {
     const getMessages = async() => {
         setLoading(true);
         try {
-            const response = await fetch('/api/chats');
+            const response = await fetch('/api/chats/fetch_dms');
             if (response.ok) {
                 const messages = await response.json();
                 setChats(messages);
