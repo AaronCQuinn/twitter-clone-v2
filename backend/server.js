@@ -1,23 +1,17 @@
-const { createSocketConnection } = require('./socket.js');
-const http = require('http');
 const express = require('express');
 const app = express();
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
-require('./database');
+require('dotenv').config();
 
-const PORT = 5000;
 app.use(cors({ origin: 'http://localhost:3000' }));
-
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json(), cookieParser());
 
 // Routes bundled into this file for organization.
-require('./routes.js')(app);
+require('./routes/routes_master.js')(app);
+require('./socket/socket.js')(app);
+require('./database/database.js');
 
-const server = http.createServer(app);
-const io = createSocketConnection(server);
-
-server.listen(PORT, () => {
-    console.log(`Server is now listening on PORT ${PORT}.`)
+app.listen(process.env.PORT, () => {
+    console.log(`Server is now listening on PORT ${process.env.PORT}.`)
 });
