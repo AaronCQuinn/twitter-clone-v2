@@ -19,9 +19,11 @@ import './app.css'
 import Chat from './pages/Chat/Chat';
 
 function App() {
+
   return (
     <AuthContextProvider>
       <ProfileContextProvider>
+
       <ToastContainer />
 
       <Routes>
@@ -38,7 +40,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
       </Routes>
-
+      
       </ProfileContextProvider>
     </AuthContextProvider>
   )

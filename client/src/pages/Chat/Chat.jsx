@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 import Spinner from '../../components/Spinner/Spinner'
 import Navbar from '../../components/Navbar/Navbar';
@@ -15,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './chat.css'
 
 const Chat = () => {
+    const { joinSocketRoom } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
     const [message, setMessage] = useState();
@@ -27,13 +29,18 @@ const Chat = () => {
         //eslint-disable-next-line
     }, [])
 
+    useEffect(() => {
+        joinSocketRoom(chat._id);
+        //eslint-disable-next-line
+    }, [chat])
+
     const getChatInfo = async() => {
         setLoading(true);
 
         try {
             const [chatInfoResponse, messagesResponse] = await Promise.all([
                 fetch(`/api/chats/fetch_dm/${params.chatId}`),
-                fetch(`/api/fetch_dm/messages/${params.chatId}`)
+                fetch(`/api/chats/fetch_dm/messages/${params.chatId}`)
             ]);
 
             if (chatInfoResponse.ok && messagesResponse.ok) {

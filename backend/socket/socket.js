@@ -1,14 +1,16 @@
-const socketIO = require('socket.io');
-const http = require('http');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 class Socket {
-    constructor(expressInstance) {
-        const server = http.createServer(expressInstance);
-        this.createSocketConnection(server);
+    constructor() {
+        this.io = this.createSocketConnection();
+        this.setEventHandlers(this.io);
     }
 
-    createSocketConnection(server) {
-        return new socketIO.Server(server, { 
+    createSocketConnection() {
+        const httpServer = createServer();
+        httpServer.listen(5001);
+        return new Server(httpServer, { 
             pingTimeout: 60000,
             cors: {
                 origin: 'http://localhost:3000',
@@ -16,12 +18,22 @@ class Socket {
             }
         });
     };
+
+    setEventHandlers(io) {
+        return io.on('connection', (socket) => {
+            
+            socket.on('setup', (clientId) => {
+                // This is done so that if we need to send some sort of specific information to an individual user, we know they're connected to their own id.
+                socket.join(clientId);
+            })
+
+            socket.on('join room', room => {
+                socket.join(room);
+            })
+
+        });
+    }
 }
 
-// io.on('connection', (socket) => {
-//     socket.on('setup', (userData) => {
-//         console.log('User data received: ' + userData);
-//     });
-// });
 
-module.exports = (expressInstance) => new Socket(expressInstance);
+module.exports = () => new Socket();

@@ -1,5 +1,6 @@
-import { createContext, useState } from "react"
+import { createContext, useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
 import axios from "axios";
 
 export const AuthContext = createContext();
@@ -8,6 +9,20 @@ export const AuthContextProvider = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState({});
     const [loginError, setLoginError] = useState();
     const navigate = useNavigate();
+
+    const socket = io('http://localhost:5001');
+
+    useEffect(() => {
+        socket.emit('setup', loggedInUser._id);
+
+        return () => {
+            socket.disconnect();
+        }
+    }, [loggedInUser, socket])
+
+    const joinSocketRoom = (roomId) => {
+        socket.emit('join room', roomId)
+    }
 
     const handleLogin = async (formValues) => {
         try {
@@ -49,7 +64,7 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser}}>
+        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser, joinSocketRoom}}>
             { children }
         </AuthContext.Provider>
     )
