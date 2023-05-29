@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react"
+import { createContext, useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from "axios";
@@ -8,22 +8,19 @@ export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState({});
     const [loginError, setLoginError] = useState();
+    const [socket, setSocket] = useState(null);
     const navigate = useNavigate();
 
-    const socket = io('http://localhost:5001');
-
     useEffect(() => {
-        socket.emit('setup', loggedInUser._id);
+        const newSocket = io('http://localhost:5001');
+        newSocket.emit('setup', loggedInUser._id);
+        setSocket(newSocket);
 
         return () => {
-            socket.disconnect();
+            newSocket.disconnect();
         }
-    }, [loggedInUser, socket])
-
-    const joinSocketRoom = (roomId) => {
-        socket.emit('join room', roomId)
-    }
-
+    }, [loggedInUser._id]);
+    
     const handleLogin = async (formValues) => {
         try {
             const response = await axios.post('/api/user_login', formValues, {
@@ -64,7 +61,7 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser, joinSocketRoom}}>
+        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser, socket}}>
             { children }
         </AuthContext.Provider>
     )

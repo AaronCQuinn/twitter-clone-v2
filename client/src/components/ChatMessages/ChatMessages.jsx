@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import ChatBubble from '../../components/ChatBubble/ChatBubble';
+import typingGif from './typing2.gif'
 import { useRef } from 'react';
 
-const ChatMessages = ({ messageArray }) => {
+const ChatMessages = ({ messageArray, isTyping }) => {
     const chatMessagesRef = useRef(null);
 
     useEffect(() => {
         chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
-    }, [messageArray])
+    }, [messageArray, isTyping])
     
     return (
         <ul className="chatMessages" ref={chatMessagesRef}>
@@ -47,9 +48,12 @@ const ChatMessages = ({ messageArray }) => {
                             index={index} 
                             isFirstMessage={firstMessageFromUser} 
                             isLastMessage={lastMessageFromUser}
-                        /> 
+                        />
                     )
                 })
+            }
+            {
+                isTyping && <img src={typingGif} className='typingGif' alt="" />
             }
         </ul>
     )

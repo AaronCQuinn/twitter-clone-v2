@@ -16,13 +16,33 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './chat.css'
 
 const Chat = () => {
-    const { joinSocketRoom } = useContext(AuthContext);
+    const { socket } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
     const [message, setMessage] = useState();
-    const [messageArray, setMessageArray] = useState();
+    const [messageArray, setMessageArray] = useState([]);
     const [chat, setChat] = useState([]);
+    const [joinedRoom, setJoinedRoom] = useState(false);
+    const [socketTyping, setSocketTyping] = useState(false);
     const params = useParams();
+
+    let typingTimer;
+    const TIMER_LENGTH = 3000;
+
+    function updateTypingNotification() {
+        socket.emit('typing', chat._id);
+        typingTimer = new Date().getTime();
+
+        setTimeout(() => {
+            const TIME_NOW = new Date().getTime();
+            let timeDifference = TIME_NOW - typingTimer;
+
+            if (timeDifference >= TIMER_LENGTH) {
+                socket.emit('stop typing', chat._id);
+            }
+
+        }, TIMER_LENGTH);
+    }
 
     useEffect(() => {
         getChatInfo();
@@ -30,9 +50,32 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        joinSocketRoom(chat._id);
-        //eslint-disable-next-line
-    }, [chat])
+        if (chat._id && !joinedRoom) {
+          socket.emit('join room', chat._id);
+          setJoinedRoom(true);
+        }
+    }, [chat._id, joinedRoom, socket]);
+    
+    useEffect(() => {
+        if (socket) {
+            socket.on('new message', (newMessage) => {
+                console.log('Hit')
+                setMessageArray(prevArray => [...prevArray, newMessage]);
+            })
+
+            socket.on('typing', () => {
+                setSocketTyping(true);
+            })
+
+            socket.on('stop typing', () => {
+                setSocketTyping(false);
+            })
+            
+            return () => {
+                socket.off('new message');
+            }
+        }
+    }, [socket])
 
     const getChatInfo = async() => {
         setLoading(true);
@@ -48,7 +91,7 @@ const Chat = () => {
                 const messages = await messagesResponse.json();
                 setChat(chatInfo);
                 setMessageArray(messages);
-
+                
             } else if (chatInfoResponse.status === 401 || messagesResponse.status === 401) {
                 setChatError(true);
             }
@@ -62,12 +105,8 @@ const Chat = () => {
     }
     
     const handleChange = (e) => {
-        const content = e.target.value;
-        if (!content) {
-            return;
-        }
-
-        setMessage(content);
+        updateTypingNotification();
+        setMessage(e.target.value);
     }
 
     const handleEnterPress = (e) => {
@@ -81,6 +120,7 @@ const Chat = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        socket.emit('stop typing', chat._id);
 
         if (!message.trim()) {
             return showToast('You cannot send a message without any content.', 'error');
@@ -89,7 +129,8 @@ const Chat = () => {
         try {
             axios.post(`/api/chats/post_message`, {content: message, _id: chat._id}, { headers: { 'Content-Type': 'application/json' }})
             .then(response => {
-                setMessageArray([...messageArray, response.data])
+                socket.emit('new message', response.data);
+                setMessageArray(prevArray => [...prevArray, response.data])
                 setMessage('');
             });
         } catch (error) {
@@ -97,6 +138,7 @@ const Chat = () => {
             setMessage(message);
         }
     }
+
 
     return (
         <Container>
@@ -125,8 +167,7 @@ const Chat = () => {
                             
                             <div className="chatContainer">
 
-                                <ChatMessages messageArray={messageArray}/>
-
+                                <ChatMessages messageArray={messageArray} isTyping={socketTyping}/>
                                 <form method="post" onSubmit={e => handleSubmit(e)}>
                                     <div className="footer" >
                                         <textarea name="messageInput" placeholder='Type a message...' value={message} onChange={(e) => handleChange(e)} onKeyDown={(event) => handleEnterPress(event)} />
