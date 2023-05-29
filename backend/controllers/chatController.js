@@ -23,7 +23,7 @@ const fetchDirectMessages = async(req, res) => {
 
     // Search the chat table, all the property of the chat schema called users, where the element (elemMatch) has a value equal (eq) to the logged in user's ID.
     Chat.find({ users: { $elemMatch: { $eq: user._id }}})
-    .populate('users')
+    .populate('users', {select: '-password -email'})
     .sort({ updatedAt: -1 })
     .limit(NUMBER_OF_DMS_TO_FETCH) 
     .then(results => 
@@ -65,7 +65,7 @@ const fetchSpecificDirectMessage = async(req, res) => {
 
         if (fetchUser) {
             // If the ID returns a user, either a DM already exists or one wants to be created.
-            fetchChat = await Chat.findOne(filter);
+            fetchChat = await Chat.findOne(filter).select('-email -password');
 
             if (fetchChat) {
                 res.status(200).send(fetchChat);
@@ -77,7 +77,7 @@ const fetchSpecificDirectMessage = async(req, res) => {
                 users: [user._id, chatId]
             })
             .then(response => {
-                return Chat.findById(response._id).populate('users');
+                return Chat.findById(response._id).populate('users').select('-email -password');
             })
             .catch(error => {
                 console.error(error);
@@ -88,7 +88,7 @@ const fetchSpecificDirectMessage = async(req, res) => {
             return;
         }
 
-        fetchChat = await Chat.findOne( { _id: chatId, users: { $elemMatch: { $eq: user._id }}} ).populate('users')
+        fetchChat = await Chat.findOne( { _id: chatId, users: { $elemMatch: { $eq: user._id }}} ).populate('users').select('-email -password')
 
         if (!fetchChat) {
             // If this returns false, it means there's no other user or group chat related to the ID passed in a param and nothing can be fetched or created.
@@ -177,7 +177,7 @@ const fetchDirectMessageContents = async(req, res) => {
 
     try{
         const message = await Message.find({ chat: req.params.chatId })
-        .populate('userSent')
+        .populate(['userSent', 'chat'])
         return res.status(200).send(message);
     } catch(error) {
         console.error("Error fetching message from database " + error);
@@ -212,6 +212,7 @@ const postNewMessage = async(req, res) => {
     try {
         let message = await Message.create(newMessage);
         message = await message.populate(['userSent', 'chat']);
+        message = await User.populate(message, { path: 'chat.users'})
         return res.status(201).send(message);
     } catch(error) {
         console.log('Error creating a new message: ' + error);

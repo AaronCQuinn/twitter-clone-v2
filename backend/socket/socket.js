@@ -20,17 +20,36 @@ class Socket {
     };
 
     setEventHandlers(io) {
-        return io.on('connection', (socket) => {
-            
-            socket.on('setup', (clientId) => {
+        io.on('connection', (socket) => {
+
+            socket.on('setup', (userPersonalRoom) => {
                 // This is done so that if we need to send some sort of specific information to an individual user, we know they're connected to their own id.
-                socket.join(clientId);
+                socket.join(userPersonalRoom);
             })
 
             socket.on('join room', room => {
+                console.log(room);
                 socket.join(room);
             })
 
+            // Emit the typing event within a specified socket channel.
+            socket.on('typing', room => {
+                socket.in(room).emit('typing')
+            });
+
+            socket.on('stop typing', room => {
+                socket.in(room).emit('stop typing')
+            });
+
+            socket.on('new message', (message) => {
+                // Send a notification to each user that is part of the chat to notify them there's a new message in the DM.
+                // const { users } = message.chat;
+                //   users.forEach(user => {
+                //     console.log(user._id);
+                //     if (user._id === message.userSent._id) { return };
+                console.log('Invoked');
+                socket.in(message.chat._id).emit('new message', message);
+            });
         });
     }
 }
