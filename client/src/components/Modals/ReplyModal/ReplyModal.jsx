@@ -31,7 +31,7 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
     const onSubmit = (e) => {
         e.preventDefault();
         try {
-            axios.post(`/api/posts/${modalPost._id}/reply`, {reply, id: modalPost._id}, { headers: { 'Content-Type': 'application/json' }})
+            axios.post(`/api/tweets/post_reply/${modalPost._id}`, {reply, id: modalPost._id}, { headers: { 'Content-Type': 'application/json' }})
         } catch (error) {
             setPostError('There was an error posting your reply. Please try again!');
             console.log(`Axios request failed: ${error}`);

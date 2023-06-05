@@ -40,5 +40,13 @@ const UserSchema = new Schema({
     followers: [{type: Schema.Types.ObjectId, ref: "User" }],
 }, {timeStamps: true});
 
+UserSchema.set('toJSON', {
+    transform: function(doc, ret) {
+        delete ret.password;
+        delete ret.email;
+        return ret;
+    }
+})
+
 let User = mongoose.model('User', UserSchema);
 module.exports = User;

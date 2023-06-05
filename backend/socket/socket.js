@@ -28,7 +28,6 @@ class Socket {
             })
 
             socket.on('join room', room => {
-                console.log(room);
                 socket.join(room);
             })
 
@@ -42,13 +41,15 @@ class Socket {
             });
 
             socket.on('new message', (message) => {
-                // Send a notification to each user that is part of the chat to notify them there's a new message in the DM.
-                // const { users } = message.chat;
-                //   users.forEach(user => {
-                //     console.log(user._id);
-                //     if (user._id === message.userSent._id) { return };
-                console.log('Invoked');
+                // Update the chat with the current message.
                 socket.in(message.chat._id).emit('new message', message);
+
+                // Send a notification to each user that is part of the chat to notify them there's a new message in the DM.
+                const { users } = message.chat;
+                  users.forEach(user => {
+                    if (user._id === message.userSent._id) { return };
+                    socket.in(user._id).emit('message received', message);
+                })
             });
         });
     }

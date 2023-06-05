@@ -1,35 +1,25 @@
-import { createContext, useEffect, useState } from "react"
-import { useNavigate } from 'react-router-dom';
-import io from 'socket.io-client';
 import axios from "axios";
+import { createContext, useState } from "react"
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState({});
     const [loginError, setLoginError] = useState();
-    const [socket, setSocket] = useState(null);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const newSocket = io('http://localhost:5001');
-        newSocket.emit('setup', loggedInUser._id);
-        setSocket(newSocket);
-
-        return () => {
-            newSocket.disconnect();
-        }
-    }, [loggedInUser._id]);
     
     const handleLogin = async (formValues) => {
         try {
             const response = await axios.post('/api/user_login', formValues, {
-            headers: { 'Content-Type': 'application/json' }})
-            if (response.status) {
-                setLoggedInUser(response.data)
-                navigate('/');
-                return;
-            }
+            headers: { 'Content-Type': 'application/json' }
+        })
+        
+        if (response.status === 200) {
+            setLoggedInUser(response.data)
+            navigate('/');
+            return;
+        }
        
         } catch(error) {
             switch (error.response.status) {
@@ -61,7 +51,7 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser, socket}}>
+        <AuthContext.Provider value={{loggedInUser, handleLogin, loginError, handleLogout, setLoggedInUser}}>
             { children }
         </AuthContext.Provider>
     )

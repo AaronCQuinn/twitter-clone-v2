@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
 
 import Spinner from '../../components/Spinner/Spinner'
 import Navbar from '../../components/Navbar/Navbar';
@@ -14,9 +13,10 @@ import { showToast } from '../../components/Toast/showToast';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './chat.css'
+import { SocketContext } from '../../context/SocketContext';
 
 const Chat = () => {
-    const { socket } = useContext(AuthContext);
+    const { socket } = useContext(SocketContext);
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
     const [message, setMessage] = useState();

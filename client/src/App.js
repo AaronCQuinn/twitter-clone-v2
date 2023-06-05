@@ -17,11 +17,14 @@ import { AuthContextProvider } from './context/AuthContext';
 import { ProfileContextProvider } from './context/ProfileContext';
 import './app.css'
 import Chat from './pages/Chat/Chat';
+import { SocketContextProvider } from './context/SocketContext';
+import Notifications from './pages/Notifications/Notifications';
 
 function App() {
 
   return (
     <AuthContextProvider>
+      <SocketContextProvider>
       <ProfileContextProvider>
 
       <ToastContainer />
@@ -36,12 +39,14 @@ function App() {
             <Route path='/search/:option' element={<Search/>} />
             <Route path='/inbox' element={<Inbox />} />
             <Route path='/inbox/:chatId' element={<Chat />} />
+            <Route path='/notifications' element={<Notifications />} />
         </Route>
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
       </Routes>
       
       </ProfileContextProvider>
+      </SocketContextProvider>
     </AuthContextProvider>
   )
 }
