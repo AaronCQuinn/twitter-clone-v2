@@ -191,10 +191,7 @@ const toggleFollowUser = async(req, res) => {
 
     // Reissue the JWT with the new info.
     const token = jwt.sign(clientData, process.env.JWT_SECRET);
-    res.cookie("token", token, {
-            httpOnly: true
-        }
-    )
+    res.cookie("token", token, { httpOnly: true })
 
     return res.status(201).send(clientUserData);
 }

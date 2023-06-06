@@ -25,7 +25,7 @@ const Tweet = ({ post, user }) => {
 
     const handleRetweetClick = async(id, event) => {
         event.stopPropagation();
-        axios.post(`/api/posts/${id}/retweet`, {id},
+        axios.post(`/api/tweets/retweet_tweet/${id}`, {id},
             {
             headers: {
                 'Content-Type': 'application/json'
