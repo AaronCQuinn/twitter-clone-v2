@@ -19,7 +19,6 @@ html, body {
 
 #root, .container {
     height: 100%;
-    overflow: hidden;
 }
 
 .flex {

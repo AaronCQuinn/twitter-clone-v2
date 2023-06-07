@@ -14,6 +14,7 @@
 .postFooter .postButtonContainer {
     padding-top: 3px;
     display: flex;
+    overflow-x: hidden;
     flex: 1;
     justify-content: space-between;
 }
@@ -37,7 +38,7 @@ button {
     align-items: center;
     justify-content: center;
     max-height: 20px;
-    max-width: 16px;
+    min-width: 16px;
 }
 
 .commentButtonBlue:hover {

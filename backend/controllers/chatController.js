@@ -10,29 +10,19 @@ const NUMBER_OF_DMS_TO_FETCH = 10;
 // route GET /api/chats/fetch_dms
 // @access Private
 const fetchDirectMessages = async(req, res) => {
-    const reqToken = req.cookies?.token;
-    if (!reqToken) {
-        return res.sendStatus(401);
-    }
-
-    const user = jwt.verify(reqToken, process.env.JWT_SECRET);
-
-    if (!user) {
-        return res.statusMessage(401);
-    }
-
+    const { _id: loggedInUser } = req.cookies.decodedToken;
+    try {
     // Search the chat table, all the property of the chat schema called users, where the element (elemMatch) has a value equal (eq) to the logged in user's ID.
-    Chat.find({ users: { $elemMatch: { $eq: user._id }}})
-    .populate('users', {select: '-password -email'})
-    .sort({ updatedAt: -1 })
+    const fetchChats = await Chat.find({ users: { $elemMatch: { $eq: loggedInUser }}})
     .limit(NUMBER_OF_DMS_TO_FETCH) 
-    .then(results => 
-        res.status(200).send(results)
-    )
-    .catch(error => {
-        console.error(error);
+    .populate('users')
+    .sort({ updatedAt: -1 })
+
+    return res.status(200).send(fetchChats);
+
+    } catch(error) {
         res.sendStatus(400);
-    })
+    }
 }
 
 // DESCRIPTION - Fetchs a specific DM that the user is trying to interact with, if it doesn't exist it is created.
@@ -40,10 +30,9 @@ const fetchDirectMessages = async(req, res) => {
 // @access Private
 const fetchSpecificDirectMessage = async(req, res) => {
     const { chatId } = req.params;
-    const reqToken = req.cookies?.token;
-    const user = jwt.verify(reqToken, process.env.JWT_SECRET);
+    const { _id: loggedInUser } = req.cookies.decodedToken;
 
-    if (!reqToken || !user || !chatId || chatId === user._id) {
+    if (!chatId || chatId === loggedInUser) {
         return res.sendStatus(401);
     }
 
@@ -54,53 +43,35 @@ const fetchSpecificDirectMessage = async(req, res) => {
             throw new Error();
         }
 
-        let fetchUser = await User.findById(chatId);
+        let fetchChat;
+        fetchChat = await Chat.findById(chatId).populate('users');
 
+        if (fetchChat) {
+            return res.status(200).send(fetchChat);
+        }
+
+        /* If a chat with the ID doesn't exist, we must check to see if it's another users ID that is passed in from viewing another persons profile.
+        in that case, we can check to see if a DM between the logged in user and the requested user already exists. If not, create the DM. */
         const filter = {
             isGroupChat: false,
-            users: {$size: 2, $all: [ObjectId(user._id), ObjectId(chatId)]}
+            users: {$size: 2, $all: [ObjectId(loggedInUser), ObjectId(chatId)]}
         } 
+        fetchChat = await Chat.findOne(filter).populate('users');
 
-        let fetchChat;
-
-        if (fetchUser) {
-            // If the ID returns a user, either a DM already exists or one wants to be created.
-            fetchChat = await Chat.findOne(filter).select('-email -password');
-
-            if (fetchChat) {
-                res.status(200).send(fetchChat);
-                return;
-            }
-
-            fetchChat = await Chat.create({
-                isGroupChat: false,
-                users: [user._id, chatId]
-            })
-            .then(response => {
-                return Chat.findById(response._id).populate('users').select('-email -password');
-            })
-            .catch(error => {
-                console.error(error);
-            });
-              
-              
-            res.status(200).send(fetchChat);
-            return;
+        if (fetchChat) {
+            return res.status(200).send(fetchChat);
         }
 
-        fetchChat = await Chat.findOne( { _id: chatId, users: { $elemMatch: { $eq: user._id }}} ).populate('users').select('-email -password')
-
-        if (!fetchChat) {
-            // If this returns false, it means there's no other user or group chat related to the ID passed in a param and nothing can be fetched or created.
-            throw new Error();
-        }
-
-        res.status(200).send(fetchChat);
-
-
+        fetchChat = await Chat.create({
+            isGroupChat: false,
+            users: [loggedInUser, chatId]
+        }).populate('users')
+      
+        return res.status(200).send(fetchChat);
+        // fetchChat = await Chat.findOne( { _id: chatId, users: { $elemMatch: { $eq: user._id }}} ).populate('users').select('-email -password')
     } catch(error) {
         console.log('Error fetching a chat: ' + error);
-        return res.sendStatus(401);
+        return res.sendStatus(500);
     }
 }
 

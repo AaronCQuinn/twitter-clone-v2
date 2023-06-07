@@ -19,6 +19,12 @@
     padding: var(--spacing);
 }
 
+.mainContentContainer {
+    display: flex;
+    flex: 1;
+    overflow-y: hidden;
+}
+
 .chatContainer {
     flex: 1;
     display: flex;

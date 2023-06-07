@@ -16,5 +16,5 @@ module.exports = (app) => {
     app.use(BASE_API_URL, imageRoutes);
     app.use(BASE_API_URL, profileRoutes);
     app.use(BASE_API_URL, searchRoutes);
-    app.use(BASE_API_URL + '/chats', chatRoutes);
+    app.use(BASE_API_URL + '/chats', verifyToken, chatRoutes);
 }

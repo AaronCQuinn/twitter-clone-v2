@@ -144,7 +144,7 @@ const Tweet = ({ post, user }) => {
                 <button onClick={(e) => handleLikeClick(post._id, e)}>
                     <div className='likeButtonContainer'>
                         <FontAwesomeIcon icon={faHeart} className={post.likes.includes(user._id) ? 'likeButtonRed' : 'likeButtonHover'} />
-                        <span className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</span>
+                        <div className='likeButtonCount'>{post.likes?.length > 0 ? post.likes.length : ''}</div>
                     </div>
                 </button>
                 
