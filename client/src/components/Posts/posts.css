@@ -1,39 +1,3 @@
-.post {
-    display: flex;
-    flex-direction: column;
-    padding: var(--spacing);
-    border-bottom: 1px solid var(--lightGrey);
-    flex-shrink: 0;
-    background-color: rgb(255,255,255);
-}
-
-.postBody:hover {
-    cursor: pointer;
-}
-
-.headerLink {
-    text-decoration: none;
-    font-weight: bold;
-    padding-right: 5px;
-}
-
-.headerLink:hover {
-    text-decoration: underline;
-}
-
-.mainContentContainer {
-    display: flex;
-    flex: 1;
-    overflow-y: hidden;
-}
-
-.postContentContainer {
-    padding-left: var(--spacing);
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
 .username,
 .date {
     color: var(--greyText);

@@ -1,13 +1,10 @@
 import React from 'react'
-import { useEffect } from 'react'
 import { Container, Row, Col } from 'react-bootstrap/';
 import Navbar from '../../components/Navbar/Navbar';
 import PostFocus from '../../components/PostFocus/PostFocus';
 
 const SinglePost = () => {
-    useEffect(() => {
-        document.title = 'View Post ● Twitter';
-    }, [])
+    document.title = 'View Post ● Twitter';
 
     return (
         <Container>

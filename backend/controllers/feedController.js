@@ -12,7 +12,8 @@ const fetchUserMainFeed = async(req, res) => {
         let UserLoggedInFeed = await Post.find({ 
         postedBy: { $in: UserLoggedInFollowing }})
         .limit(INITIAL_TWEETS_TO_FETCH)
-        .populate(['retweetData', 'replyTo', 'postedBy'])
+        .populate(['replyTo', 'postedBy'])
+        .populate( { path: 'retweetData', populate: { path: 'postedBy', model: 'User'}} )
         .sort({ createdAt: -1 })
 
         return res.status(200).send(UserLoggedInFeed);
@@ -30,9 +31,13 @@ const fetchTweet = async(req, res) => {
     try {
         let tweet = await Post.findById(tweetToFetchId)
         .populate(['postedBy', 'retweetData', 'replyTo'])
+        .populate( { path: 'retweetData', populate: { path: 'postedBy', model: 'User'}} )
         .sort({"createdAt": -1 })
+
         let replies = await Post.find({ replyTo: tweetToFetchId })
+        .limit(INITIAL_TWEETS_TO_FETCH)
         .populate(['postedBy', 'retweetData', 'replyTo'])
+        .sort({'createdAt': -1})
 
         return res.status(200).send({tweet, replies});
     } catch(error) {

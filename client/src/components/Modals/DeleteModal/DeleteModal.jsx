@@ -1,43 +1,23 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRetweet } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import { timeDifference } from '../../../util/timeDifference';
-import { toast } from 'react-toastify';
+import { showToast } from '../../Toast/showToast';
 import axios from 'axios';
 import '../ReplyModal/replymodal.css'
 
 function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
-    const [postError, setPostError] = useState();
-
-    useEffect(() => {
-        toast.error(postError, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-        });
-    }, [postError])
 
     const onSubmit = (e) => {
         e.preventDefault();
         try { 
-        axios.delete(`/api/tweets/delete_tweet/${modalPost._id}/`, {}, { headers: { 'Content-Type': 'application/json' }})
-            .then(res => {
-                console.log(res);
-            })
+            axios.delete(`/api/tweets/delete_tweet/${modalPost._id}/`, {}, { headers: { 'Content-Type': 'application/json' }})
         } catch (error) {
-            setPostError('There was an error posting your reply. Please try again!');
-            console.error(`Error posting to back end: ${error}`);
-        } finally {
-            setDeleteModalShow(false);
-        }
+            showToast('There was an error posting your reply. Please try again!', 'error');
+        } 
+        setDeleteModalShow(false);
     }
 
     return (
@@ -56,13 +36,13 @@ function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
             {modalPost &&
                 <div className="modalPost">
 
-                    <div className="mainContentContainer">
+                    <div className="tweetContainer">
 
                         <div className="postUserImageContainer">
                             <img src={modalPost.postedBy.profilePicture} alt="" />
                         </div>
 
-                        <div className="postContentContainer">
+                        <div className="tweetContent">
                             <div className="header">
                                 {modalPost.retweetData !== undefined &&
                                     <div className='postActionContainer'>
@@ -82,7 +62,7 @@ function DeleteModal({deleteModalShow, setDeleteModalShow, modalPost}) {
                                 <span className='date'>{timeDifference(new Date(), new Date(modalPost.createdAt))}</span>
                             </div>
 
-                            <div className="postBody">
+                            <div>
                                 <span>{modalPost.content}</span>
                             </div>
                         </div>

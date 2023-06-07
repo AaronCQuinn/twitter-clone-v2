@@ -14,7 +14,6 @@ const PostFocus = () => {
     const [post, setPost] = useState();
     const [postReplies, setPostReplies] = useState();
 
-
     const getPost = async(id) => {
         setLoading(true);
         try {
@@ -32,23 +31,19 @@ const PostFocus = () => {
         getPost(id);
     }, [])
 
+    const hasReplies = postReplies > 0 ? true : false;
+
     return (
         <Col className={"mainSectionContainer "}>
             <PageHeader title={'View Tweet'} />
 
             {loading ? <Spinner /> : <Tweet post={post} user={loggedInUser} />}
+
             <PageHeader title={'Replies'} />
 
-            {loading ? <Spinner /> 
-                : postReplies.length > 0 ?          
-                postReplies.map((post) => {
-                    return <Tweet post={post} key={post._id} user={loggedInUser} />
-                })
-                : 
-                <>
-                    <div className='noReplyText'>This tweet has no replies yet!</div>
-                </>
-            }
+            {loading ? <Spinner /> : hasReplies ? postReplies.map(post => { return <Tweet post={post} key={post._id} user={loggedInUser} />})
+            : 
+            <div className='noReplyText'>This tweet has no replies yet!</div>}
         </Col>
     )
 }

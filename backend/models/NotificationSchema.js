@@ -17,6 +17,10 @@ const NotificationSchema = new Schema({
 NotificationSchema.statics.insertNotification = async(userTo, userFrom, notificationType, entityId) => {
     let data = { userTo, userFrom, notificationType, entityId };
 
+    if (userTo.toString() === userFrom.toString()) {
+        return;
+    }
+
     // Check if the notification already exists. If this check didn't exist, a user could just toggle a like on a tweet for example and spam the notification page of other users with no real value.
     await Notification.deleteOne(data).catch(error => console.log(error));
 

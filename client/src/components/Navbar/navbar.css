@@ -18,7 +18,6 @@
 }
 
 .navbarLink:hover {
-    background-color: var(--buttonHoverBH);
     color: var(--twitter-blue);
     border-radius: 50%;
     transition: var(--transition-ease);

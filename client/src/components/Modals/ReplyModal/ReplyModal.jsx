@@ -56,11 +56,11 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
         <Modal.Body>
             {modalPost &&
             <div className="modalPost">
-                <div className="mainContentContainer underline">
+                <div className="tweetContainer underline">
                     <div className="postUserImageContainer">
                     <img src={modalPost.postedBy.profilePicture} alt="" />
                     </div>
-                    <div className="postContentContainer">
+                    <div className="tweetContent">
                     <div className="header">
                         {modalPost.retweetData !== undefined &&
                             <div className='postActionContainer'>
@@ -79,7 +79,7 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
                             <span className='username'>{"@" + modalPost.postedBy.username}</span>
                         <span className='date'>{timeDifference(new Date(), new Date(modalPost.createdAt))}</span>
                     </div>
-                    <div className="postBody">
+                    <div>
                         <span>{modalPost.content}</span>
                     </div>
                 </div>

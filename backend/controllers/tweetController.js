@@ -12,12 +12,12 @@ const postTweet = async(req, res) => {
     }
 
     const { content: tweetContent } = req.body;
-    let { _id: UserLoggedInId } = req.cookies.decodedToken;
+    let { _id: userLoggedInId } = req.cookies.decodedToken;
 
     try {
         let newTweet = await Post.create({
             content: tweetContent,
-            postedBy: UserLoggedInId
+            postedBy: userLoggedInId
         });
         newTweet = await Post.populate(newTweet, 'postedBy');
 
@@ -188,6 +188,7 @@ const retweetTweet = async(req, res) => {
         if (updatePost) {
             await Notification.insertNotification(updatePost.postedBy, loggedInUser, Notification.NOTIFICATION_TYPES.RETWEET, updatePost._id);
         }
+        
         // Reissue the JWT with the new info.
         const token = jwt.sign(returnUser.toJSON(), process.env.JWT_SECRET);
         res.cookie("token", token, { httpOnly: true })
