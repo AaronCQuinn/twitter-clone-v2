@@ -31,7 +31,8 @@ NotificationSchema.statics.NOTIFICATION_TYPES = {
     FOLLOW: "follow",
     RETWEET: 'retweet',
     LIKE: 'like',
-    REPLY: 'reply'
+    REPLY: 'reply',
+    MESSAGE: 'message'
 }
 
 let Notification = mongoose.model('Notification', NotificationSchema);

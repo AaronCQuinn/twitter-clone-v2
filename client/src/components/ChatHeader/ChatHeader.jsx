@@ -19,46 +19,25 @@ const ChatHeader = (fetchedChat) => {
 
     function renderOneOnOneDMImages(users) {
         return users.map((user, index) => {
-            return (
-                <img
-                key={index}
-                src={user.profilePicture}
-                alt={`Profile ${index}`}
-                />
-            )
+            return ( <img key={index} src={user.profilePicture} alt={`Profile ${index}`} /> )
         })
     }
 
     function renderImages(users) {
         const limitedUsers = users.slice(0, 3); // Slice the first 3 elements
         const renderedUsers = limitedUsers.map((user, index) => {
-          return (
-            <img
-              key={index}
-              src={user.profilePicture}
-              alt={`Profile ${index}`}
-            />
-          );
+            return (<img key={index} src={user.profilePicture} alt={`Profile ${index}`} />);
         });
         return renderedUsers;
     }
-
-    function renderCount() {
-        if (filteredUsers.length > 3) {
-            return filteredUsers.length - 3;
-        }
-
-        return filteredUsers.length;
-    }
-      
-
+  
     return (
         <>
             <div className="chatImagesContainer">
                 {isGroupChat ? renderImages(filteredUsers): renderOneOnOneDMImages(users)}
             </div>
 
-            {isGroupChat && <div className="userCount"> {"+" + renderCount()}</div>}
+            {isGroupChat && <div className="userCount">{'+' + (users.length -2)}</div>}
             
             <div className="chatTitle" onClick={() => setChatNameModalShow(true)}>
                 { chatTitle ? chatTitle : users.length > 2 ? "Your group message." : "Your one-on-one message." }

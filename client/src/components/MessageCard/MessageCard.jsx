@@ -5,7 +5,7 @@ import './messagecard.css'
 
 const MessageCard = ({ chat }) => {
     const { loggedInUser } = useContext(AuthContext);
-    const latestMessage = 'Latest message.'
+    let latestMessage = chat.latestMessage ? chat.latestMessage.content : 'Latest message.'
 
     const setChatName = () => {
         let chatName = chat.chatName;
@@ -33,11 +33,7 @@ const MessageCard = ({ chat }) => {
 
         return (
             <div className={`resultsImageContainer ${otherChatUser.length > 1 && 'groupChatImage'}`}>
-                {
-                chatImage.map((item, index) => {
-                    return <img src={item} alt="" key={index} />
-                })
-                }
+                { chatImage.map((item, index) => { return <img src={item} alt="" key={index} /> }) }
             </div>
         );
     }

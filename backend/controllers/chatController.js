@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const Chat = require('../models/ChatSchema');
 const User = require('../models/UserSchema');
 const Message = require('../models/MessageSchema');
+const Notification = require('../models/NotificationSchema');
 const { ObjectId } = require('mongodb');
 
 const NUMBER_OF_DMS_TO_FETCH = 10;
@@ -15,7 +16,7 @@ const fetchDirectMessages = async(req, res) => {
     // Search the chat table, all the property of the chat schema called users, where the element (elemMatch) has a value equal (eq) to the logged in user's ID.
     const fetchChats = await Chat.find({ users: { $elemMatch: { $eq: loggedInUser }}})
     .limit(NUMBER_OF_DMS_TO_FETCH) 
-    .populate('users')
+    .populate(['users', 'latestMessage'])
     .sort({ updatedAt: -1 })
 
     return res.status(200).send(fetchChats);
@@ -160,30 +161,31 @@ const fetchDirectMessageContents = async(req, res) => {
 // route GET /api/chats/post_message
 // @access Private
 const postNewMessage = async(req, res) => {
-    const { content, _id } = req.body;
-    const reqToken = req.cookies?.token;
-    const user = jwt.verify(reqToken, process.env.JWT_SECRET);
-
-    if (!reqToken || !user) {
-        res.sendStatus(401);
-        return;
-    }
+    const { content: messageContent, _id: chatId } = req.body;
+    const { _id: loggedInUser }= req.cookies.decodedToken;
     
-    if (!content || !_id) {
-        res.sendStatus(400);
-        return;
+    if (!messageContent || !chatId) {
+        return res.sendStatus(400);
     }
 
     const newMessage = {
-        userSent: user._id,
-        content: content,
-        chat: _id
+        userSent: loggedInUser,
+        content: messageContent,
+        chat: chatId
     }
 
     try {
         let message = await Message.create(newMessage);
         message = await message.populate(['userSent', 'chat']);
-        message = await User.populate(message, { path: 'chat.users'})
+        message = await User.populate(message, { path: 'chat.users'});
+
+        const chatToSendNotifications = await Chat.findByIdAndUpdate(chatId, { latestMessage: message });
+        chatToSendNotifications.users.forEach(userId => {
+            if (userId.toString() === loggedInUser.toString()) { return };
+            
+            Notification.insertNotification(userId, loggedInUser, Notification.NOTIFICATION_TYPES.MESSAGE, message.chat._id)
+        })
+
         return res.status(201).send(message);
     } catch(error) {
         console.log('Error creating a new message: ' + error);

@@ -55,13 +55,7 @@ const InboxMessageContainer = () => {
             </div>
         </div>
 
-        {loading ? 
-            <Spinner />
-            :
-            chatArrayToRender.map((chat) => {
-                return <MessageCard chat={chat} key={chat._id} />
-            }) 
-        }
+        {loading ? <Spinner /> : chatArrayToRender.map(chat => { return <MessageCard chat={chat} key={chat._id} /> }) }
         </>
     )
 }

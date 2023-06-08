@@ -29,7 +29,7 @@ function Home() {
                     <Navbar />
                 </Col>
 
-                <Col className="col-10 col-md-8 col-lg-6">
+                <Col className="mainSectionContainer">
                     <PageHeader title="Search" />
 
                     <SearchBar setLoading={setLoading} setSearchResults={setSearchResults} isSelected={isSelected}/>

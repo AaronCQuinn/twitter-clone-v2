@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col } from 'react-bootstrap/';
@@ -9,10 +9,7 @@ import InboxMessageContainer from '../../components/InboxMessageContainer/InboxM
 
 const Inbox = () => {
     const [createMessage, setCreateMessage] = useState(false);
-
-    useEffect(() => {
-        document.title = 'Inbox ● Twitter';
-    }, []);
+    document.title = 'Inbox ● Twitter';
     
     return (
         <Container>
@@ -21,18 +18,13 @@ const Inbox = () => {
                     <Navbar />
                 </Col>
 
-                <Col className="col-10 col-md-8 col-lg-6">
+                <Col className="mainSectionContainer">
                     <div className="titleContainer">
                         <h1 className='titleContainerTitle'>Inbox</h1>
                         <FontAwesomeIcon icon={faPlusSquare} onClick={() => setCreateMessage(!createMessage)} style={{cursor: 'pointer'}} />
                     </div>
 
-                    {createMessage ? 
-                    <MessageCreation />
-                    :
-                    <InboxMessageContainer />
-                    }
-
+                    {createMessage ? <MessageCreation /> : <InboxMessageContainer />}
                 </Col>
 
                 <Col xs={2} className='d-none d-md-block col-md-2 col-lg-4'>

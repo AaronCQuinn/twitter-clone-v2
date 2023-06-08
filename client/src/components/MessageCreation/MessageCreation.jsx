@@ -16,9 +16,7 @@ const MessageCreation = () => {
     const { loggedInUser } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        document.title = 'Create Message ● Twitter';
-    }, []);
+    document.title = 'Create Message ● Twitter';
 
     useEffect(() => {
         if (input) {
