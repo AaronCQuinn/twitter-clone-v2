@@ -17,8 +17,9 @@ function Home() {
     const params = useParams();
     const { loggedInUser } = useContext(AuthContext);
 
+    document.title = 'Search ● Twitter';
+    
     useEffect(() => {
-        document.title = 'Search ● Twitter';
         params.option ? setIsSelected(params.option) : setIsSelected('posts');
     }, [params.option]);
 

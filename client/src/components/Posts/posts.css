@@ -21,9 +21,6 @@
 
 .postFooter .postButtonContainer button {
     padding: 2px 0px;
-}
-
-button {
     background-color: transparent;
     border: none;
     color: var(--greyButtonText)

@@ -1,0 +1,28 @@
+.markAllOpenHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding-top: var(--spacing);
+    padding-bottom: var(--spacing);
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.markAllOpenButton {
+    position: relative;
+}
+
+.markAllOpenCount {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+}

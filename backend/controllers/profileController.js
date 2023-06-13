@@ -1,32 +1,19 @@
 const User = require('../models/UserSchema');
 const Post = require('../models/PostSchema');
+const { ObjectId } = require('mongodb');
 
 // DESCRIPTION - Fetchs a user's profile.
 // route GET /api/profile/:id
 // @access Private
 const fetchProfile = async(req, res) => {
     const { username } = req.params;
-    const user = req.cookies.token;
-
-    if (!user) {
-      return res.sendStatus(401);
-    }
-
+    const isUserId = ObjectId.isValid(username);
+    
     // Combine the database queries into a group reducing time to get adata.
-    userProfile = await User.findOne({ username: username }, { email: 0, password: 0 })
+    userProfile = await User.findOne(isUserId ? {_id: username} : {username: username})
 
     let posts = await Post.find({ postedBy: userProfile._id, replyTo: { $exists: false } })
-        .populate({
-          path: "postedBy", 
-          select: '-password -email'
-        })
-        .populate({
-          path: 'retweetData',
-          populate: {
-            path: 'postedBy',
-            select: '-password -email'
-          }
-        })
+    .populate('postedBy').populate({path: 'retweetData', populate: {path:'postedBy'}})
         .populate({
           path: 'replyTo.postedBy',
           select: "username"
@@ -39,10 +26,6 @@ const fetchProfile = async(req, res) => {
       const removedPinned = posts.splice(pinnedPosition, 1);
       posts.unshift(removedPinned[0]);
     }
-
-    if (!user) {
-        return res.sendStatus(400);
-    };
       
     return res.status(200).send({userProfile, posts});
 }
@@ -52,18 +35,17 @@ const fetchProfile = async(req, res) => {
 // @access Private
 const fetchProfileReplies = async(req, res) => {
     const { username } = req.params;
-    twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 })
+    const isUserId = ObjectId.isValid(username);
+    twitterUser = await User.findOne(isUserId ? {_id: username} : {username: username})
 
     await Post.find({ postedBy: twitterUser._id, replyTo: { $exists: true } })
     .populate({
         path: "postedBy", 
-        select: '-password -email'
     })
     .populate({
         path: 'retweetData',
         populate: {
             path: 'postedBy',
-            select: '-password -email'
         }
     })
     .populate({
@@ -82,13 +64,17 @@ const fetchProfileReplies = async(req, res) => {
 
 const fetchProfileFollowing = async(req, res) => {
     const { username } = req.params;
-    const twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 }).populate('following', '_id firstName lastName username profilePicture description');
+    const isUserId = ObjectId.isValid(username);
+
+    const twitterUser = await User.findOne(isUserId ? {_id: username} : {username: username}).populate('following', '_id firstName lastName username profilePicture description');
     res.status(200).send(twitterUser.following);
 }
 
 const fetchProfileFollowers = async(req, res) => {
     const { username } = req.params;
-    const twitterUser = await User.findOne({ username: username }, { email: 0, password: 0 }).populate('followers', '_id firstName lastName username profilePicture description');
+    const isUserId = ObjectId.isValid(username);
+
+    const twitterUser = await User.findOne(isUserId ? {_id: username} : {username: username}).populate('followers', '_id firstName lastName username profilePicture description');
     res.status(200).send(twitterUser.followers);
 }
 

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { fetchNotifications } = require('../controllers/notificationController.js');
+const { fetchNotifications, markAllNotificationsOpen, markNotificationOpen } = require('../controllers/notificationController.js');
 
-router.get('/get_notifications', fetchNotifications);
+router.get('', fetchNotifications);
+router.put('/mark-all-open', markAllNotificationsOpen);
+router.put('/mark-open', markNotificationOpen);
 
 module.exports = router;
