@@ -23,6 +23,25 @@
     transition: var(--transition-ease);
 }
 
+.navBarNotifications {
+    position: relative;
+}
+
+.navBarNotifcationsIcon {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+}
+
 .blue {
     color: var(--twitter-blue);
 }

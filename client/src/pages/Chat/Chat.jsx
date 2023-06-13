@@ -9,14 +9,17 @@ import PageHeader from '../../components/PageHeader/PageHeader'
 import ChatHeader from '../../components/ChatHeader/ChatHeader';
 import ChatMessages from '../../components/ChatMessages/ChatMessages';
 import { showToast } from '../../components/Toast/showToast';
-
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './chat.css'
 import { SocketContext } from '../../context/SocketContext';
+import { AuthContext } from '../../context/AuthContext';
+import { NotificationContext } from '../../context/NotificationContext';
 
 const Chat = () => {
     const { socket } = useContext(SocketContext);
+    const { loggedInUser } = useContext(AuthContext);
+    const { updateDmNotifications } = useContext(NotificationContext);
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
     const [message, setMessage] = useState();
@@ -76,6 +79,31 @@ const Chat = () => {
             }
         }
     }, [socket])
+
+    useEffect(() => {
+        let messagesToUpdate = messageArray.filter(message => !message.readBy.includes(loggedInUser)).map(message => { return message._id });
+
+        if (messagesToUpdate.length === 0) {
+            return;
+        } 
+
+        try {
+            axios.put('/api/chats/mark-messages-read', messagesToUpdate);
+        } catch(error) {
+            showToast('There was an error updating the chat.', 'error');
+        }
+    }, [messageArray, loggedInUser])
+
+    useEffect(() => {
+        try {
+            axios.put('/api/notifications/mark-all-chat-open', [chat._id]);
+            updateDmNotifications();
+        } catch(error) {
+            console.log(error);
+            showToast('There was an error updating the chat.', 'error');
+        }
+        //eslint-disable-next-line
+    }, [chat])
 
     const getChatInfo = async() => {
         setLoading(true);
@@ -138,7 +166,6 @@ const Chat = () => {
             setMessage(message);
         }
     }
-
 
     return (
         <Container>

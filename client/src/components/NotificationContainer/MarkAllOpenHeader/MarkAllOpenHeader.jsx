@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './markAllOpenHeader.css'
 import { Button } from 'react-bootstrap'
+import { NotificationContext } from '../../../context/NotificationContext'
 
-const MarkAllOpenHeader = ({ notifications, handleMarkAllOpenClick }) => {
+const MarkAllOpenHeader = () => {
+    const { notifications, handleMarkAllOpenClick } = useContext(NotificationContext);
     const COUNT = notifications.reduce((acc, obj) => obj['opened'] === false ? acc + 1 : acc, 0);
 
     return (

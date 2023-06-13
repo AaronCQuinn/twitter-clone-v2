@@ -4,8 +4,8 @@ import Navbar from '../../components/Navbar/Navbar'
 import { Container, Col, Row } from 'react-bootstrap'
 import NotificationContainer from '../../components/NotificationContainer/NotificationContainer';
 
-
 const Notifications = () => {
+
     return (
         <Container>
                 <Row>

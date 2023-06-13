@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext'
 import './messagecard.css'
 
 const MessageCard = ({ chat }) => {
+    console.log(chat);
     const { loggedInUser } = useContext(AuthContext);
     let latestMessage = chat.latestMessage ? chat.latestMessage.content : 'Latest message.'
 

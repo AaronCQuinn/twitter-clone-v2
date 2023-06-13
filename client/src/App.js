@@ -19,6 +19,7 @@ import './app.css'
 import Chat from './pages/Chat/Chat';
 import { SocketContextProvider } from './context/SocketContext';
 import Notifications from './pages/Notifications/Notifications';
+import { NotificationContextProvider } from './context/NotificationContext';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
     <AuthContextProvider>
       <SocketContextProvider>
       <ProfileContextProvider>
+      <NotificationContextProvider>
 
       <ToastContainer />
 
@@ -45,6 +47,7 @@ function App() {
         <Route path='/login' element={<Login />} />
       </Routes>
       
+      </NotificationContextProvider>
       </ProfileContextProvider>
       </SocketContextProvider>
     </AuthContextProvider>

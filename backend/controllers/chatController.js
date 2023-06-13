@@ -193,4 +193,23 @@ const postNewMessage = async(req, res) => {
     }
 }
 
-module.exports = { fetchDirectMessages, fetchSpecificDirectMessage, createNewDirectMessage, updateDirectMessageName, fetchDirectMessageContents, postNewMessage };
+const markMessagesRead = async(req, res) => {
+    const { body: messagesToUpdate } = req;
+    const { _id: loggedInUserId } = req.cookies.decodedToken;
+
+    if (!messagesToUpdate) {
+        return res.sendStatus(400);
+    }
+
+    try {
+        await Message.updateMany(
+            { _id: { $in: messagesToUpdate } }, 
+            { $addToSet : { readBy: loggedInUserId } },
+        );
+        return res.sendStatus(200);
+    } catch(error) {
+        return res.sendStatus(500);
+    }
+}
+
+module.exports = { fetchDirectMessages, fetchSpecificDirectMessage, createNewDirectMessage, updateDirectMessageName, fetchDirectMessageContents, postNewMessage, markMessagesRead };

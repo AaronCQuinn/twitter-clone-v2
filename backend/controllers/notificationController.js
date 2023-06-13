@@ -7,7 +7,7 @@ const fetchNotifications = async(req, res) => {
     const { _id: LoggedInUserId } = req.cookies.decodedToken;
 
     try {
-        const userNotifications = await Notification.find( { userTo: LoggedInUserId, notificationType: { $ne: Notification.NOTIFICATION_TYPES.MESSAGE } }).limit(20).populate(['userTo', 'userFrom']).sort({ createdAt: -1 });
+        const userNotifications = await Notification.find({ userTo: LoggedInUserId }).populate(['userTo', 'userFrom']).sort({ createdAt: -1 });
         return res.status(200).send(userNotifications);
     } catch(error) {
         res.sendStatus(500);
@@ -20,12 +20,18 @@ const markAllNotificationsOpen = async(req, res) => {
     const { _id: LoggedInUserId } = req.cookies.decodedToken;
     const { body: notificationIdArray } = req;
 
+    console.log(notificationIdArray);
+
+    if (!notificationIdArray) {
+        return res.sendStatus(400);
+    }
+
     try {
         await Notification.where({userTo: mongoose.Types.ObjectId(LoggedInUserId)})
-        .updateMany({_id: { $in: notificationIdArray}}, {opened: true})
-        .sort({'createdAt': -1})
+        .updateMany({_id: { $in: notificationIdArray }}, {opened: true})
         res.sendStatus(200);
     } catch(error) {
+        console.log(error);
         res.sendStatus(500);
     }
 }
@@ -44,4 +50,21 @@ const markNotificationOpen = async(req, res) => {
     }
 }
 
-module.exports = { fetchNotifications, markAllNotificationsOpen, markNotificationOpen };
+const markAllChatNotificationsOpen = async(req, res) => {
+    const { _id: LoggedInUserId } = req.cookies.decodedToken;
+    const { body: notificationId } = req;
+
+    if (!notificationId) {
+        return res.sendStatus(400);
+    }
+
+    try {
+        await Notification.where({userTo: mongoose.Types.ObjectId(LoggedInUserId)})
+        .updateMany({entityId: notificationId }, {opened: true})
+        res.sendStatus(200);
+    } catch(error) {
+        res.sendStatus(500);
+    }
+}
+
+module.exports = { fetchNotifications, markAllNotificationsOpen, markNotificationOpen, markAllChatNotificationsOpen };
