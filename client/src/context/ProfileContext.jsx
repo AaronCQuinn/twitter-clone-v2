@@ -1,53 +1,54 @@
 import React, { createContext, useState } from 'react';
+import axios from 'axios';
 
 const ProfileContext = createContext();
 
 function ProfileContextProvider({ children }) {
-    const [userProfile, setUserProfile] = useState();
-    const [userProfilePosts, setUserProfilePosts] = useState();
-    const [userProfileReplies, setUserProfileReplies] = useState();
-    const [userProfileFollowing, setUserProfileFollowing] = useState();
-    const [userProfileFollowers, setUserProfileFollowers] = useState();
+    const [profile, setProfile] = useState();
+    const [profileTweets, setProfileTweets] = useState({});
+    const [profileReplies, setProfileReplies] = useState({});
+    const [profileFollowing, setProfileFollowing] = useState({});
+    const [profileFollowers, setProfileFollowers] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const getProfile = async(username) => {
-        // this can definitely be improved, possibly combining the state and using a reducer
+    const fetchProfile = async (profileId) => {
         setLoading(true);
         try {
-            const [res, replies, following, followers] = await Promise.all([
-                fetch(`/api/profile/${username}`),
-                fetch(`/api/profile/${username}/replies`),
-                fetch(`/api/profile/${username}/following`),
-                fetch(`/api/profile/${username}/followers`),
-            ]);
-            const data = await res.json();
-            const repliesData = await replies.json();
-            const followingData = await following.json();
-            const followersData = await followers.json();
-            
-            setUserProfileFollowing(followingData);
-            setUserProfileFollowers(followersData);
-            setUserProfile(data.userProfile);
-            setUserProfilePosts(data.posts);
-            setUserProfileReplies(repliesData.posts);
-        } catch(error) {
-            console.log("Error trying to get profile from the database: " + error);
+          const [profileResponse, tweetsResponse, repliesResponse, followingResponse, followersResponse] = await Promise.all([
+            axios.get(`/api/profile/${profileId}`),
+            axios.get(`/api/profile/${profileId}/tweets`),
+            axios.get(`/api/profile/${profileId}/replies`),
+            axios.get(`/api/profile/${profileId}/following`),
+            axios.get(`/api/profile/${profileId}/followers`),
+          ]);
+          
+          setProfile(profileResponse.data);
+          setProfileTweets(tweetsResponse.data);
+          setProfileReplies(repliesResponse.data);
+          setProfileFollowing(followingResponse.data);
+          setProfileFollowers(followersResponse.data);
+        } catch (error) {
+          console.log("Error trying to get profile from the database: " + error);
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
+      };      
+
+    const updateProfileFollowingCount = () =>{
+        console.log(profile);
     }
-    
-    
+
     return (
         <ProfileContext.Provider 
         value={{ 
-            userProfile, 
-            userProfilePosts, 
-            userProfileReplies, 
-            userProfileFollowers,
-            userProfileFollowing,
+            profile, 
+            profileTweets, 
+            profileReplies, 
+            profileFollowers,
+            profileFollowing,
             loading, 
-            getProfile
+            fetchProfile,
+            updateProfileFollowingCount,
             }}>
         {children}
         </ProfileContext.Provider>

@@ -133,6 +133,7 @@
     align-items: center;
     color: var(--greyText);
     font-weight: bold;
+    text-transform: capitalize;
 }
 
 .tab.active {

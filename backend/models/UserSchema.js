@@ -29,10 +29,11 @@ const UserSchema = new Schema({
     },
     profilePicture: {
         type: String, 
-        default: "/images/profilePicture.png"
+        default: "/api/images/profilePicture.png"
     },
     coverPhoto: {
         type: String, 
+        default: "/api/images/default_cover_photo.jpg"
     },
     likes: [{type: Schema.Types.ObjectId, ref: "Post" }],
     retweets: [{type: Schema.Types.ObjectId, ref: "Post" }],

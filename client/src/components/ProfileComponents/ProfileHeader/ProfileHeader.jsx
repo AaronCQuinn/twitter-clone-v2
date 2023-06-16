@@ -3,20 +3,19 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faCamera } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from '../../../context/AuthContext';
-import { ProfileContext } from '../../../context/ProfileContext';
 import FollowButton from '../../FollowButton/FollowButton';
-import './profileheader.css'
 import UploadProfilePicModal from '../../Modals/UploadProfilePicModal/UploadProfilePicModal';
 import UploadCoverPhotoModal from '../../Modals/UploadCoverPhotoModal/UploadCoverPhotoModal';
+import './profileheader.css'
 
-const ProfileHeader = () => {
-    const { userProfile } = useContext(ProfileContext);
+const ProfileHeader = ({ profile }) => {
     const { loggedInUser } = useContext(AuthContext);
     const [pictureHovered, setPictureHovered] = useState(false);
     const [coverHovered, setCoverHovered] = useState(false);
     const [showUploadProfilePicModal, setShowUploadProfilePicModal] = useState(false);
     const [showUploadCoverPhotoModal, setShowUploadCoverPhotoModal] = useState(false);
 
+    const IS_LOGGED_IN_USERS_PROFILE = loggedInUser._id === profile._id;
     return (
         <>
         <UploadProfilePicModal setShowUploadProfilePicModal={setShowUploadProfilePicModal} showUploadProfilePicModal={showUploadProfilePicModal}/>
@@ -24,48 +23,29 @@ const ProfileHeader = () => {
         {/* Header Image */}
         <div className="profileHeaderContainer">
 
-            <div 
-                onClick={() => setShowUploadCoverPhotoModal(true)} 
-                onMouseEnter={() => setCoverHovered(true)} 
-                onMouseLeave={() => setCoverHovered(false)} 
-                className={`${coverHovered && 'pointer'} coverPhotoContainer`}
-            >
-                <img src={userProfile.coverPhoto} alt="" /> 
-                {(userProfile._id === loggedInUser._id && coverHovered) &&
-                    <FontAwesomeIcon icon={faCamera} className={"coverPhotoIcon"} />
-                }
-
+            <div onClick={() => setShowUploadCoverPhotoModal(true)} onMouseEnter={() => setCoverHovered(true)} onMouseLeave={() => setCoverHovered(false)} 
+            className={`${coverHovered && 'pointer'} coverPhotoContainer`}>
+                <img src={profile.coverPhoto} alt="" /> 
+                {(IS_LOGGED_IN_USERS_PROFILE && coverHovered) && <FontAwesomeIcon icon={faCamera} className="coverPhotoIcon" />}
             </div>
 
-            <div 
-                onClick={() => setShowUploadProfilePicModal(true)} 
-                onMouseEnter={() => setPictureHovered(true)} 
-                onMouseLeave={() => setPictureHovered(false)} 
-                className={`${pictureHovered && 'pointer'} profileUserImageContainer`}
-            >
+            <div onClick={() => setShowUploadProfilePicModal(true)} onMouseEnter={() => setPictureHovered(true)} onMouseLeave={() => setPictureHovered(false)} 
+            className={`${pictureHovered && 'pointer'} profileUserImageContainer`}>
 
-                {loggedInUser._id === userProfile._id ? <img src={loggedInUser.profilePicture} alt="" /> : <img src={userProfile.profilePicture} alt="" />}
-                {(userProfile._id === loggedInUser._id && pictureHovered) &&
-                    <FontAwesomeIcon icon={faCamera} className={"profilePictureButton"} />
-                }
+                <img src={profile.profilePicture} alt="" />
+                {(IS_LOGGED_IN_USERS_PROFILE && pictureHovered) && <FontAwesomeIcon icon={faCamera} className={"profilePictureButton"} />}
 
             </div>
         </div>
         
-
-
         {/* Buttons allowing to edit the profile or follow depending on status */}
         <div className="profileButtonsContainer">
-            {userProfile.username.toLowerCase() === loggedInUser.username.toLowerCase() ?
-                <button className='editButton'>
-                    Edit Profile
-                </button>
-                :
+            {IS_LOGGED_IN_USERS_PROFILE ? <button className='editButton'> Edit Profile </button> :
                 <>
-                <Link to={`/inbox/${userProfile._id}`} className='messageButton'>
+                <Link to={`/inbox/${profile._id}`} className='messageButton'>
                     <FontAwesomeIcon icon={faEnvelope} />
                 </Link>
-                <FollowButton user={userProfile._id} styles={'profileFollowButton'}/>
+                <FollowButton styles={'profileFollowButton'} doesRequestingUserFollow={profile.doesRequestingUserFollow} />
                 </>
             }
         </div>
@@ -73,23 +53,23 @@ const ProfileHeader = () => {
         {/* Profile Information */ }
         <div className="userDetailsContainer">
             <span className='displayName'>
-                {userProfile.firstName + " " + userProfile.lastName}
+                {profile.firstName + " " + profile.lastName}
             </span>
             <span className="username">
-                @{userProfile.username}
+                @{profile.username}
             </span>
             <span className="description">
-                {userProfile.description}
+                {profile.description}
             </span>
 
             <div className="followersContainer">
-                <span className="value">{userProfile.following.length}</span>
-                <Link to={`/profile/${userProfile.username}/following`} >
+                <span className="value">{profile.followingCount}</span>
+                <Link to={`/profile/${profile._id}/following`} >
                     Following
                 </Link>
-                <span className="value">{userProfile.followers.length}</span>
-                <Link to={`/profile/${userProfile.username}/followers`} >
-                        {userProfile.followers.length === 1 ? 'Follower' : 'Followers'}
+                <span className="value">{profile.followersCount}</span>
+                <Link to={`/profile/${profile._id}/followers`} >
+                        {profile.followersCount === 1 ? 'Follower' : 'Followers'}
                 </Link>
             </div>
         </div>

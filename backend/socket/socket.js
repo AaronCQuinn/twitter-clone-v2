@@ -51,9 +51,12 @@ class Socket {
                     socket.in(user._id).emit('message received', message);
                 })
             });
+
+            socket.on('notification received', (newNotification) => {
+                socket.in(newNotification).emit('notification received')
+            })
         });
     }
 }
-
 
 module.exports = () => new Socket();

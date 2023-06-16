@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from 'axios';
 import { showToast } from '../../components/Toast/showToast'
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,8 +9,10 @@ import ReplyModal from '../Modals/ReplyModal/ReplyModal';
 import DeleteModal from '../Modals/DeleteModal/DeleteModal';
 import './tweet.css'
 import UserImageBubble from '../UserImageBubble/UserImageBubble';
+import { SocketContext } from '../../context/SocketContext';
 
 const Tweet = ({ post, user }) => {
+    const { emitNotification } = useContext(SocketContext);
     const [modalShow, setModalShow] = useState(false);
     const [modalPost, setModalPost] = useState();
     const [deleteModalShow, setDeleteModalShow] = useState();
@@ -27,6 +29,7 @@ const Tweet = ({ post, user }) => {
 
         try {
             axios.post(`/api/tweets/retweet_tweet/${id}`, {id}, { headers: { 'Content-Type': 'application/json' }})
+            emitNotification(post.postedBy._id);
         } catch(error) {
             showToast('There was an error liking the post, please try again!', 'error');
         }
@@ -37,6 +40,7 @@ const Tweet = ({ post, user }) => {
 
         try {
           await axios.put(`/api/tweets/like_tweet/${id}`, { id }, { headers: { 'Content-Type': 'application/json',}});
+          emitNotification(post.postedBy._id);
         } catch (error) {
           showToast('There was an error liking the post, please try again!', 'error');
         }

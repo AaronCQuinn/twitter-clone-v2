@@ -5,6 +5,7 @@ import FollowButton from '../FollowButton/FollowButton'
 
 const UserCard = ({ post }) => {
   const { profilePicture, firstName, lastName, username, _id, description} = post;
+  console.log(post);
   return (
     <div className='userCardContainer'>
 
@@ -22,7 +23,7 @@ const UserCard = ({ post }) => {
       </div>
 
       <div className='userCardFollowBtnContainer'>
-        <FollowButton styles={'userCardFollowBtn'} user={_id} />
+        <FollowButton styles={'userCardFollowBtn'} idToFollow={_id} />
       </div>
     </div>
   )

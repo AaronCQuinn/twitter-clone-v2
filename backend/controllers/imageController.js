@@ -9,8 +9,7 @@ const fetchImage = async(req, res) => {
 };
 
 const uploadProfilePicture = async(req, res) => {
-    const user = req.cookies.token;
-    const { username, _id } = jwt.decode(user);
+    const { username, _id } = req.cookies.decodedToken;
     const requestedUsername = req.params.username;
   
     if (username !== requestedUsername) {
@@ -31,7 +30,7 @@ const uploadProfilePicture = async(req, res) => {
       }
     });
   
-    const returnUser = await User.findOneAndUpdate({_id: _id}, {profilePicture: `/api/uploads/images/${req.file.filename}.png` }, { new: true });
+    const returnUser = await User.findOneAndUpdate({_id: _id}, {profilePicture: `/api/images/${req.file.filename}.png` }, { new: true });
     const clientData = issueClientData(returnUser);
     const token = jwt.sign(clientData, process.env.JWT_SECRET);
     res.cookie('token', token, { httpOnly: true })
@@ -40,8 +39,7 @@ const uploadProfilePicture = async(req, res) => {
 }
 
 const uploadCoverPhoto = async(req, res) => {
-    const user = req.cookies.token;
-    const { username, _id } = jwt.decode(user);
+    const { username, _id } = req.cookies.decodedToken;
     const requestedUsername = req.params.username;
 
     if (username !== requestedUsername) {
@@ -63,7 +61,7 @@ const uploadCoverPhoto = async(req, res) => {
       }
     });
 
-    const returnUser = await User.findOneAndUpdate(_id, { coverPhoto: `/api/uploads/images/${req.file.filename}.png` }, { new: true });
+    const returnUser = await User.findOneAndUpdate(_id, { coverPhoto: `/api/images/${req.file.filename}.png` }, { new: true });
     const clientData = issueClientData(returnUser);
     const token = jwt.sign(clientData, process.env.JWT_SECRET);
     res.cookie('token', token, { httpOnly: true })

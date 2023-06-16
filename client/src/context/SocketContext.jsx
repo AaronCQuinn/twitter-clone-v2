@@ -18,8 +18,15 @@ export const SocketContextProvider = ({ children }) => {
         }
     }, [loggedInUser._id]);
 
+    function emitNotification(userId) {
+        if (userId === loggedInUser) return;
+
+        console.log('sent from client');
+        socket.emit('notification received', userId);
+    }
+
     return (
-        <SocketContext.Provider value={{socket}}>
+        <SocketContext.Provider value={{socket, emitNotification}}>
             { children }
         </SocketContext.Provider>
     )

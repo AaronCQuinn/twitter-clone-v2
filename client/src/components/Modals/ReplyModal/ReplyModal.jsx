@@ -9,11 +9,13 @@ import { timeDifference } from '../../../util/timeDifference';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import './replymodal.css'
+import { SocketContext } from '../../../context/SocketContext';
 
 function ReplyModal({modalShow, setModalShow, modalPost}) {
+    const { loggedInUser } = useContext(AuthContext);
+    const { emitNotification } = useContext(SocketContext);
     const [reply, setReply] = useState("");
     const [postError, setPostError] = useState();
-    const {loggedInUser} = useContext(AuthContext);
 
     useEffect(() => {
         toast.error(postError, {
@@ -32,6 +34,7 @@ function ReplyModal({modalShow, setModalShow, modalPost}) {
         e.preventDefault();
         try {
             axios.post(`/api/tweets/post_reply/${modalPost._id}`, {reply, id: modalPost._id}, { headers: { 'Content-Type': 'application/json' }})
+            emitNotification(modalPost.postedBy._id);
         } catch (error) {
             setPostError('There was an error posting your reply. Please try again!');
             console.log(`Axios request failed: ${error}`);

@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { fetchProfile, fetchProfileReplies, fetchProfileFollowing, fetchProfileFollowers } = require('../controllers/profileController');
+const { fetchProfile, fetchProfileReplies, fetchProfileFollowing, fetchProfileFollowers, fetchProfileTweets } = require('../controllers/profileController');
 
-router.get('/profile/:username', fetchProfile);
-router.get('/profile/:username/replies', fetchProfileReplies);
-router.get('/profile/:username/following', fetchProfileFollowing);
-router.get('/profile/:username/followers', fetchProfileFollowers);
+router.get('/profile/:profileId', fetchProfile);
+router.get('/profile/:profileId/tweets', fetchProfileTweets);
+router.get('/profile/:profileId/replies', fetchProfileReplies);
+router.get('/profile/:profileId/following', fetchProfileFollowing);
+router.get('/profile/:profileId/followers', fetchProfileFollowers);
 
 module.exports = router;

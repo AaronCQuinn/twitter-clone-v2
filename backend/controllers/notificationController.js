@@ -14,6 +14,18 @@ const fetchNotifications = async(req, res) => {
     }
 }
 
+const fetchLatestNotification = async(req, res) => {
+    const { _id: LoggedInUserId } = req.cookies.decodedToken;
+
+    try {
+        const latestNotification = await Notification.findOne({ userTo: LoggedInUserId }).
+        populate(['userTo', 'userFrom']);
+        return res.status(200).send(latestNotification);
+    } catch(error) {
+        return res.sendStatus(500);
+    }
+}
+
 // DESCRIPTION - Marks all the currently rendered notifications 'opened' property as true.
 // @access Private
 const markAllNotificationsOpen = async(req, res) => {
@@ -67,4 +79,4 @@ const markAllChatNotificationsOpen = async(req, res) => {
     }
 }
 
-module.exports = { fetchNotifications, markAllNotificationsOpen, markNotificationOpen, markAllChatNotificationsOpen };
+module.exports = { fetchNotifications, fetchLatestNotification, markAllNotificationsOpen, markNotificationOpen, markAllChatNotificationsOpen };

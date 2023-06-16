@@ -19,7 +19,7 @@ import { NotificationContext } from '../../context/NotificationContext';
 const Chat = () => {
     const { socket } = useContext(SocketContext);
     const { loggedInUser } = useContext(AuthContext);
-    const { updateDmNotifications } = useContext(NotificationContext);
+    const { markAllDMNotificationsOpen } = useContext(NotificationContext);
     const [loading, setLoading] = useState(true);
     const [chatError, setChatError] = useState(false);
     const [message, setMessage] = useState();
@@ -62,7 +62,6 @@ const Chat = () => {
     useEffect(() => {
         if (socket) {
             socket.on('new message', (newMessage) => {
-                console.log('Hit')
                 setMessageArray(prevArray => [...prevArray, newMessage]);
             })
 
@@ -76,6 +75,8 @@ const Chat = () => {
             
             return () => {
                 socket.off('new message');
+                socket.off('typing');
+                socket.off('stop typing');
             }
         }
     }, [socket])
@@ -97,7 +98,7 @@ const Chat = () => {
     useEffect(() => {
         try {
             axios.put('/api/notifications/mark-all-chat-open', [chat._id]);
-            updateDmNotifications();
+            markAllDMNotificationsOpen();
         } catch(error) {
             console.log(error);
             showToast('There was an error updating the chat.', 'error');

@@ -5,6 +5,7 @@ const verifyToken = (req, res, next) => {
 
     if (!token) {
         res.sendStatus(401);
+        return;
     }
 
     try {

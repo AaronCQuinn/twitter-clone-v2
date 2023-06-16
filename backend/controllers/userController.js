@@ -144,56 +144,36 @@ const verifyUserAuth = async(req, res) => {
 // @access Private
 const toggleFollowUser = async(req, res) => {
     const { id: UserToFollowId } = req.body;
+    const { _id: LoggedInUser } = req.cookies.decodedToken;
 
     if (!UserToFollowId) {
         return res.sendStatus(400);
     }
 
-    const reqToken = req.cookies?.token;
-    if (!reqToken) {
-        return res.sendStatus(401);
+    try {
+        const getLoggedInUser = await User.findById(LoggedInUser); 
+        const isAlreadyFollowed = getLoggedInUser.following.includes(UserToFollowId);
+
+        // Update the user requesting the follow.
+        await User.findByIdAndUpdate(LoggedInUser, { [isAlreadyFollowed ? "$pull" : "$addToSet"]: {following: UserToFollowId} }, { new: true });
+
+        // Update the user being followed.
+        await User.findByIdAndUpdate(UserToFollowId, { [isAlreadyFollowed ? "$pull" : "$addToSet"]: {followers: LoggedInUser} }, { new: true })
+        .catch(error => {
+            console.error('Encountered an error trying to add a follower to user:' + error)
+            res.sendStatus(500);
+        })
+
+    if (!isAlreadyFollowed) {
+        await Notification.insertNotification(UserToFollowId, LoggedInUser, Notification.NOTIFICATION_TYPES.FOLLOW, LoggedInUser);
     }
 
-    const LoggedInUser = jwt.verify(reqToken, process.env.JWT_SECRET);
 
-    if (!LoggedInUser) {
-        return res.statusMessage(401);
-    }
-
-    const isFollowed = LoggedInUser.following && LoggedInUser.following.includes(UserToFollowId);
-
-    const clientUserData = await User.findByIdAndUpdate(LoggedInUser._id, { [isFollowed ? "$pull" : "$addToSet"]: {following: UserToFollowId} }, { new: true })
-    .catch(error => {
-        console.error('User ' + LoggedInUser.username + " encountered an error while following a user: " + error)
-        res.sendStatus(500);
-    })
-
-    await User.findByIdAndUpdate(UserToFollowId, { [isFollowed ? "$pull" : "$addToSet"]: {followers: LoggedInUser._id} }, { new: true })
-    .catch(error => {
-        console.error('Encountered an error trying to add a follower to user:' + error)
-        res.sendStatus(500);
-    })
-
-    if (!isFollowed) {
-        await Notification.insertNotification(UserToFollowId, LoggedInUser._id, Notification.NOTIFICATION_TYPES.FOLLOW, LoggedInUser._id);
-    }
-
-    const {username, profilePicture, _id, likes, retweets, following, followers} = clientUserData;
-    const clientData = {
-        username, 
-        profilePicture, 
-        _id, 
-        likes,
-        retweets,
-        followers,
-        following
-    }
-
-    // Reissue the JWT with the new info.
-    const token = jwt.sign(clientData, process.env.JWT_SECRET);
-    res.cookie("token", token, { httpOnly: true })
-
-    return res.status(201).send(clientUserData);
+    return res.sendStatus(201);
+    } catch(error) {
+        console.log(error);
+        return res.sendStatus(500);
+    } 
 }
 
 module.exports = { logUserIn, registerUser, logUserOut, verifyUserAuth, toggleFollowUser };

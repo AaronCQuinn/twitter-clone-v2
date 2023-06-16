@@ -8,10 +8,7 @@ import { NotificationContext } from '../../context/NotificationContext';
 
 const Navbar = () => {
     const { handleLogout, loggedInUser } = useContext(AuthContext);
-    const { notifications, dmNotifications } = useContext(NotificationContext);
-
-    const notificationCount = notifications.reduce((acc, obj) => obj['opened'] === false ? acc + 1 : acc, 0);
-    const dmNotificationCount = dmNotifications.reduce((acc, obj) => obj['opened'] === false ? acc + 1 : acc, 0);
+    const { getUnopenedDMNotificationCount, getUnopenedNotificationCount } = useContext(NotificationContext);
 
     return (
         <nav className='navbar'>
@@ -31,18 +28,18 @@ const Navbar = () => {
                     </Link>
                 <li className='navBarNotifications'>
                     <Link to='/notifications'>
-                        {notificationCount > 0 && <span className='navBarNotifcationsIcon'>{notificationCount}</span>}
+                        {getUnopenedNotificationCount() > 0 && <span className='navBarNotifcationsIcon'>{getUnopenedNotificationCount()}</span>}
                         <FontAwesomeIcon icon={faBell} className='navbarLink'/>
                     </Link>
                 </li>
                 <li className='navBarNotifications'>
                     <Link to='/inbox' className='navBarNotifications'>
-                        {dmNotificationCount > 0 && <span className='navBarNotifcationsIcon'>{dmNotificationCount}</span>}
+                        {getUnopenedDMNotificationCount() > 0 && <span className='navBarNotifcationsIcon'>{getUnopenedDMNotificationCount()}</span>}
                         <FontAwesomeIcon icon={faEnvelope} className='navbarLink' />
                     </Link>
                 </li>
                 <li>
-                    <Link to={'/profile/' + loggedInUser.username + '/posts'}>
+                    <Link to={'/profile/' + loggedInUser._id + '/tweets'}>
                         <FontAwesomeIcon icon={faUser} className='navbarLink' />
                     </Link>
                 </li>

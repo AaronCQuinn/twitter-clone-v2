@@ -35,8 +35,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
             <Route path='/' element={<Home/>} />
             <Route path='/post/:id' element={<SinglePost/>} />
-            <Route path='/profile/:username' element={<Profile />} />
-            <Route path='/profile/:username/:option' element={<Profile/>} />
+            <Route path='/profile/:profileId' element={<Profile />} />
+            <Route path='/profile/:profileId/:option' element={<Profile/>} />
             <Route path='/search/' element={<Search/>} />
             <Route path='/search/:option' element={<Search/>} />
             <Route path='/inbox' element={<Inbox />} />

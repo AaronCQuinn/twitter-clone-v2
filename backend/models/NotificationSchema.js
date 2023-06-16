@@ -17,6 +17,7 @@ const NotificationSchema = new Schema({
 NotificationSchema.statics.insertNotification = async(userTo, userFrom, notificationType, entityId) => {
     let data = { userTo, userFrom, notificationType, entityId };
 
+    console.log(userFrom, userTo);
     if (userTo.toString() === userFrom.toString()) {
         return;
     }
